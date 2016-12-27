@@ -30,11 +30,20 @@ class Article extends React.Component {
 
   render() {
     const date = new Date(this.props.data.date).toLocaleDateString('sl');
-
+    let cover;
+    if (!this.props.data.iframeURL) {
+      cover = <img src={this.props.data.imageURL} className="img-responsive agrument__image" alt={this.props.data.imageSource} />;
+    } else {
+      cover = (
+        <div className="embed-responsive" style={{ paddingBottom: this.props.data.iframeHeight }}>
+          <iframe className="embed-responsive-item" src={this.props.data.iframeURL} />
+        </div>
+      );
+    }
     return (
       <article className="agrument__article" id={`post-${this.props.data.id}`} data-id={this.props.data.id}>
         <h1 className="agrument__title">{this.props.data.title}</h1>
-        <img src={this.props.data.imageURL} className="img-responsive agrument__image" alt={this.props.data.imageSource} />
+        {cover}
         <div className="agrument__source"><a href={this.props.data.imageURL}>{this.props.data.imageSource}</a></div>
         <div className="row">
           <div className="col-md-2">
@@ -50,7 +59,7 @@ class Article extends React.Component {
             </div>
           </div>
           <div className="col-md-10">
-            <div className="agrument__text" dangerouslySetInnerHTML={{ __html: this.props.data.articleHTML }} />
+            <div className="agrument__text" dangerouslySetInnerHTML={{ __html: this.props.data.content }} />
           </div>
         </div>
       </article>
@@ -63,9 +72,11 @@ Article.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
     date: PropTypes.string,
-    articleHTML: PropTypes.string,
+    content: PropTypes.string,
     imageURL: PropTypes.string,
     imageSource: PropTypes.string,
+    iframeURL: PropTypes.string,
+    iframeHeight: PropTypes.number,
   }),
 };
 

@@ -15,7 +15,7 @@ const Header = ({ title, subTitle }) => (
         </div>
         <div className="col-md-12">
           <h1 id="intro">
-            <span id="title">{title} /</span>
+            <span id="title">{title} / </span>
             {subTitle}
           </h1>
         </div>

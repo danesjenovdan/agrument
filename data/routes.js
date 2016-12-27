@@ -30,9 +30,11 @@ module.exports = function setupRoutes(app) {
           id: postId,
           title: `Title: ${postId}`,
           date: dateObj.toISOString(),
-          articleHTML: '<p>Paragraph with <a href="link">link</a></p>',
+          content: '<p>Paragraph with <a href="link">link</a></p>',
           imageURL: 'http://placehold.it/300x100',
           imageSource: 'placehold.it',
+          iframeURL: 'https://www.youtube.com/embed/XIMLoLxmTDw',
+          iframeHeight: '25%', // % of width
         },
       ],
     });
