@@ -10,13 +10,14 @@ class Article extends React.Component {
     super(props);
 
     this.state = {
-      permalink: `http://agrument.danesjenovdan.si/${formatDateForURL(props.data.date)}`,
+      longUrl: `http://agrument.danesjenovdan.si/${formatDateForURL(props.data.date)}`,
+      shortUrl: '',
     };
   }
 
   componentDidMount() {
-    this.dataRequest = shortenUrl(this.state.permalink, (shortUrl) => {
-      this.setState({ permalink: shortUrl });
+    this.dataRequest = shortenUrl(this.state.longUrl, (shortUrl) => {
+      this.setState({ shortUrl });
       this.dataRequest = null;
     });
   }
@@ -40,12 +41,12 @@ class Article extends React.Component {
             <div className="agrument__date">{date}</div>
             <div className="agrument__copy-text">Skopiraj povezavo!</div>
             <div className="agrument__copy-input">
-              <InputImmutable value={this.state.permalink} />
+              <InputImmutable value={this.state.shortUrl || this.state.longUrl} />
             </div>
             <div className="agrument_social-buttons">
-              <PulseIconButton iconName="facebook" onClickFunc={() => shareOnFacebook(this.props.data.title, this.props.data.shortLink)} />
-              <PulseIconButton iconName="twitter" onClickFunc={() => shareOnTwitter(this.props.data.title, this.props.data.shortLink)} />
-              <PulseIconButton iconName="googleplus" onClickFunc={() => shareOnGooglePlus(this.props.data.title, this.props.data.shortLink)} />
+              <PulseIconButton iconName="facebook" onClickFunc={() => shareOnFacebook(this.props.data.title, this.state.longUrl)} />
+              <PulseIconButton iconName="twitter" onClickFunc={() => shareOnTwitter(this.props.data.title, this.state.longUrl)} />
+              <PulseIconButton iconName="googleplus" onClickFunc={() => shareOnGooglePlus(this.props.data.title, this.state.longUrl)} />
             </div>
           </div>
           <div className="col-md-10">
