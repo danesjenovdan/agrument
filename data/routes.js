@@ -33,7 +33,6 @@ module.exports = function setupRoutes(app) {
           articleHTML: '<p>Paragraph with <a href="link">link</a></p>',
           imageURL: 'http://placehold.it/300x100',
           imageSource: 'placehold.it',
-          shortLink: 'short.link/xxx',
         },
       ],
     });
