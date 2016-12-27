@@ -1,0 +1,193 @@
+.agrument__container {
+
+  a:not(.btn) {
+    color: $agrument-teal;
+    font-weight: 700;
+    text-decoration: none;
+    &:hover,
+    &:active {
+      text-decoration: underline;
+    }
+  }
+
+  .form-control {
+    color: $agrument-darkteal;
+    border-color: $agrument-teal;
+
+    &:hover,
+    &:focus {
+      border-color: $agrument-darkteal;
+    }
+  }
+
+  .agrument__article {
+    background-color: #fff;
+    padding: 25px;
+    margin-top: 35px;
+    margin-bottom: 35px;
+    font-size: 18px;
+
+    .agrument__title {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: $agrument-teal;
+    }
+
+    .agrument__image {
+      width: 100%;
+    }
+
+    .agrument__source {
+      text-align: right;
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
+    .agrument__date {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .agrument__copy-text {
+      font-size: 12px;
+    }
+
+    .agrument__copy-input {
+      .component__input--autofocus .form-control {
+        margin: 15px 0;
+        font-size: 12px;
+        text-align: center;
+        padding: 6px;
+      }
+    }
+
+    .agrument__date,
+    .agrument__copy-input {
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid $agrument-teal;
+    }
+
+    .agrument__copy-input {
+      padding-bottom: 5px;
+    }
+
+    .agrument_social-buttons {
+      .component__social-pulse-btn {
+        background-color: $agrument-teal;
+        width: 30px;
+        height: 30px;
+        margin-right: 8px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .pulse {
+          border: 1px solid $agrument-teal;
+        }
+
+        .icon {
+          font-size: 15px;
+        }
+      }
+    }
+
+    .agrument__text {
+      p {
+        margin-bottom: 26px;
+      }
+    }
+  }
+
+  .agrument__sidebar {
+    margin-top: 35px;
+    font-size: 16px;
+
+    .card__title {
+      color: $agrument-teal;
+    }
+
+    .triangle--top {
+      border-top-color: $agrument-teal;
+    }
+
+    .agrument__subscribe {
+      .component__checkbox label {
+        &:before,
+        &:after {
+          border-color: $agrument-teal;
+        }
+
+        &:hover:before,
+        &:hover:after {
+          border-color: $agrument-darkteal;
+        }
+      }
+
+      .component__button {
+        background-color: $agrument-teal;
+
+        &:hover {
+          background-color: $agrument-darkteal;
+        }
+      }
+    }
+
+    .agrument__reset-container {
+      margin-top: 20px;
+    }
+
+    .agrument__rss-container {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid $agrument-teal;
+    }
+  }
+
+  .sticky .agrument__sidebar {
+    margin-top: 0;
+  }
+}
+
+
+
+
+/*
+
+.orderagrument, .newagrumentrss, .orderagrumentbutton {
+    width: 100%;
+}
+
+.newagrumentsidebar label {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 70px;
+}
+
+.newagrumentrsscontainer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f0efef;
+}
+
+.newagrumentrss span {
+    color: #ffffff;
+    font-size: 18px;
+    padding-top: 20px;
+}
+
+.newagrumentrss:hover span {
+    color: #333333;
+}
+
+.newagrumentsidebar .hvalaagrumenttext {
+  text-align: center;
+  padding-top: 0;
+  font-weight: 700;
+}
+
+
+*/

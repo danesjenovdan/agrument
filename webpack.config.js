@@ -133,14 +133,8 @@ module.exports = {
   devServer: {
     contentBase: './src',
     historyApiFallback: {
-      rewrites: [
-        {
-          from: /^\/\d{1,2}\.\d{1,2}\.\d{4}$/,
-          to() {
-            return '/';
-          },
-        },
-      ],
+      index: '/',
+      disableDotRule: true,
     },
     port: 3000,
     compress: isProd,

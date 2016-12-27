@@ -1,0 +1,142 @@
+.component__input {
+  .form-control {
+    border-radius: 0px;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 2px solid #c2d8d8;
+    font-size: 18px;
+    color: #7ebfbf;
+    padding: 18px 10px;
+
+    &:hover,
+    &:focus {
+      border-color: #c2d8d8;
+    }
+  }
+
+  &.component__input--autofocus .form-control {
+    background-color: $light-gray;
+    cursor: pointer;
+  }
+}
+
+.component__social-pulse-btn {
+  background-color: #272727;
+  color: #fff;
+  height: 60px;
+  width: 60px;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
+
+  .pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 50%;
+    transition: transform 275ms cubic-bezier(0.53, -0.67, 0.73, 0.74);
+    &:hover {
+      transform: scale(1.15);
+      transition-timing-function: cubic-bezier(0.37, 0.74, 0.15, 1.65);
+    }
+  }
+}
+
+.component__checkbox {
+  $size: 20px;
+
+  &.component__checkbox--large {
+    $size: 40px;
+  }
+
+  @keyframes check {
+    0% {
+      height: 0;
+      width: 0;
+    }
+    25% {
+      height: 0;
+      width: $size * 0.33;
+    }
+    50% {
+      height: $size * 0.75;
+      width: $size * 0.33;
+    }
+  }
+
+  input {
+    display: none;
+  }
+
+  label {
+    display: block;
+    position: relative;
+    padding-left: $size + 10px;
+
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    }
+
+    &:before {
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      width: $size;
+      height: $size;
+      border: 2px solid #c2d8d8;
+    }
+
+    &:after {
+      top: 50%;
+      //top: $size * 0.60;
+      left: $size * 0.125;
+      transform: translateY($size / 10) scaleX(-1) rotate(180deg + -45deg);
+      transform-origin: left top;
+      border: 0 solid #c2d8d8;
+    }
+
+    &:hover:before,
+    &:hover:after {
+      border-color: #c2d8d8;
+    }
+  }
+
+  input:checked + label:after {
+    animation: check 0.8s;
+    height: $size * 0.75;
+    width: $size * 0.33;
+    border-right-width: $size / 10;
+    border-top-width: $size / 10;
+  }
+}
+
+.component__button {
+  padding: 10px 15px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 0px;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 1px;
+  background-color: #dd786b;
+  position: relative;
+  transition: background-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+  &:hover {
+    color: #fff;
+  }
+}
