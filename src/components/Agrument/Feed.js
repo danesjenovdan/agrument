@@ -5,6 +5,7 @@ import { concat } from 'lodash';
 import { browserHistory } from 'react-router';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
+import Spinner from '../Spinner';
 import { formatDateForURL } from '../../actions/agrument';
 
 let dontChangeURLOnScroll = false;
@@ -33,11 +34,12 @@ class Feed extends React.Component {
     this.dataRequest = request
       .get('/data/agrument.json') // TODO: get the date from url here
       .end((err, res) => {
+        this.setState({ loading: false });
         if (err) {
           console.error(err);
-          this.setState({ error: err, loading: false });
+          this.setState({ error: err });
         } else {
-          this.setState({ data: JSON.parse(res.text).agrument_posts, loading: false });
+          this.setState({ data: JSON.parse(res.text).agrument_posts });
           this.dataRequest = null;
         }
       });
@@ -66,21 +68,24 @@ class Feed extends React.Component {
   }
 
   lazyLoadMore() {
-    if (this.dataRequest) {
+    if (this.state.loading) {
       return;
     }
+
+    this.setState({ loading: true });
 
     const lastId = this.state.data[this.state.data.length - 1].id;
     this.dataRequest = request
       .get(`/data/agrument.json?id=${lastId - 1}`)
       .end((err, res) => {
+        this.setState({ loading: false });
         if (err) {
           console.error(err);
-          this.setState({ error: true, loading: false });
+          this.setState({ error: true });
         } else {
           const json = JSON.parse(res.text);
           const mergedData = concat(this.state.data, json.agrument_posts);
-          this.setState({ data: mergedData, loading: false });
+          this.setState({ data: mergedData });
           this.dataRequest = null;
         }
       });
@@ -97,17 +102,16 @@ class Feed extends React.Component {
         </WaypointBlock>
       ));
       if (this.state.loading) {
-        content.push(<div key="spinner">TODO: Spinner!</div>);
+        content.push(<Spinner key="spinner" />);
       } else {
-        content.push(<Waypoint key="waypoint" onEnter={() => this.lazyLoadMore()} />);
+        content.push(<Waypoint key="waypoint" onEnter={() => this.lazyLoadMore()} bottomOffset={-100} />);
       }
     } else if (this.state.loading) {
-      content = <div>TODO: Spinner!</div>;
+      content = <Spinner />;
     }
     return (
       <div className="agrument__feed">
         {content}
-        <div>TODO: Spinner!</div>
       </div>
     );
   }

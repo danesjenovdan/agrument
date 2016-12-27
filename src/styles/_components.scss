@@ -140,3 +140,26 @@
     color: #fff;
   }
 }
+
+.component__spinner {
+  $size: 48px;
+
+  padding: $size / 2;
+
+  @keyframes spinner {
+    0%   { transform: rotate(0deg);   }
+    100% { transform: rotate(360deg); }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: $size;
+    height: $size;
+    border-style: solid;
+    border-color: #4281f4;
+    border-width: $size / 4;
+    border-right-color: transparent !important;
+    border-radius: 50% !important;
+    animation: spinner 1s infinite linear;
+  }
+}
