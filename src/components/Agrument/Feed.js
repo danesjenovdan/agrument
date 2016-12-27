@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import request from 'superagent';
 import Waypoint from 'react-waypoint';
 import { concat } from 'lodash';
@@ -31,8 +31,13 @@ class Feed extends React.Component {
   }
 
   componentDidMount() {
+    let url = '/data/agrument.json';
+    if (this.props.params.date) {
+      url += `?date=${this.props.params.date}`;
+    }
+
     this.dataRequest = request
-      .get('/data/agrument.json') // TODO: get the date from url here
+      .get(url)
       .end((err, res) => {
         this.setState({ loading: false });
         if (err) {
@@ -45,10 +50,11 @@ class Feed extends React.Component {
       });
 
     this.cancelListen = browserHistory.listen((event) => {
+      console.log(event.action);
       if (event.state && event.state.postId && event.action === 'POP') {
-        dontChangeURLOnScroll = true;
         const elem = document.querySelector(`#post-${event.state.postId}`);
         if (elem) {
+          dontChangeURLOnScroll = true;
           setTimeout(() => {
             elem.scrollIntoView(true);
             dontChangeURLOnScroll = false;
@@ -116,5 +122,9 @@ class Feed extends React.Component {
     );
   }
 }
+
+Feed.propTypes = {
+  params: PropTypes.shape({ date: PropTypes.string }),
+};
 
 export default Feed;

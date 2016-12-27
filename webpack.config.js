@@ -4,6 +4,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
+const setupRoutes = require('./data/routes.js');
+
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
 
@@ -140,25 +142,7 @@ module.exports = {
     compress: isProd,
     stats: { colors: true },
     setup: (app) => {
-      // Here you can access the Express app object and add your own custom middleware to it.
-      // TODO: move to separate file and require('filename')(app) it.
-      app.get('/data/agrument.json', (req, res) => {
-        res.json(
-          {
-            agrument_posts: [
-              {
-                id: +req.query.id || 100,
-                title: req.query.id || '100',
-                date: '12.12.2012',
-                articleHTML: '<p>Paragraph with <a href="link">link</a></p>',
-                imageURL: 'http://placehold.it/300x100',
-                imageSource: 'placehold.it',
-                shortLink: 'short.link/xxx',
-              },
-            ],
-          }
-        );
-      });
+      setupRoutes(app);
     },
   },
 };

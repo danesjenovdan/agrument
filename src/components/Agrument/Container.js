@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Feed from './Feed';
 import Sidebar from './Sidebar';
 
-const Container = () => (
+const Container = ({ params }) => (
   <div className="container agrument__container">
     <StickyContainer>
       <div className="row">
         <div className="col-md-9">
-          <Feed />
+          <Feed params={params} />
         </div>
         <div className="col-md-3 hidden-xs hidden-sm">
           <Sticky>
@@ -19,5 +19,9 @@ const Container = () => (
     </StickyContainer>
   </div>
 );
+
+Container.propTypes = {
+  params: PropTypes.shape({ date: PropTypes.string }),
+};
 
 export default Container;

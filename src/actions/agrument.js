@@ -4,7 +4,8 @@ function validateEmail(email) {
 }
 
 function formatDateForURL(date) {
-  return new Date(date).toLocaleDateString('sl').replace(/\s/g, '');
+  const dateObj = new Date(date);
+  return `${dateObj.getDate()}.${dateObj.getMonth() + 1}.${dateObj.getFullYear()}`;
 }
 
 export {
