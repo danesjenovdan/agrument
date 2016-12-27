@@ -3,6 +3,11 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+function formatDateForURL(date) {
+  return new Date(date).toLocaleDateString('sl').replace(/\s/g, '');
+}
+
 export {
   validateEmail,
+  formatDateForURL,
 };

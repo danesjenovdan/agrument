@@ -6,7 +6,7 @@ import { shareOnFacebook, shareOnTwitter, shareOnGooglePlus } from '../../action
 const Article = ({ data }) => {
   const date = new Date(data.date).toLocaleDateString('sl');
   return (
-    <article className="agrument__article">
+    <article className="agrument__article" id={`post-${data.id}`}>
       <h1 className="agrument__title">{data.title}</h1>
       <img src={data.imageURL} className="img-responsive agrument__image" alt={data.imageSource} />
       <div className="agrument__source"><a href={data.imageURL}>{data.imageSource}</a></div>

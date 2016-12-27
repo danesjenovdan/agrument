@@ -5,18 +5,21 @@ import { autobind } from 'core-decorators';
 class WaypointBlock extends React.Component {
 
   @autobind
-  handleWaypointEnter() {
-    if (this.props.onEnterFunc) {
-      this.props.onEnterFunc();
+  handleWaypointEnter(event, position) {
+    if ((event.previousPosition === 'below' && position === 'top') || (event.previousPosition === 'above' && position === 'bottom')) {
+      console.log(event, position);
+      if (this.props.onEnterFunc) {
+        this.props.onEnterFunc();
+      }
     }
   }
 
   render() {
     return (
       <div>
-        <Waypoint onEnter={() => { this.handleWaypointEnter('top'); }} bottomOffset="75%" />
+        <Waypoint onEnter={(event) => { this.handleWaypointEnter(event, 'top'); }} bottomOffset="50%" />
         {this.props.children}
-        <Waypoint onEnter={() => { this.handleWaypointEnter('bottom'); }} topOffset="75%" />
+        <Waypoint onEnter={(event) => { this.handleWaypointEnter(event, 'bottom'); }} topOffset="50%" />
       </div>
     );
   }
