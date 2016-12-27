@@ -7,7 +7,6 @@ class WaypointBlock extends React.Component {
   @autobind
   handleWaypointEnter(event, position) {
     if ((event.previousPosition === 'below' && position === 'top') || (event.previousPosition === 'above' && position === 'bottom')) {
-      console.log(event, position);
       if (this.props.onEnterFunc) {
         this.props.onEnterFunc();
       }
