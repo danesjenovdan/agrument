@@ -43,12 +43,12 @@ class Feed extends React.Component {
       .get(url)
       .end((err, res) => {
         this.setState({ loading: false });
+        this.dataRequest = null;
         if (err) {
           console.error(err);
           this.setState({ error: err });
         } else {
-          this.setState({ data: JSON.parse(res.text).agrument_posts });
-          this.dataRequest = null;
+          this.setState({ data: res.body.agrument_posts });
         }
       });
 
@@ -105,6 +105,7 @@ class Feed extends React.Component {
       .get(`/data/agrument.json?id=${lastId - 1}`)
       .end((err, res) => {
         this.setState({ loading: false });
+        this.dataRequest = null;
         if (err) {
           if (err.status !== 404) {
             console.error(err);
@@ -113,10 +114,13 @@ class Feed extends React.Component {
             this.setState({ shouldLoadBelow: false });
           }
         } else {
-          const json = JSON.parse(res.text);
-          const mergedData = concat(this.state.data, json.agrument_posts);
-          this.setState({ data: mergedData });
-          this.dataRequest = null;
+          const json = res.body;
+          if (json.agrument_posts && json.agrument_posts.length) {
+            const mergedData = concat(this.state.data, json.agrument_posts);
+            this.setState({ data: mergedData });
+          } else {
+            this.setState({ shouldLoadBelow: false });
+          }
         }
       });
   }
@@ -133,6 +137,7 @@ class Feed extends React.Component {
       .get(`/data/agrument.json?id=${firstId + 1}`)
       .end((err, res) => {
         this.setState({ loading: false });
+        this.dataRequest = null;
         if (err) {
           if (err.status !== 404) {
             console.error(err);
@@ -141,10 +146,13 @@ class Feed extends React.Component {
             this.setState({ shouldLoadAbove: false });
           }
         } else {
-          const json = JSON.parse(res.text);
-          const mergedData = concat(json.agrument_posts, this.state.data);
-          this.setState({ data: mergedData });
-          this.dataRequest = null;
+          const json = res.body;
+          if (json.agrument_posts && json.agrument_posts.length) {
+            const mergedData = concat(json.agrument_posts, this.state.data);
+            this.setState({ data: mergedData });
+          } else {
+            this.setState({ shouldLoadAbove: false });
+          }
         }
       });
   }
