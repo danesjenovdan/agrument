@@ -24,6 +24,10 @@ module.exports = function setupRoutes(app) {
       }
       postId = dayOfYearFromDate(dateObj);
     }
+    if (postId < 0 || postId > 365) {
+      res.status(404).send('Not found');
+      return;
+    }
     res.json({
       agrument_posts: [
         {
@@ -31,9 +35,9 @@ module.exports = function setupRoutes(app) {
           title: `Title: ${postId}`,
           date: dateObj.toISOString(),
           content: '<p>Paragraph with <a href="link">link</a></p>',
-          imageURL: 'http://placehold.it/300x100',
+          imageURL: `http://placehold.it/300x${(Math.random() * 100) + 50}`,
           imageSource: 'placehold.it',
-          iframeURL: 'https://www.youtube.com/embed/XIMLoLxmTDw',
+          iframeURL: null,
           iframeHeight: '25%', // % of width
         },
       ],

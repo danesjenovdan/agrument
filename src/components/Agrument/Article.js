@@ -76,7 +76,7 @@ Article.propTypes = {
     imageURL: PropTypes.string,
     imageSource: PropTypes.string,
     iframeURL: PropTypes.string,
-    iframeHeight: PropTypes.number,
+    iframeHeight: PropTypes.string,
   }),
 };
 

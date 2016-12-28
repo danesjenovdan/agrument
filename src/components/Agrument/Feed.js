@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
+import Button from '../FormControl/Button';
 import { formatDateForURL } from '../../actions/agrument';
 
 let dontChangeURLOnScroll = false;
@@ -21,12 +22,14 @@ function changeURLOnScroll(event, post) {
 }
 
 class Feed extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       loading: true,
       error: false,
       data: null,
+      shouldLoadAbove: !!this.props.params.date,
+      shouldLoadBelow: true,
     };
   }
 
@@ -64,6 +67,23 @@ class Feed extends React.Component {
     });
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.data && this.state.data.length !== nextState.data.length) {
+      if (this.state.data[0].id !== nextState.data[0].id) {
+        this.oldHeight = document.body.scrollHeight;
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.oldHeight) {
+      const newHeight = document.body.scrollHeight;
+      const diff = newHeight - this.oldHeight;
+      document.body.scrollTop += diff;
+      this.oldHeight = null;
+    }
+  }
+
   componentWillUnmount() {
     if (this.dataRequest) {
       this.dataRequest.abort();
@@ -74,7 +94,7 @@ class Feed extends React.Component {
   }
 
   lazyLoadMore() {
-    if (this.state.loading) {
+    if (this.state.loading || !this.state.shouldLoadBelow) {
       return;
     }
 
@@ -86,11 +106,43 @@ class Feed extends React.Component {
       .end((err, res) => {
         this.setState({ loading: false });
         if (err) {
-          console.error(err);
-          this.setState({ error: true });
+          if (err.status !== 404) {
+            console.error(err);
+            this.setState({ error: true });
+          } else {
+            this.setState({ shouldLoadBelow: false });
+          }
         } else {
           const json = JSON.parse(res.text);
           const mergedData = concat(this.state.data, json.agrument_posts);
+          this.setState({ data: mergedData });
+          this.dataRequest = null;
+        }
+      });
+  }
+
+  lazyLoadAbove() {
+    if (this.state.loading || !this.state.shouldLoadAbove || this.oldHeight) {
+      return;
+    }
+
+    this.setState({ loading: true });
+
+    const firstId = this.state.data[0].id;
+    this.dataRequest = request
+      .get(`/data/agrument.json?id=${firstId + 1}`)
+      .end((err, res) => {
+        this.setState({ loading: false });
+        if (err) {
+          if (err.status !== 404) {
+            console.error(err);
+            this.setState({ error: true });
+          } else {
+            this.setState({ shouldLoadAbove: false });
+          }
+        } else {
+          const json = JSON.parse(res.text);
+          const mergedData = concat(json.agrument_posts, this.state.data);
           this.setState({ data: mergedData });
           this.dataRequest = null;
         }
@@ -107,10 +159,19 @@ class Feed extends React.Component {
           <Article data={post} />
         </WaypointBlock>
       ));
-      if (this.state.loading) {
-        content.push(<Spinner key="spinner" />);
-      } else {
-        content.push(<Waypoint key="waypoint" onEnter={() => this.lazyLoadMore()} bottomOffset={-100} />);
+      if (this.state.shouldLoadAbove) {
+        if (this.state.loading) {
+          content.unshift(<Spinner key="spinner-above" />);
+        } else {
+          content.unshift(<Button key="load-above" onClickFunc={() => this.lazyLoadAbove()} value="^ Naloži ^" />);
+        }
+      }
+      if (this.state.shouldLoadBelow) {
+        if (this.state.loading) {
+          content.push(<Spinner key="spinner-below" />);
+        } else {
+          content.push(<Waypoint key="load-below" onEnter={() => this.lazyLoadMore()} bottomOffset={-100} />);
+        }
       }
     } else if (this.state.loading) {
       content = <Spinner />;
