@@ -144,8 +144,6 @@
 .component__spinner {
   $size: 48px;
 
-  padding: $size / 2;
-
   @keyframes spinner {
     0%   { transform: rotate(0deg);   }
     100% { transform: rotate(360deg); }

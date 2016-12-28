@@ -20,6 +20,14 @@
     }
   }
 
+  .component__button {
+    background-color: $agrument-teal;
+
+    &:hover {
+      background-color: $agrument-darkteal;
+    }
+  }
+
   .agrument__article {
     background-color: #fff;
     padding: 25px;
@@ -126,14 +134,6 @@
           border-color: $agrument-darkteal;
         }
       }
-
-      .component__button {
-        background-color: $agrument-teal;
-
-        &:hover {
-          background-color: $agrument-darkteal;
-        }
-      }
     }
 
     .agrument__reset-container {
@@ -151,7 +151,13 @@
     margin-top: 0;
   }
 
-  .component__spinner .spinner {
-    border-color: $agrument-teal;
+  .agrument__spinner-container {
+    height: 48px;
+    margin: 20px 0;
+    text-align: center;
+
+    .component__spinner .spinner {
+      border-color: $agrument-teal;
+    }
   }
 }

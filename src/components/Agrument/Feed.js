@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react';
-import request from 'superagent';
 import Waypoint from 'react-waypoint';
 import { concat } from 'lodash';
 import { browserHistory } from 'react-router';
+import { autobind } from 'core-decorators';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
 import Button from '../FormControl/Button';
-import { formatDateForURL } from '../../actions/agrument';
+import { formatDateForURL, getPostByID, getInitialPost } from '../../actions/agrument';
 
 let dontChangeURLOnScroll = false;
 
@@ -34,26 +34,9 @@ class Feed extends React.Component {
   }
 
   componentDidMount() {
-    let url = '/data/agrument.json';
-    if (this.props.params.date) {
-      url += `?date=${this.props.params.date}`;
-    }
-
-    this.dataRequest = request
-      .get(url)
-      .end((err, res) => {
-        this.setState({ loading: false });
-        this.dataRequest = null;
-        if (err) {
-          console.error(err);
-          this.setState({ error: err });
-        } else {
-          this.setState({ data: res.body.agrument_posts });
-        }
-      });
+    this.dataRequest = getInitialPost(this.props.params.date).end(this.setInitialArticleState);
 
     this.cancelListen = browserHistory.listen((event) => {
-      console.log(event.action);
       if (event.state && event.state.postId && event.action === 'POP') {
         const elem = document.querySelector(`#post-${event.state.postId}`);
         if (elem) {
@@ -93,96 +76,91 @@ class Feed extends React.Component {
     }
   }
 
-  lazyLoadMore() {
-    if (this.state.loading || !this.state.shouldLoadBelow) {
-      return;
+  @autobind
+  setInitialArticleState(err, res) {
+    this.setState({ loading: false });
+    this.dataRequest = null;
+
+    if (err) {
+      console.error(err);
+      this.setState({ error: true });
+    } else if (!res.body.agrument_posts || !res.body.agrument_posts.length) {
+      console.error('Initial post not found!');
+      this.setState({ error: true });
+    } else {
+      this.setState({ data: res.body.agrument_posts });
     }
+  }
 
-    this.setState({ loading: true });
+  updateArticleState(err, res, prepend) {
+    this.setState({ loading: false });
+    this.dataRequest = null;
 
-    const lastId = this.state.data[this.state.data.length - 1].id;
-    this.dataRequest = request
-      .get(`/data/agrument.json?id=${lastId - 1}`)
-      .end((err, res) => {
-        this.setState({ loading: false });
-        this.dataRequest = null;
-        if (err) {
-          if (err.status !== 404) {
-            console.error(err);
-            this.setState({ error: true });
-          } else {
-            this.setState({ shouldLoadBelow: false });
-          }
-        } else {
-          const json = res.body;
-          if (json.agrument_posts && json.agrument_posts.length) {
-            const mergedData = concat(this.state.data, json.agrument_posts);
-            this.setState({ data: mergedData });
-          } else {
-            this.setState({ shouldLoadBelow: false });
-          }
-        }
-      });
+    if ((err && err.status === 404) || (!err && (!res.body.agrument_posts || !res.body.agrument_posts.length))) {
+      if (prepend) {
+        this.setState({ shouldLoadAbove: false });
+      } else {
+        this.setState({ shouldLoadBelow: false });
+      }
+    } else if (err) {
+      console.error(err);
+      this.setState({ error: true });
+    } else {
+      let mergedData;
+      if (prepend) {
+        mergedData = concat(res.body.agrument_posts, this.state.data);
+      } else {
+        mergedData = concat(this.state.data, res.body.agrument_posts);
+      }
+      this.setState({ data: mergedData });
+    }
+  }
+
+  lazyLoadBelow() {
+    if (!this.state.loading && this.state.shouldLoadBelow) {
+      this.setState({ loading: true });
+      const lastId = this.state.data[this.state.data.length - 1].id;
+      this.dataRequest = getPostByID(lastId - 1).end((err, res) => this.updateArticleState(err, res, false));
+    }
   }
 
   lazyLoadAbove() {
-    if (this.state.loading || !this.state.shouldLoadAbove || this.oldHeight) {
-      return;
+    if (!this.state.loading && this.state.shouldLoadAbove && !this.oldHeight) {
+      this.setState({ loading: true });
+      const firstId = this.state.data[0].id;
+      this.dataRequest = getPostByID(firstId + 1).end((err, res) => this.updateArticleState(err, res, true));
     }
-
-    this.setState({ loading: true });
-
-    const firstId = this.state.data[0].id;
-    this.dataRequest = request
-      .get(`/data/agrument.json?id=${firstId + 1}`)
-      .end((err, res) => {
-        this.setState({ loading: false });
-        this.dataRequest = null;
-        if (err) {
-          if (err.status !== 404) {
-            console.error(err);
-            this.setState({ error: true });
-          } else {
-            this.setState({ shouldLoadAbove: false });
-          }
-        } else {
-          const json = res.body;
-          if (json.agrument_posts && json.agrument_posts.length) {
-            const mergedData = concat(json.agrument_posts, this.state.data);
-            this.setState({ data: mergedData });
-          } else {
-            this.setState({ shouldLoadAbove: false });
-          }
-        }
-      });
   }
 
   render() {
-    let content = [];
-    if (this.state.error) {
-      content = <div>NAPAKA!</div>;
-    } else if (this.state.data) {
-      content = this.state.data.map((post, i) => (
+    const content = [];
+    if (this.state.data) {
+      if (this.state.shouldLoadAbove) {
+        content.push(<div key="load-above" className="agrument__spinner-container">
+          {this.state.loading ? <Spinner /> : <Button key="load-above" onClickFunc={() => this.lazyLoadAbove()} value="^ Naloži ^" />}
+        </div>);
+      }
+
+      const articles = this.state.data.map((post, i) => (
         <WaypointBlock key={i} onEnterFunc={event => changeURLOnScroll(event, post)}>
           <Article data={post} />
         </WaypointBlock>
       ));
-      if (this.state.shouldLoadAbove) {
-        if (this.state.loading) {
-          content.unshift(<Spinner key="spinner-above" />);
-        } else {
-          content.unshift(<Button key="load-above" onClickFunc={() => this.lazyLoadAbove()} value="^ Naloži ^" />);
-        }
-      }
+      content.push(...articles);
+
       if (this.state.shouldLoadBelow) {
-        if (this.state.loading) {
-          content.push(<Spinner key="spinner-below" />);
-        } else {
-          content.push(<Waypoint key="load-below" onEnter={() => this.lazyLoadMore()} bottomOffset={-100} />);
-        }
+        content.push(<div key="load-below" className="agrument__spinner-container">
+          {this.state.loading ? <Spinner /> : <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
+        </div>);
       }
     } else if (this.state.loading) {
-      content = <Spinner />;
+      content.push(<div key="load-main" className="agrument__spinner-container">
+        <Spinner />
+      </div>);
+    } else {
+      content.push(<div key="load-main" className="agrument__spinner-container">
+        <h1>NAPAKA :(</h1>
+      </div>);
     }
     return (
       <div className="agrument__feed">
