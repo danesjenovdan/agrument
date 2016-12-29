@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Helmet from 'react-helmet';
 import Waypoint from 'react-waypoint';
 import { concat } from 'lodash';
 import { browserHistory } from 'react-router';
@@ -9,18 +10,6 @@ import Spinner from '../Spinner';
 import Button from '../FormControl/Button';
 import { formatDateForURL, getPostByID, getInitialPost } from '../../actions/agrument';
 
-let dontChangeURLOnScroll = false;
-
-function changeURLOnScroll(event, post) {
-  if (dontChangeURLOnScroll) {
-    return;
-  }
-  const newPath = `/${formatDateForURL(post.date)}`;
-  if (window.location.pathname !== newPath) {
-    browserHistory.push({ pathname: newPath, state: { postId: +post.id } });
-  }
-}
-
 class Feed extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +19,7 @@ class Feed extends React.Component {
       data: null,
       shouldLoadAbove: !!this.props.params.date,
       shouldLoadBelow: true,
+      activePost: null,
     };
   }
 
@@ -40,10 +30,10 @@ class Feed extends React.Component {
       if (event.state && event.state.postId && event.action === 'POP') {
         const elem = document.querySelector(`#post-${event.state.postId}`);
         if (elem) {
-          dontChangeURLOnScroll = true;
+          this.dontChangeURLOnScroll = true;
           setTimeout(() => {
             elem.scrollIntoView(true);
-            dontChangeURLOnScroll = false;
+            this.dontChangeURLOnScroll = false;
           }, 0);
         }
       }
@@ -88,7 +78,7 @@ class Feed extends React.Component {
       console.error('Initial post not found!');
       this.setState({ error: true });
     } else {
-      this.setState({ data: res.body.agrument_posts });
+      this.setState({ data: res.body.agrument_posts, activePost: res.body.agrument_posts[0] });
     }
   }
 
@@ -132,6 +122,17 @@ class Feed extends React.Component {
     }
   }
 
+  changeActiveArticle(post) {
+    if (this.dontChangeURLOnScroll) {
+      return;
+    }
+    const newPath = `/${formatDateForURL(post.date)}`;
+    if (window.location.pathname !== newPath) {
+      browserHistory.push({ pathname: newPath, state: { postId: +post.id } });
+      this.setState({ activePost: post });
+    }
+  }
+
   render() {
     const content = [];
     if (this.state.data) {
@@ -142,7 +143,7 @@ class Feed extends React.Component {
       }
 
       const articles = this.state.data.map((post, i) => (
-        <WaypointBlock key={i} onEnterFunc={event => changeURLOnScroll(event, post)}>
+        <WaypointBlock key={i} onEnterFunc={() => this.changeActiveArticle(post)}>
           <Article data={post} />
         </WaypointBlock>
       ));
@@ -162,8 +163,21 @@ class Feed extends React.Component {
         <h1>NAPAKA :(</h1>
       </div>);
     }
+    const meta = this.state.activePost ? (
+      <Helmet
+        title={this.state.activePost.title}
+        meta={[
+          { name: 'description', content: this.state.activePost.description },
+          { property: 'og:title', content: this.state.activePost.title },
+          { property: 'og:type', content: 'article' },
+          { property: 'og:description', content: this.state.activePost.description },
+          { property: 'og:image', content: this.state.activePost.imageURL },
+        ]}
+      />
+    ) : null;
     return (
       <div className="agrument__feed">
+        {meta}
         {content}
       </div>
     );

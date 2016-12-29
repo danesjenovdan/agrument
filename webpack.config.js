@@ -75,6 +75,7 @@ module.exports = {
   output: {
     path: distPath,
     filename: isProd ? '[name].[chunkhash].js' : '[name].js',
+    publicPath: '/',
   },
   devtool: isProd ? 'source-map' : 'eval',
   plugins: activePlugins,

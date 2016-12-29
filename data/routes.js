@@ -35,6 +35,7 @@ module.exports = function setupRoutes(app) {
           title: `Title: ${postId}`,
           date: dateObj.toISOString(),
           content: '<p>Paragraph with <a href="link">link</a></p>',
+          description: `Short desc of title ${postId} for use in meta and og tags`,
           imageURL: `http://placehold.it/300x${(Math.random() * 100) + 50}`,
           imageSource: 'placehold.it',
           iframeURL: null,
