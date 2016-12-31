@@ -1,3 +1,24 @@
+.component__header {
+  background-color: #6ba8a0;
+  padding-top: 32px;
+  z-index: 3;
+
+  .header__intro {
+    font-size: 30px;
+    color: #272727;
+    font-weight: 200;
+    line-height: 48px;
+    margin-top: 64px;
+    margin-bottom: 64px;
+    .header__title {
+      font-size: 48px;
+      color: #ffffff;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
+}
+
 .component__input {
   .form-control {
     border-radius: 0px;

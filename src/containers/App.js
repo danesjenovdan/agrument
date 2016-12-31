@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import './style.scss';
 
-const App = props => (
-  <div className="container-fluid">
+const App = ({ children }) => (
+  <div>
     <Helmet
       defaultTitle="Agrument"
       titleTemplate="%s - Agrument"
     />
-    {props.children}
+    {children}
   </div>
 );
 
