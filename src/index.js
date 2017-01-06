@@ -3,5 +3,6 @@ import React from 'react';
 import { Router, browserHistory } from 'react-router/es6';
 import rootRoute from './pages/routes';
 import './styles/general.scss';
+import 'react-select/dist/react-select.css';
 
 render(<Router history={browserHistory} routes={rootRoute} scrollStrategy="none" />, document.getElementById('root'));

@@ -12,28 +12,20 @@ export default {
   component: App,
   childRoutes: [
     {
-      path: '/(:date)', // available as: this.props.params['date']
+      path: '/dash',
       getComponent(location, cb) {
-        System.import('./Home')
-          .then(loadRoute(cb))
-          .catch(errorLoading);
-      },
-    },
-    /* {
-      path: 'blog',
-      getComponent(location, cb) {
-        System.import('./Blog')
+        System.import('./Dashboard')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
     },
     {
-      path: 'about',
+      path: '/(:date)', // available as: this.props.params['date']
       getComponent(location, cb) {
-        System.import('./About')
+        System.import('./Agrument')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
-    },// */
+    },
   ],
 };

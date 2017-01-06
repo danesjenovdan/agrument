@@ -10,11 +10,26 @@
     line-height: 48px;
     margin-top: 64px;
     margin-bottom: 64px;
+
     .header__title {
       font-size: 48px;
       color: #ffffff;
       font-weight: 600;
       text-transform: uppercase;
+    }
+  }
+
+  &.component__header--small {
+    .header__intro {
+      font-size: 16px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      font-weight: 400;
+      line-height: 22px;
+
+      .header__title {
+        font-size: 18px;
+      }
     }
   }
 }

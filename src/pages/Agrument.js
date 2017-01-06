@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
-import Header from '../../components/Header';
-import AgrumentContainer from '../../components/Agrument/Container';
-import SideMenu from '../../components/SideMenu';
+import Header from '../components/Header';
+import AgrumentContainer from '../components/Agrument/Container';
+import SideMenu from '../components/SideMenu';
 
-const Home = ({ params }) => (
+const Agrument = ({ params }) => (
   <div>
     <SideMenu />
     <div className="container-fluid">
@@ -16,8 +16,8 @@ const Home = ({ params }) => (
   </div>
 );
 
-Home.propTypes = {
+Agrument.propTypes = {
   params: PropTypes.shape({ date: PropTypes.string }),
 };
 
-export default Home;
+export default Agrument;

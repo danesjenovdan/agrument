@@ -109,6 +109,19 @@ module.exports = {
         ],
       },
       {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader?sourceMap',
+          },
+          {
+            loader: isProd ? ExtractTextPlugin.extract({
+              loader: 'css-loader?sourceMap',
+            }) : 'css-loader?sourceMap',
+          },
+        ],
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: [

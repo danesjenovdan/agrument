@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Feed from './Feed';
 import Sidebar from './Sidebar';
@@ -6,6 +7,7 @@ import Sidebar from './Sidebar';
 const Container = ({ params }) => (
   <div className="container agrument__container">
     <StickyContainer>
+      <Link to="/dash">Dash</Link> { /* TODO: remove this link */ }
       <div className="row">
         <div className="col-md-9">
           <Feed params={params} />
