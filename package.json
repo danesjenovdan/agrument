@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Danes je nov dan - React",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.js",
     "prod": "node build.js production server",
