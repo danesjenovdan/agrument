@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 
-const Button = ({ value, block, external, children, type, href, disabled, onClickFunc }) => {
+const Button = ({ value, block, external, children, type = 'button', href, disabled, onClickFunc }) => {
   const inside = typeof children === 'undefined' ? value : children;
   const classes = classnames(
     'component__button',

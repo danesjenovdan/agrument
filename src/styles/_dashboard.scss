@@ -5,4 +5,23 @@
     background-color: #fff;
   }
 
+  .component__button {
+    background-color: $agrument-teal;
+
+    &:hover {
+      background-color: $agrument-darkteal;
+    }
+  }
+
+  .component__checkbox label {
+    &:before,
+    &:after {
+      border-color: $agrument-teal;
+    }
+
+    &:hover:before,
+    &:hover:after {
+      border-color: $agrument-darkteal;
+    }
+  }
 }
