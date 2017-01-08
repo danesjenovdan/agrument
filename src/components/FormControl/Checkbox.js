@@ -12,6 +12,9 @@ class Checkbox extends React.Component {
   @autobind
   handleChange(event) {
     this.setState({ checked: event.target.checked });
+    if (this.props.onChange) {
+      this.props.onChange(event);
+    }
   }
 
   render() {
@@ -32,6 +35,7 @@ class Checkbox extends React.Component {
 Checkbox.propTypes = {
   large: PropTypes.bool,
   label: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 export default Checkbox;

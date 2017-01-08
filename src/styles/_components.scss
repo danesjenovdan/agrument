@@ -35,6 +35,10 @@
 }
 
 .component__input {
+  &.component__input--inline {
+    display: inline-block;
+  }
+
   .form-control {
     border-radius: 0px;
     outline: none;
@@ -196,5 +200,11 @@
     border-right-color: transparent !important;
     border-radius: 50% !important;
     animation: spinner 1s infinite linear;
+  }
+}
+
+.component__filechooser {
+  &.component__filechooser--inline {
+    display: inline-block;
   }
 }

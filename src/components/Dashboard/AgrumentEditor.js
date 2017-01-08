@@ -32,6 +32,11 @@ class AgrumentEditor extends React.Component {
   }
 
   @autobind
+  onUseSpecialEmbedChange(event) {
+    this.setState({ useSpecialEmbed: event.target.checked });
+  }
+
+  @autobind
   updatePravice(value) {
     this.setState({ pravice: value });
   }
@@ -66,7 +71,7 @@ class AgrumentEditor extends React.Component {
   render() {
     const image = this.state.image ? (
       <div className="form-group text-center">
-        <img src={this.state.image} alt="og" className="img-responsive" />
+        <img src={this.state.image} alt="og" className="img-responsive img-thumbnail" />
       </div>
     ) : null;
     return (
@@ -98,13 +103,13 @@ class AgrumentEditor extends React.Component {
               <ImageEdit onDone={this.updateImage} />
             </div>
             <div className="col-sm-6">
-              <Checkbox label="Uporabi posebni embed" />
+              <Checkbox label="Uporabi posebni embed" onChange={this.onUseSpecialEmbedChange} />
             </div>
             <div className="clearfix" />
           </div>
-          <div className="form-group">
+          { this.state.useSpecialEmbed ? <div className="form-group">
             <textarea className="form-control" placeholder="Prilepi embed kodo" />
-          </div>
+          </div> : null }
           <Button block value="Oddaj" />
         </form>
       </div>

@@ -7,13 +7,13 @@ const Container = () => (
   <div className="container dash__container">
     <Link to="/">Home</Link> { /* TODO: remove this link */}
     <div className="row">
-      <div className="col-md-6">
+      <div className="col-lg-6">
         <div className="clearfix" />
         <Card title="Agrumenti, ki jih moraš oddati" />
         <AgrumentEditor />
         <AgrumentEditor />
       </div>
-      <div className="col-md-6">
+      <div className="col-lg-6">
         <div className="clearfix" />
         <Card title="Agrumenti, za katere lahko glasuješ" />
       </div>

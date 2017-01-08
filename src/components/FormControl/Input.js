@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import classnames from 'classnames';
 
 class Input extends React.Component {
   get value() {
@@ -14,8 +15,12 @@ class Input extends React.Component {
   }
 
   render() {
+    const classes = classnames(
+      'component__input',
+      { 'component__input--inline': this.props.inline },
+    );
     return (
-      <div className="component__input">
+      <div className={classes}>
         <input
           className="form-control"
           value={this.props.value}
@@ -32,6 +37,7 @@ Input.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
+  inline: PropTypes.bool,
 };
 
 export default Input;

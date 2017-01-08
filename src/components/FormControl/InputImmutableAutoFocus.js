@@ -1,13 +1,22 @@
 import React, { PropTypes } from 'react';
+import classnames from 'classnames';
 
-const Input = ({ value }) => (
-  <div className="component__input component__input--autofocus">
-    <input className="form-control" value={value} readOnly onFocus={(e) => { e.target.select(); }} />
-  </div>
-);
+const Input = ({ value, inline }) => {
+  const classes = classnames(
+    'component__input',
+    'component__input--autofocus',
+    { 'component__input--inline': inline },
+  );
+  return (
+    <div className={classes}>
+      <input className="form-control" value={value} readOnly onFocus={(e) => { e.target.select(); }} />
+    </div>
+  );
+};
 
 Input.propTypes = {
   value: PropTypes.string,
+  inline: PropTypes.bool,
 };
 
 export default Input;

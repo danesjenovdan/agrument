@@ -4,6 +4,8 @@ import Cropper from 'react-cropper';
 import { autobind } from 'core-decorators';
 import Modal from '../Modal';
 import Button from '../FormControl/Button';
+import FileChooser from '../FormControl/FileChooser';
+import Input from '../FormControl/Input';
 
 class ImageEdit extends React.Component {
   constructor() {
@@ -32,6 +34,14 @@ class ImageEdit extends React.Component {
   }
 
   @autobind
+  onLoadLink(event) {
+    event.preventDefault();
+    if (this.linkInput) {
+      this.setState({ image: this.linkInput.value });
+    }
+  }
+
+  @autobind
   onDone() {
     if (this.props.onDone && this.cropper && this.cropper.getCroppedCanvas()) {
       this.props.onDone(this.cropper.getCroppedCanvas().toDataURL('image/jpeg'));
@@ -56,15 +66,29 @@ class ImageEdit extends React.Component {
         <Portal closeOnEsc isOpened={this.state.modalOpen} onClose={this.closeModal}>
           <Modal title="Naloži sliko">
             <div className="modal-body">
-              <input type="file" onChange={this.onFileSelected} />
-              <Cropper
-                src={this.state.image}
-                ref={(cropper) => { this.cropper = cropper; }}
-                style={{ width: '100%', maxHeight: '80vh' }}
-                zoomable={false}
-                autoCropArea={1}
-                viewMode={1}
-              />
+              <div className="row">
+                <div className="form-inline">
+                  <div className="col-md-6">
+                    <FileChooser inline value="Uploadaj sliko" onChange={this.onFileSelected} />
+                  </div>
+                  <div className="col-md-6">
+                    <Input inline placeholder="Prilepi link" ref={(linkInput) => { this.linkInput = linkInput; }} />
+                    <Button value="Naloži preko linka" onClickFunc={this.onLoadLink} />
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <Cropper
+                    src={this.state.image}
+                    ref={(cropper) => { this.cropper = cropper; }}
+                    style={{ width: '100%', maxHeight: '80vh' }}
+                    zoomable={false}
+                    autoCropArea={1}
+                    viewMode={1}
+                  />
+                </div>
+              </div>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" onClick={this.closeModal}>Zapri</button>
