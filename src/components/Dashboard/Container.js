@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import Card from '../Card';
+import TriangleHeading from '../Card/TriangleHeading';
 import AgrumentEditor from './AgrumentEditor';
 
 const Container = () => (
@@ -9,13 +9,13 @@ const Container = () => (
     <div className="row">
       <div className="col-lg-6">
         <div className="clearfix" />
-        <Card title="Agrumenti, ki jih moraš oddati" />
+        <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
         <AgrumentEditor />
         <AgrumentEditor />
       </div>
       <div className="col-lg-6">
         <div className="clearfix" />
-        <Card title="Agrumenti, za katere lahko glasuješ" />
+        <TriangleHeading title="Agrumenti, za katere lahko glasuješ" />
       </div>
     </div>
   </div>
