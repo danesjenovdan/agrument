@@ -1,3 +1,6 @@
+const agrument = require('./agrument');
+const dash = require('./dash');
+
 function dayOfYearFromDate(date) {
   const first = new Date(date.getFullYear(), 0, 1);
   return Math.ceil((date - first) / 1000 / 60 / 60 / 24, 0);
@@ -24,7 +27,7 @@ module.exports = function setupRoutes(app) {
       }
       postId = dayOfYearFromDate(dateObj);
     }
-    if (postId < 0 || postId > 365) {
+    if (postId < 0 || postId > 366) {
       res.status(404).send('Not found');
       return;
     }
@@ -44,4 +47,11 @@ module.exports = function setupRoutes(app) {
       ],
     });
   });
+
+  // Agrument
+  app.get('/data/agrument', agrument);
+
+  // Agrument Dashboard
+  app.get('/data/dash/active_submissions', dash.active_submissions);
+  app.get('/data/dash/active_votes', dash.active_votes);
 };
