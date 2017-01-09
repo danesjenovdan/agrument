@@ -96,7 +96,7 @@ class AgrumentEditor extends React.Component {
           ) : null}
           <div className="form-group">
             <div className="col-sm-6">
-              <ImageEdit onDone={this.updateImage} />
+              <ImageEdit onDone={this.onImageChange} />
             </div>
             <div className="col-sm-6">
               <Checkbox label="Uporabi posebni embed" onChange={this.onHasEmbedChange} checked={this.state.data.hasEmbed} />

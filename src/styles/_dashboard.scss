@@ -1,8 +1,18 @@
 .dash__container {
-  .component__agrument-editor {
+  .component__agrument-editor,
+  .component__agrument-preview {
     margin-bottom: 35px;
     padding: 25px;
     background-color: #fff;
+  }
+
+  .navbar {
+    margin-top: 20px;
+    border: 0;
+
+    .container-fluid {
+      background: #fff;
+    }
   }
 
   .component__button {
