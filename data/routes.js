@@ -52,6 +52,6 @@ module.exports = function setupRoutes(app) {
   app.get('/data/agrument', agrument);
 
   // Agrument Dashboard
-  app.get('/data/dash/active_submissions', dash.active_submissions);
-  app.get('/data/dash/active_votes', dash.active_votes);
+  app.get('/data/dash/active_submissions.json', dash.active_submissions);
+  app.get('/data/dash/active_votes.json', dash.active_votes);
 };
