@@ -11,7 +11,8 @@
     "build:client": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.js",
     "build:server": "rimraf dist_server && cross-env NODE_ENV=production babel src -d dist_server",
     "build": "npm run build:client && npm run build:server",
-    "serve": "node ./dist_server/server"
+    "serve": "node ./dist_server/server",
+    "build-serve": "npm run build && npm run serve"
   },
   "dependencies": {
     "babel-cli": "^6.18.0",

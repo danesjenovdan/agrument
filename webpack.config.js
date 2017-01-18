@@ -118,6 +118,7 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
+              babelrc: false,
               presets: [
                 ['es2015', { modules: false }],
                 'react',
