@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import Select from 'react-select';
-import RichTextEditor from 'react-rte';
 import { autobind } from 'core-decorators';
 import moment from 'moment';
+import RichTextEditor from '../RichTextEditor';
 import Checkbox from '../FormControl/Checkbox';
 import Button from '../FormControl/Button';
 import ImageEdit from './ImageEdit';
@@ -23,7 +23,7 @@ class AgrumentEditor extends React.Component {
 
     this.state = {
       moment: moment(props.data.deadline),
-      content: RichTextEditor.createValueFromString(props.data.content, 'html'),
+      content: RichTextEditor ? RichTextEditor.createValueFromString(props.data.content, 'html') : '',
       data: props.data,
     };
   }
@@ -74,10 +74,10 @@ class AgrumentEditor extends React.Component {
             <input className="form-control" name="title" placeholder="Naslov agrumenta" defaultValue={this.state.data.title} />
           </div>
           <div className="form-group">
-            <RichTextEditor
+            {RichTextEditor ? <RichTextEditor
               value={this.state.content}
               onChange={this.onContentChange}
-            />
+            /> : null}
           </div>
           <div className="form-group">
             <Select

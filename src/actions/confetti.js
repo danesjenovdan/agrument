@@ -3,6 +3,8 @@
 // The original code is under the Apache 2.0 license.
 // http://opensource.org/licenses/Apache-2.0
 
+var window = {}; // TODO: window does not exist on server so fix server side render with this
+
 var CONFETTIS_PER_SHAKE = 80;
 var MAX_CONFETTIS = 81;
 

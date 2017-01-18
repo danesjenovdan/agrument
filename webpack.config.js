@@ -18,7 +18,10 @@ const activePlugins = [
     minChunks: Infinity,
   }),
   new webpack.DefinePlugin({
-    'process.env': { NODE_ENV: JSON.stringify(nodeEnv) },
+    'process.env': {
+      NODE_ENV: JSON.stringify(nodeEnv),
+      BROWSER: JSON.stringify(true),
+    },
   }),
 ];
 
@@ -28,8 +31,6 @@ if (isProd) {
       minimize: true,
       debug: false,
     }),
-    // new webpack.optimize.OccurrenceOrderPlugin(),
-    // new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
@@ -69,7 +70,6 @@ module.exports = {
     ],
     main: [
       './index.js',
-      //'./pages/Home',
     ],
   },
   output: {
@@ -81,17 +81,6 @@ module.exports = {
   plugins: activePlugins,
   module: {
     rules: [
-      /* {
-        test: /\.html$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-            },
-          },
-        ],
-      },// */
       {
         test: /\.scss$/,
         use: [
