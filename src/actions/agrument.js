@@ -1,6 +1,6 @@
 import request from 'superagent';
 
-const GET_POSTS_URL = '/data/agrument.json';
+const GET_POST_URL = '/api/agrument';
 
 function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -12,22 +12,31 @@ function formatDateForURL(date) {
   return `${dateObj.getDate()}.${dateObj.getMonth() + 1}.${dateObj.getFullYear()}`;
 }
 
-function getPostByID(id) {
-  return request.get(GET_POSTS_URL)
-    .query({ id });
+function getInitialPost(date) {
+  return request.get(GET_POST_URL)
+    .query({ date });
 }
 
-function getInitialPost(dateString) {
-  let req = request.get(GET_POSTS_URL);
-  if (dateString) {
-    req = req.query({ date: dateString });
-  }
-  return req;
+function getOlderPost(date) {
+  return request.get(GET_POST_URL)
+    .query({
+      date: formatDateForURL(date),
+      direction: 'older',
+    });
+}
+
+function getNewerPost(date) {
+  return request.get(GET_POST_URL)
+    .query({
+      date: formatDateForURL(date),
+      direction: 'newer',
+    });
 }
 
 export {
   validateEmail,
   formatDateForURL,
-  getPostByID,
   getInitialPost,
+  getOlderPost,
+  getNewerPost,
 };

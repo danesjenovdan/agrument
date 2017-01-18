@@ -13,11 +13,15 @@ const mockJson = {
   ],
 };
 
-module.exports = {
-  active_submissions(req, res) {
-    res.json(mockJson);
-  },
-  active_votes(req, res) {
-    res.json(mockJson);
-  },
+function getPendingSubmissions(req, res) {
+  res.json(mockJson);
+}
+
+function getVotableSubmissions(req, res) {
+  res.json(mockJson);
+}
+
+export {
+  getPendingSubmissions,
+  getVotableSubmissions,
 };

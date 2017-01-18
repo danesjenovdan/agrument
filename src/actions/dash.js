@@ -1,11 +1,17 @@
 import request from 'superagent';
 
-const GET_SUBMISSIONS_URL = '/data/dash/active_submissions.json';
+const GET_PENDING_URL = '/api/agrument/pending';
+const GET_VOTABLE_URL = '/api/agrument/votable';
 
-function getSubmissions() {
-  return request.get(GET_SUBMISSIONS_URL);
+function getPending() {
+  return request.get(GET_PENDING_URL);
+}
+
+function getVotable() {
+  return request.get(GET_VOTABLE_URL);
 }
 
 export {
-  getSubmissions,
+  getPending,
+  getVotable,
 };

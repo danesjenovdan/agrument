@@ -5,7 +5,7 @@ import TriangleHeading from '../Card/TriangleHeading';
 import AgrumentEditor from './AgrumentEditor';
 import AgrumentVotePreview from './AgrumentVotePreview';
 import Navbar from './Navbar';
-import { getSubmissions } from '../../actions/dash';
+import { getPending, getVotable } from '../../actions/dash';
 
 class Container extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class Container extends React.Component {
   }
 
   componentDidMount() {
-    this.dataRequest = getSubmissions().end(this.setSubmissionsState);
+    this.dataRequest = getPending().end(this.setSubmissionsState);
   }
 
   componentWillUnmount() {

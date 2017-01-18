@@ -8,7 +8,7 @@ import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
 import Button from '../FormControl/Button';
-import { formatDateForURL, getPostByID, getInitialPost } from '../../actions/agrument';
+import { formatDateForURL, getInitialPost, getOlderPost, getNewerPost } from '../../actions/agrument';
 
 class Feed extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class Feed extends React.Component {
     this.state = {
       loading: true,
       error: false,
-      data: null,
+      data: [],
       shouldLoadAbove: !!this.props.params.date,
       shouldLoadBelow: true,
       activePost: null,
@@ -41,7 +41,7 @@ class Feed extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (this.state.data && this.state.data.length !== nextState.data.length) {
+    if (this.state.data.length && this.state.data.length !== nextState.data.length) {
       if (this.state.data[0].id !== nextState.data[0].id) {
         this.oldHeight = document.body.scrollHeight;
       }
@@ -74,11 +74,11 @@ class Feed extends React.Component {
     if (err) {
       console.error(err);
       this.setState({ error: true });
-    } else if (!res.body.agrument_posts || !res.body.agrument_posts.length) {
+    } else if (!res.body.post) {
       console.error('Initial post not found!');
       this.setState({ error: true });
     } else {
-      this.setState({ data: res.body.agrument_posts, activePost: res.body.agrument_posts[0] });
+      this.setState({ data: [res.body.post], activePost: res.body.post });
     }
   }
 
@@ -86,7 +86,7 @@ class Feed extends React.Component {
     this.setState({ loading: false });
     this.dataRequest = null;
 
-    if ((err && err.status === 404) || (!err && (!res.body.agrument_posts || !res.body.agrument_posts.length))) {
+    if ((err && err.status === 404) || (!err && !res.body.post)) {
       if (prepend) {
         this.setState({ shouldLoadAbove: false });
       } else {
@@ -98,9 +98,9 @@ class Feed extends React.Component {
     } else {
       let mergedData;
       if (prepend) {
-        mergedData = concat(res.body.agrument_posts, this.state.data);
+        mergedData = concat(res.body.post, this.state.data);
       } else {
-        mergedData = concat(this.state.data, res.body.agrument_posts);
+        mergedData = concat(this.state.data, res.body.post);
       }
       this.setState({ data: mergedData });
     }
@@ -109,16 +109,18 @@ class Feed extends React.Component {
   lazyLoadBelow() {
     if (!this.state.loading && this.state.shouldLoadBelow) {
       this.setState({ loading: true });
-      const lastId = this.state.data[this.state.data.length - 1].id;
-      this.dataRequest = getPostByID(lastId - 1).end((err, res) => this.updateArticleState(err, res, false));
+      const lastDate = this.state.data[this.state.data.length - 1].date;
+      this.dataRequest = getOlderPost(lastDate)
+        .end((err, res) => this.updateArticleState(err, res, false));
     }
   }
 
   lazyLoadAbove() {
     if (!this.state.loading && this.state.shouldLoadAbove && !this.oldHeight) {
       this.setState({ loading: true });
-      const firstId = this.state.data[0].id;
-      this.dataRequest = getPostByID(firstId + 1).end((err, res) => this.updateArticleState(err, res, true));
+      const firstDate = this.state.data[0].date;
+      this.dataRequest = getNewerPost(firstDate)
+        .end((err, res) => this.updateArticleState(err, res, true));
     }
   }
 
@@ -135,15 +137,15 @@ class Feed extends React.Component {
 
   render() {
     const content = [];
-    if (this.state.data) {
+    if (this.state.data.length) {
       if (this.state.shouldLoadAbove) {
         content.push(<div key="load-above" className="agrument__spinner-container">
           {this.state.loading ? <Spinner /> : <Button key="load-above" onClickFunc={() => this.lazyLoadAbove()} value="^ Naloži ^" />}
         </div>);
       }
 
-      const articles = this.state.data.map((post, i) => (
-        <WaypointBlock key={i} onEnterFunc={() => this.changeActiveArticle(post)}>
+      const articles = this.state.data.map(post => (
+        <WaypointBlock key={post.id} onEnterFunc={() => this.changeActiveArticle(post)}>
           <Article data={post} />
         </WaypointBlock>
       ));
@@ -151,7 +153,9 @@ class Feed extends React.Component {
 
       if (this.state.shouldLoadBelow) {
         content.push(<div key="load-below" className="agrument__spinner-container">
-          {this.state.loading ? <Spinner /> : <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
+          {this.state.loading ?
+            <Spinner /> :
+            <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
         </div>);
       }
     } else if (this.state.loading) {

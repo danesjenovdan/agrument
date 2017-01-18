@@ -4,8 +4,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
-const setupRoutes = require('./data/routes.js');
-
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
 
@@ -154,8 +152,10 @@ module.exports = {
     port: 3000,
     compress: isProd,
     stats: { colors: true },
-    setup: (app) => {
-      setupRoutes(app);
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+      },
     },
   },
 };
