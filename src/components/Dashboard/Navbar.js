@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router/es6';
+import { Link } from 'react-router';
 
 const Navbar = () => (
   <nav className="navbar navbar-default">

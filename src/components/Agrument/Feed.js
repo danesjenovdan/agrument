@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Helmet from 'react-helmet';
 import Waypoint from 'react-waypoint';
 import { concat } from 'lodash';
-import { browserHistory } from 'react-router/es6';
+import { browserHistory } from 'react-router';
 import { autobind } from 'core-decorators';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';

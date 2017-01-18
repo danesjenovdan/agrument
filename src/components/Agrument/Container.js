@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router/es6';
+import { Link } from 'react-router';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Feed from './Feed';
 import Sidebar from './Sidebar';

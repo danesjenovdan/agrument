@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory } from 'react-router/es6';
+import { Router, browserHistory } from 'react-router';
 import 'react-select/dist/react-select.css';
 import 'cropperjs/dist/cropper.css';
 
