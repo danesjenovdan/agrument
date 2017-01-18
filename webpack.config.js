@@ -129,6 +129,15 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
+              presets: [
+                ['es2015', { modules: false }],
+                'react',
+              ],
+              plugins: [
+                'transform-decorators-legacy',
+                'transform-runtime',
+                'lodash',
+              ],
             },
           },
         ],
