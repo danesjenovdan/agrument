@@ -1,4 +1,4 @@
-import App from '../containers/App';
+import App from './containers/App';
 
 function errorLoading(err) {
   console.error('Dynamic page loading failed', err);
@@ -14,7 +14,7 @@ export default {
     {
       path: '/dash',
       getComponent(location, cb) {
-        System.import('./Dashboard')
+        System.import('./Pages/Dashboard')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
@@ -22,7 +22,7 @@ export default {
     {
       path: '/(:date)', // available as: this.props.params['date']
       getComponent(location, cb) {
-        System.import('./Agrument')
+        System.import('./Pages/Agrument')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
