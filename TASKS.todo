@@ -1,0 +1,24 @@
+TODO:
+	☐ pop state to / doesnt scroll to top
+	☐ react-rte component should load async
+	☐ server-side rendering returns static index.html on /
+		☐ figure out a way to fix this and still not break dev-server index.html
+  ☐ autoprefixer
+  ☐ babel-polyfill (with babel-env?) (test IE first)
+  ☐ check this out when you update from beta webpack2 https://webpack.js.org/guides/
+  ☐ deal with color schemes in sass better https://www.sitepoint.com/dealing-color-schemes-sass/
+  ☐ sw-precache webpack plugin? or something for service worker
+  ☐ buttons that change state when clicked (loading etc.)
+
+  http://www.2ality.com/2017/01/import-operator.html
+  https://webpack.js.org/guides/migrating/#code-splitting-with-es2015
+
+Links:
+  ☐ https://philipwalton.com/articles/loading-polyfills-only-when-needed/
+  ☐ https://www.sitepoint.com/dealing-color-schemes-sass/
+  ☐ https://hackernoon.com/10-things-i-learned-making-the-fastest-site-in-the-world-18a0e1cdf4a7#.jj6hvfnrq
+
+Sizes:
+  715 0
+  100 1
+  141 vendor

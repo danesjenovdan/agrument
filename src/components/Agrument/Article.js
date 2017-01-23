@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react';
 import InputImmutable from '../FormControl/InputImmutableAutoFocus';
 import PulseIconButton from '../Social/PulseIconButton';
-import { shareOnFacebook, shareOnTwitter, shareOnGooglePlus } from '../../actions/social';
-import { formatDateForURL } from '../../actions/agrument';
-import { shortenUrl } from '../../actions/shortener';
+import { shareOnFacebook, shareOnTwitter, shareOnGooglePlus } from '../../utils/social';
+import { toSloDateString } from '../../utils/date';
+import { shortenUrl } from '../../utils/shortener';
 
 class Article extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      longUrl: `http://agrument.danesjenovdan.si/${formatDateForURL(props.data.date)}`,
+      longUrl: `http://agrument.danesjenovdan.si/${toSloDateString(props.data.date)}`,
       shortUrl: '',
     };
   }
@@ -77,7 +77,7 @@ Article.propTypes = {
     imageSource: PropTypes.string,
     iframeURL: PropTypes.string,
     iframeHeight: PropTypes.string,
-  }),
+  }).isRequired,
 };
 
 export default Article;

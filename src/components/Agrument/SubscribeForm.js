@@ -4,8 +4,8 @@ import { autobind } from 'core-decorators';
 import Input from '../FormControl/Input';
 import Checkbox from '../FormControl/Checkbox';
 import Button from '../FormControl/Button';
-import { validateEmail } from '../../actions/agrument';
-import confetti from '../../actions/confetti';
+import { validateEmail } from '../../utils/email';
+import confetti from '../../utils/confetti';
 
 class SubscribeForm extends React.Component {
   constructor() {

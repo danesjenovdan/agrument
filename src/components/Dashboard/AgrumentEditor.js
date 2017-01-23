@@ -1,13 +1,10 @@
 import React, { PropTypes } from 'react';
 import Select from 'react-select';
 import { autobind } from 'core-decorators';
-import moment from 'moment';
 import RichTextEditor from '../RichTextEditor';
 import Checkbox from '../FormControl/Checkbox';
 import Button from '../FormControl/Button';
 import ImageEdit from './ImageEdit';
-
-moment.locale('sl');
 
 const rights = [
   { value: 'ena', label: 'One' },
@@ -22,7 +19,6 @@ class AgrumentEditor extends React.Component {
     super(props);
 
     this.state = {
-      moment: moment(props.data.deadline),
       content: RichTextEditor ? RichTextEditor.createValueFromString(props.data.content, 'html') : '',
       data: props.data,
     };
@@ -68,16 +64,15 @@ class AgrumentEditor extends React.Component {
   render() {
     return (
       <div className="component__agrument-editor">
-        <p className="lead">Deadline: {this.state.moment.format('l')} - {this.state.moment.fromNow()}!</p>
+        <p className="lead">Deadline: {this.props.data.deadline} - {/* TODO: fromNow() or until() */}!</p>
         <form action="https://httpbin.org/get" onSubmit={this.onSubmitAgrument}>
           <div className="form-group">
             <input className="form-control" name="title" placeholder="Naslov agrumenta" defaultValue={this.state.data.title} />
           </div>
           <div className="form-group">
-            {RichTextEditor ? <RichTextEditor
-              value={this.state.content}
-              onChange={this.onContentChange}
-            /> : null}
+            {RichTextEditor ? (
+              <RichTextEditor value={this.state.content} onChange={this.onContentChange} />
+            ) : null}
           </div>
           <div className="form-group">
             <Select
@@ -99,13 +94,15 @@ class AgrumentEditor extends React.Component {
               <ImageEdit onDone={this.onImageChange} />
             </div>
             <div className="col-sm-6">
-              <Checkbox label="Uporabi posebni embed" onChange={this.onHasEmbedChange} checked={this.state.data.hasEmbed} />
+              <Checkbox label="Uporabi posebni embed" onChange={this.onHasEmbedChange} checked={!!this.state.data.hasEmbed} />
             </div>
             <div className="clearfix" />
           </div>
-          {this.state.data.hasEmbed ? <div className="form-group">
-            <textarea className="form-control" placeholder="Prilepi embed kodo" defaultValue={this.state.data.embedCode} />
-          </div> : null}
+          {this.state.data.hasEmbed ? (
+            <div className="form-group">
+              <textarea className="form-control" placeholder="Prilepi embed kodo" defaultValue={this.state.data.embedCode} />
+            </div>
+          ) : null}
           <Button block value="Oddaj" />
         </form>
       </div>

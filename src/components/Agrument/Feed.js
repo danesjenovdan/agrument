@@ -8,7 +8,8 @@ import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
 import Button from '../FormControl/Button';
-import { formatDateForURL, getInitialPost, getOlderPost, getNewerPost } from '../../actions/agrument';
+import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';
+import { toSloDateString } from '../../utils/date';
 
 class Feed extends React.Component {
   constructor(props) {
@@ -128,7 +129,7 @@ class Feed extends React.Component {
     if (this.dontChangeURLOnScroll) {
       return;
     }
-    const newPath = `/${formatDateForURL(post.date)}`;
+    const newPath = `/${toSloDateString(post.date)}`;
     if (window.location.pathname !== newPath) {
       browserHistory.push({ pathname: newPath, state: { postId: +post.id } });
       this.setState({ activePost: post });
@@ -190,6 +191,10 @@ class Feed extends React.Component {
 
 Feed.propTypes = {
   params: PropTypes.shape({ date: PropTypes.string }),
+};
+
+Feed.defaultProps = {
+  params: { date: '' },
 };
 
 export default Feed;

@@ -9,7 +9,7 @@ const TriangleHeading = ({ title }) => (
 );
 
 TriangleHeading.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
 };
 
 export default TriangleHeading;
