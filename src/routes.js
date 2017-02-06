@@ -12,6 +12,14 @@ export default {
   component: App,
   childRoutes: [
     {
+      path: '/login',
+      getComponent(location, cb) {
+        System.import('./Pages/Login')
+          .then(loadRoute(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
       path: '/dash',
       getComponent(location, cb) {
         System.import('./Pages/Dashboard')

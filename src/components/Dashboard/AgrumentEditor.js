@@ -5,6 +5,7 @@ import RichTextEditor from '../RichTextEditor';
 import Checkbox from '../FormControl/Checkbox';
 import Button from '../FormControl/Button';
 import ImageEdit from './ImageEdit';
+import LocalizedTimeAgo from '../LocalizedTimeAgo';
 
 const rights = [
   { value: 'ena', label: 'One' },
@@ -64,7 +65,7 @@ class AgrumentEditor extends React.Component {
   render() {
     return (
       <div className="component__agrument-editor">
-        <p className="lead">Deadline: {this.props.data.deadline} - {/* TODO: fromNow() or until() */}!</p>
+        <p className="lead">Deadline: <LocalizedTimeAgo date={this.state.data.deadline} /></p>
         <form action="https://httpbin.org/get" onSubmit={this.onSubmitAgrument}>
           <div className="form-group">
             <input className="form-control" name="title" placeholder="Naslov agrumenta" defaultValue={this.state.data.title} />
@@ -111,7 +112,17 @@ class AgrumentEditor extends React.Component {
 }
 
 AgrumentEditor.propTypes = {
-  data: PropTypes.shape(),
+  data: PropTypes.shape({
+    id: PropTypes.number,
+    deadline: PropTypes.number,
+    author: PropTypes.number,
+    title: PropTypes.string,
+    content: PropTypes.string,
+    image: PropTypes.string,
+    rights: PropTypes.string,
+    hasEmbed: PropTypes.number,
+    embedCode: PropTypes.string,
+  }).isRequired,
 };
 
 export default AgrumentEditor;

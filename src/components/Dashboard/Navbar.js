@@ -1,19 +1,23 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-const Navbar = () => (
+const Navbar = ({ username }) => (
   <nav className="navbar navbar-default">
     <div className="container-fluid">
       <div className="navbar-header">
-        <span className="navbar-brand">Zdravo Miha!</span>
+        <span className="navbar-brand">Zdravo {username}!</span>
       </div>
       <ul className="nav navbar-nav navbar-right">
         <li><Link to="">Shortener</Link></li>
         <li><Link to="/">Agrument</Link></li>
-        <li><Link to="">Log out</Link></li>
+        <li><Link to={{ pathname: '/login', query: { logout: true } }}>Odjavi se!</Link></li>
       </ul>
     </div>
   </nav>
 );
+
+Navbar.propTypes = {
+  username: PropTypes.string.isRequired,
+};
 
 export default Navbar;

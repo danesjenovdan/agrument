@@ -1,66 +1,49 @@
 import React from 'react';
-import { autobind } from 'core-decorators';
-import TriangleHeading from '../Card/TriangleHeading';
-import AgrumentEditor from './AgrumentEditor';
-import AgrumentVotePreview from './AgrumentVotePreview';
+import { browserHistory } from 'react-router';
 import Navbar from './Navbar';
-import { getPending, getVotable } from '../../utils/dash';
+import { getUser } from '../../utils/dash';
 import PinnedMessages from './PinnedMessages';
+import PendingSubmissions from './PendingSubmissions';
+import VotableSubmissions from './VotableSubmissions';
+import Spinner from '../Spinner';
 
 class Container extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
     this.state = {
-      loading: true,
-      error: false,
-      submissions: null,
+      user: null,
     };
   }
 
   componentDidMount() {
-    this.dataRequest = getPending().end(this.setSubmissionsState);
-  }
-
-  componentWillUnmount() {
-    if (this.dataRequest) {
-      this.dataRequest.abort();
-    }
-  }
-
-  @autobind
-  setSubmissionsState(err, res) {
-    this.setState({ loading: false });
-    this.dataRequest = null;
-
-    if (err) {
-      console.error(err);
-      this.setState({ error: true });
-    } else if (!res.body.submissions || !res.body.submissions.length) {
-      console.error('No submissions!');
-    } else {
-      this.setState({ submissions: res.body.submissions });
-    }
+    getUser().end((err, res) => {
+      if (err || !res.ok) {
+        browserHistory.replace('/login');
+      } else {
+        this.setState({ user: res.body });
+      }
+    });
   }
 
   render() {
+    if (!this.state.user) {
+      return (
+        <div className="container dash__container">
+          <Spinner />
+        </div>
+      );
+    }
     return (
       <div className="container dash__container">
-        <Navbar />
+        <Navbar username={this.state.user.name} />
         <PinnedMessages />
         <div className="row">
           <div className="col-lg-6">
-            <div className="clearfix" />
-            <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
-            {this.state.submissions ? (
-              this.state.submissions.map(post => <AgrumentEditor key={post.id} data={post} />)
-            ) : null}
+            <PendingSubmissions />
           </div>
           <div className="col-lg-6">
-            <div className="clearfix" />
-            <TriangleHeading title="Agrumenti, za katere lahko glasuješ" />
-            {this.state.submissions ? (
-              this.state.submissions.map(post => <AgrumentVotePreview key={post.id} data={post} />)
-            ) : null}
+            <VotableSubmissions />
           </div>
         </div>
       </div>
