@@ -71,7 +71,7 @@ Article.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
-    date: PropTypes.string,
+    date: PropTypes.number,
     content: PropTypes.string,
     imageURL: PropTypes.string,
     imageSource: PropTypes.string,

@@ -5,14 +5,36 @@ function getUserData(req, res) {
   res.json(req.user);
 }
 
+function getAllUsers(req, res) {
+  if (req.user.group === 'admin') {
+    db('users')
+      .select('id', 'name', 'group')
+      .then((data) => {
+        res.json({
+          users: data,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          error: err.message,
+        });
+      });
+  } else {
+    res.status(401).json({
+      error: 'Unauthorized',
+    });
+  }
+}
+
 function getPendingSubmissions(req, res) {
-  db('submissions')
-    .where('author', req.user.id)
+  db('posts')
+    .where('type', 'pending')
+    .andWhere('author', req.user.id)
     .orderBy('deadline', 'asc')
     .select()
     .then((data) => {
       res.json({
-        submissions: data,
+        pending: data,
       });
     })
     .catch((err) => {
@@ -24,15 +46,18 @@ function getPendingSubmissions(req, res) {
 
 function editPendingSubmission(req, res) {
   // clone req.body and replace some props with undefined so they are ignored by db.update and we
-  // can't f.e. change the id or author by mistake
+  // can't for example change the id or author by mistake
   const data = _.assign({}, req.body, {
     id: undefined,
     author: undefined,
     deadline: undefined,
+    type: undefined,
+    date: undefined,
   });
 
-  db('submissions')
-    .where('id', req.params.id)
+  db('posts')
+    .whereIn('type', ['votable', 'pending'])
+    .andWhere('id', req.params.id)
     .update(data)
     .then(() => {
       res.json({
@@ -46,9 +71,55 @@ function editPendingSubmission(req, res) {
     });
 }
 
+function submitPendingForVote(req, res) {
+  db('posts')
+    .where('type', 'pending')
+    .andWhere('author', req.user.id)
+    .andWhere('id', req.params.id)
+    .update({
+      type: 'votable',
+    })
+    .then(() => {
+      res.json({
+        success: 'Submitted for vote!',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+}
+
+
+function publishVotableToPublic(req, res) {
+  if (req.user.group === 'admin') {
+    db('posts')
+      .where('type', 'votable')
+      .andWhere('id', req.params.id)
+      .update({
+        type: 'published',
+      })
+      .then(() => {
+        res.json({
+          success: 'Published!',
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          error: err.message,
+        });
+      });
+  } else {
+    res.status(401).json({
+      error: 'Unauthorized',
+    });
+  }
+}
+
 function getVotableSubmissions(req, res) {
-  db('submissions') // TODO: from votable table
-    // .where('author', req.user.id)
+  db('posts')
+    .where('type', 'votable')
     .orderBy('deadline', 'asc')
     .select()
     .then((data) => {
@@ -133,8 +204,11 @@ function removePinnedMessage(req, res) {
 
 export {
   getUserData,
+  getAllUsers,
   getPendingSubmissions,
   editPendingSubmission,
+  submitPendingForVote,
+  publishVotableToPublic,
   getVotableSubmissions,
   getPinnedMessages,
   addPinnedMessage,

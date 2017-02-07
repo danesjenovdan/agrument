@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { autobind } from 'core-decorators';
+import _ from 'lodash';
 import Button from '../FormControl/Button';
 import AgrumentVotePreview from './AgrumentVotePreview';
 import AgrumentEditor from './AgrumentEditor';
@@ -20,6 +21,7 @@ class EditSwitcher extends React.Component {
         console.log(err);
       } else {
         this.setState({ editor: false });
+        this.props.onEditorShowChange(false);
       }
     });
   }
@@ -27,6 +29,7 @@ class EditSwitcher extends React.Component {
   @autobind
   switchToEditor() {
     this.setState({ editor: true });
+    this.props.onEditorShowChange(true);
   }
 
   render() {
@@ -49,6 +52,11 @@ class EditSwitcher extends React.Component {
 
 EditSwitcher.propTypes = {
   data: PropTypes.shape().isRequired,
+  onEditorShowChange: PropTypes.func,
+};
+
+EditSwitcher.defaultProps = {
+  onEditorShowChange: _.noop,
 };
 
 export default EditSwitcher;

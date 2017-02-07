@@ -15,7 +15,7 @@ class LoginForm extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.location.query.logout) {
+    if (this.props.location.query.logout === 'true') {
       logout().end();
     }
   }
@@ -63,7 +63,7 @@ class LoginForm extends React.Component {
 LoginForm.propTypes = {
   location: PropTypes.shape({
     query: PropTypes.shape({
-      logout: PropTypes.bool,
+      logout: PropTypes.string,
     }),
   }).isRequired,
 };

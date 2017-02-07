@@ -82,7 +82,7 @@ class AgrumentEditor extends React.Component {
     const data = {
       title: this.state.data.title,
       content,
-      image: this.state.data.image,
+      imageURL: this.state.data.image,
       rights: this.state.data.rights,
       hasEmbed: this.state.data.hasEmbed,
       embedCode: this.state.data.embedCode,

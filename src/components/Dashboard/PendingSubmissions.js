@@ -1,7 +1,7 @@
 import React from 'react';
 import { autobind } from 'core-decorators';
 import TriangleHeading from '../Card/TriangleHeading';
-import AgrumentEditor from './AgrumentEditor';
+import PendingEntry from './PendingEntry';
 import { getPending } from '../../utils/dash';
 
 class Pending extends React.Component {
@@ -10,12 +10,12 @@ class Pending extends React.Component {
 
     this.state = {
       error: false,
-      submissions: null,
+      pending: null,
     };
   }
 
   componentDidMount() {
-    this.dataRequest = getPending().end(this.setSubmissionsState);
+    this.dataRequest = getPending().end(this.setPendingState);
   }
 
   componentWillUnmount() {
@@ -25,16 +25,16 @@ class Pending extends React.Component {
   }
 
   @autobind
-  setSubmissionsState(err, res) {
+  setPendingState(err, res) {
     this.dataRequest = null;
 
     if (err || !res.body) {
       console.error(err);
       this.setState({ error: true });
-    } else if (!res.body.submissions || !res.body.submissions.length) {
-      console.error('No submissions!');
+    } else if (!res.body.pending || !res.body.pending.length) {
+      console.error('No pending!');
     } else {
-      this.setState({ submissions: res.body.submissions });
+      this.setState({ pending: res.body.pending });
     }
   }
 
@@ -42,8 +42,8 @@ class Pending extends React.Component {
     return (
       <div>
         <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
-        {this.state.submissions ? (
-          this.state.submissions.map(post => <AgrumentEditor key={post.id} data={post} />)
+        {this.state.pending ? (
+          this.state.pending.map(post => <PendingEntry key={post.id} data={post} />)
         ) : null}
       </div>
     );

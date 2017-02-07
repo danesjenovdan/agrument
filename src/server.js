@@ -10,14 +10,18 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import password from 'password-hash-and-salt';
+import _ from 'lodash';
 import db from './api/database';
 import middleware from './middleware';
 import getAgrument from './api/agrument';
 import {
   getUserData,
+  getAllUsers,
   getPendingSubmissions,
+  submitPendingForVote,
   editPendingSubmission,
   getVotableSubmissions,
+  publishVotableToPublic,
   getPinnedMessages,
   addPinnedMessage,
   removePinnedMessage,
@@ -65,7 +69,7 @@ passport.use(new LocalStrategy((username, pass, done) => {
 
 passport.serializeUser((user, done) => {
   // this is the data stored to the session
-  const sessionUser = { id: user.id, name: user.name, group: user.group };
+  const sessionUser = _.pick(user, ['id', 'name', 'group']);
   done(null, sessionUser);
 });
 
@@ -116,9 +120,12 @@ dashRouter.use((req, res, next) => {
   }
 });
 dashRouter.get('/user', getUserData);
+dashRouter.get('/users', getAllUsers);
 dashRouter.get('/pending', getPendingSubmissions);
 dashRouter.post('/pending/edit/:id', editPendingSubmission);
+dashRouter.post('/pending/submit/:id', submitPendingForVote);
 dashRouter.get('/votable', getVotableSubmissions);
+dashRouter.post('/votable/publish/:id', publishVotableToPublic);
 dashRouter.get('/pinned', getPinnedMessages);
 dashRouter.post('/pinned/add', addPinnedMessage);
 dashRouter.delete('/pinned/remove/:id', removePinnedMessage);

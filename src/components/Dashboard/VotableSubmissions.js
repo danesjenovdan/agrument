@@ -1,7 +1,7 @@
 import React from 'react';
 import { autobind } from 'core-decorators';
 import TriangleHeading from '../Card/TriangleHeading';
-import EditSwitcher from './AgrumentEditSwitcher';
+import VotableEntry from './VotableEntry';
 import { getVotable } from '../../utils/dash';
 
 class Votable extends React.Component {
@@ -43,7 +43,7 @@ class Votable extends React.Component {
       <div>
         <TriangleHeading title="Agrumenti, za katere lahko glasuješ" />
         {this.state.votable ? (
-          this.state.votable.map(post => <EditSwitcher key={post.id} data={post} />)
+          this.state.votable.map(post => <VotableEntry key={post.id} data={post} />)
         ) : null}
       </div>
     );

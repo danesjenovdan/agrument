@@ -141,7 +141,7 @@ class Feed extends React.Component {
     if (this.state.data.length) {
       if (this.state.shouldLoadAbove) {
         content.push(<div key="load-above" className="agrument__spinner-container">
-          {this.state.loading ? <Spinner /> : <Button key="load-above" onClickFunc={() => this.lazyLoadAbove()} value="^ Naloži ^" />}
+          {this.state.loading ? <Spinner /> : <Button key="load-above-btn" onClickFunc={() => this.lazyLoadAbove()} value="^ Naloži ^" />}
         </div>);
       }
 
