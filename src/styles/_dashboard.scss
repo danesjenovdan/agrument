@@ -1,7 +1,6 @@
 .dash__container {
   .component__agrument-editor,
   .component__agrument-preview {
-    margin-bottom: 35px;
     padding: 25px;
     background-color: #fff;
   }
@@ -84,5 +83,9 @@
         }
       }
     }
+  }
+
+  .component__edit-switcher {
+    margin-bottom: 35px;
   }
 }

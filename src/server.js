@@ -16,6 +16,7 @@ import getAgrument from './api/agrument';
 import {
   getUserData,
   getPendingSubmissions,
+  editPendingSubmission,
   getVotableSubmissions,
   getPinnedMessages,
   addPinnedMessage,
@@ -116,6 +117,7 @@ dashRouter.use((req, res, next) => {
 });
 dashRouter.get('/user', getUserData);
 dashRouter.get('/pending', getPendingSubmissions);
+dashRouter.post('/pending/edit/:id', editPendingSubmission);
 dashRouter.get('/votable', getVotableSubmissions);
 dashRouter.get('/pinned', getPinnedMessages);
 dashRouter.post('/pinned/add', addPinnedMessage);

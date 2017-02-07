@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
 import Select from 'react-select';
 import { autobind } from 'core-decorators';
+import _ from 'lodash';
 import RichTextEditor from '../RichTextEditor';
 import Checkbox from '../FormControl/Checkbox';
-import Button from '../FormControl/Button';
 import ImageEdit from './ImageEdit';
 import LocalizedTimeAgo from '../LocalizedTimeAgo';
+import { editPending } from '../../utils/dash';
 
 const rights = [
   { value: 'ena', label: 'One' },
@@ -30,14 +31,8 @@ class AgrumentEditor extends React.Component {
   }
 
   @autobind
-  onHasEmbedChange(event) {
-    this.state.data.hasEmbed = event.target.checked;
-    this.setState({ data: this.state.data });
-  }
-
-  @autobind
-  onRightsChange(value) {
-    this.state.data.rights = value;
+  onTitleChange(event) {
+    this.state.data.title = event.target.value;
     this.setState({ data: this.state.data });
   }
 
@@ -47,19 +42,58 @@ class AgrumentEditor extends React.Component {
   }
 
   @autobind
+  onRightsChange(value) {
+    let rightsString = value;
+    if (_.isArray(rightsString)) {
+      rightsString = rightsString.map(e => e.value).join(',');
+    }
+    this.state.data.rights = rightsString;
+    this.setState({ data: this.state.data });
+  }
+
+  @autobind
   onImageChange(value) {
     this.state.data.image = value;
     this.setState({ data: this.state.data });
   }
 
+  @autobind
+  onHasEmbedChange(event) {
+    this.state.data.hasEmbed = event.target.checked;
+    this.setState({ data: this.state.data });
+  }
+
+  @autobind
+  onEmbedCodeChange(event) {
+    this.state.data.embedCode = event.target.value;
+    this.setState({ data: this.state.data });
+  }
 
   @autobind
   onSubmitAgrument(event) {
-    this.setState({ loading: true });
     event.preventDefault();
-    console.log('submit');
-    // TODO: post as json?
-    // content.toString('html');
+    this.save();
+  }
+
+  save(callback) {
+    const content = this.state.content.toString('html');
+    this.state.data.content = content;
+
+    const data = {
+      title: this.state.data.title,
+      content,
+      image: this.state.data.image,
+      rights: this.state.data.rights,
+      hasEmbed: this.state.data.hasEmbed,
+      embedCode: this.state.data.embedCode,
+    };
+
+    editPending(this.state.data.id, data)
+      .end((err, res) => {
+        if (callback) {
+          callback(err, res);
+        }
+      });
   }
 
   render() {
@@ -68,7 +102,13 @@ class AgrumentEditor extends React.Component {
         <p className="lead">Deadline: <LocalizedTimeAgo date={this.state.data.deadline} /></p>
         <form action="https://httpbin.org/get" onSubmit={this.onSubmitAgrument}>
           <div className="form-group">
-            <input className="form-control" name="title" placeholder="Naslov agrumenta" defaultValue={this.state.data.title} />
+            <input
+              className="form-control"
+              name="title"
+              placeholder="Naslov agrumenta"
+              defaultValue={this.state.data.title}
+              onChange={this.onTitleChange}
+            />
           </div>
           <div className="form-group">
             {RichTextEditor ? (
@@ -101,10 +141,9 @@ class AgrumentEditor extends React.Component {
           </div>
           {this.state.data.hasEmbed ? (
             <div className="form-group">
-              <textarea className="form-control" placeholder="Prilepi embed kodo" defaultValue={this.state.data.embedCode} />
+              <textarea className="form-control" placeholder="Prilepi embed kodo" defaultValue={this.state.data.embedCode} onChange={this.onEmbedCodeChange} />
             </div>
           ) : null}
-          <Button block value="Oddaj" />
         </form>
       </div>
     );

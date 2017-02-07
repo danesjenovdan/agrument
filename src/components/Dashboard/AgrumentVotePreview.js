@@ -11,17 +11,16 @@ const AgrumentVotePreview = ({ data }) => (
     </div>
     <p className="lead">{data.title}</p>
     <div className="agrument__text" dangerouslySetInnerHTML={{ __html: data.content }} />
-    <Button value="Uredi" />
-    <div className="pull-right">
-      <Button value="Za" />
-      <Button value="Proti" />
-      <Button value="Veto" />
+    <div>
+      <Button value="Za" disabled />
+      <Button value="Proti" disabled />
+      <Button value="Veto" disabled />
     </div>
   </article>
 );
 
 AgrumentVotePreview.propTypes = {
-  data: PropTypes.shape(),
+  data: PropTypes.shape().isRequired,
 };
 
 export default AgrumentVotePreview;

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import db from './database';
 
 function getUserData(req, res) {
@@ -12,6 +13,30 @@ function getPendingSubmissions(req, res) {
     .then((data) => {
       res.json({
         submissions: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+}
+
+function editPendingSubmission(req, res) {
+  // clone req.body and replace some props with undefined so they are ignored by db.update and we
+  // can't f.e. change the id or author by mistake
+  const data = _.assign({}, req.body, {
+    id: undefined,
+    author: undefined,
+    deadline: undefined,
+  });
+
+  db('submissions')
+    .where('id', req.params.id)
+    .update(data)
+    .then(() => {
+      res.json({
+        success: 'Edited submission!',
       });
     })
     .catch((err) => {
@@ -109,6 +134,7 @@ function removePinnedMessage(req, res) {
 export {
   getUserData,
   getPendingSubmissions,
+  editPendingSubmission,
   getVotableSubmissions,
   getPinnedMessages,
   addPinnedMessage,

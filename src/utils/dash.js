@@ -1,6 +1,7 @@
 import request from 'superagent';
 
 const GET_PENDING_URL = '/api/dash/pending';
+const EDIT_PENDING_URL = '/api/dash/pending/edit';
 const GET_VOTABLE_URL = '/api/dash/votable';
 const GET_PINNED_URL = '/api/dash/pinned';
 const REMOVE_PINNED_URL = '/api/dash/pinned/remove';
@@ -9,6 +10,11 @@ const USER_URL = '/api/dash/user';
 
 function getPending() {
   return request.get(GET_PENDING_URL);
+}
+
+function editPending(id, data) {
+  return request.post(`${EDIT_PENDING_URL}/${id}`)
+    .send(data);
 }
 
 function getVotable() {
@@ -34,6 +40,7 @@ function getUser() {
 
 export {
   getPending,
+  editPending,
   getVotable,
   getPinned,
   removePinned,
