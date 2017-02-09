@@ -20,6 +20,7 @@ import {
   getPendingSubmissions,
   submitPendingForVote,
   editPendingSubmission,
+  addPendingSubmission,
   getVotableSubmissions,
   publishVotableToPublic,
   getPinnedMessages,
@@ -123,6 +124,7 @@ dashRouter.get('/user', getUserData);
 dashRouter.get('/users', getAllUsers);
 dashRouter.get('/pending', getPendingSubmissions);
 dashRouter.post('/pending/edit/:id', editPendingSubmission);
+dashRouter.post('/pending/add', addPendingSubmission);
 dashRouter.post('/pending/submit/:id', submitPendingForVote);
 dashRouter.get('/votable', getVotableSubmissions);
 dashRouter.post('/votable/publish/:id', publishVotableToPublic);

@@ -71,6 +71,33 @@ function editPendingSubmission(req, res) {
     });
 }
 
+function addPendingSubmission(req, res) {
+  db('posts')
+    .insert({
+      date: Date.now(),
+      author: req.body.author,
+      title: '',
+      content: '',
+      description: '',
+      imageURL: '',
+      imageCaption: '',
+      hasEmbed: 0,
+      deadline: Date.now(),
+      rights: '',
+      type: 'pending',
+    })
+    .then(() => {
+      res.json({
+        success: 'Added submission!',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+}
+
 function submitPendingForVote(req, res) {
   db('posts')
     .where('type', 'pending')
@@ -207,6 +234,7 @@ export {
   getAllUsers,
   getPendingSubmissions,
   editPendingSubmission,
+  addPendingSubmission,
   submitPendingForVote,
   publishVotableToPublic,
   getVotableSubmissions,

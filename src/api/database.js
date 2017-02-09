@@ -12,6 +12,7 @@ const db = knex({
     timezone: 'Z',
     charset: 'utf8',
   },
+  useNullAsDefault: true,
 });
 
 export default db;

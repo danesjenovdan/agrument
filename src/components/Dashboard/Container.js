@@ -6,6 +6,7 @@ import PinnedMessages from './PinnedMessages';
 import PendingSubmissions from './PendingSubmissions';
 import VotableSubmissions from './VotableSubmissions';
 import Spinner from '../Spinner';
+import AssignNewAgrument from './AssignNewAgrument';
 
 class Container extends React.Component {
   constructor() {
@@ -38,6 +39,9 @@ class Container extends React.Component {
       <div className="container dash__container">
         <Navbar username={this.state.user.name} />
         <PinnedMessages />
+        {this.state.user.group === 'admin' ? (
+          <AssignNewAgrument />
+        ) : null}
         <div className="row">
           <div className="col-lg-6">
             <PendingSubmissions />
