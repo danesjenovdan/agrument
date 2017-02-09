@@ -4,9 +4,9 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
 import Helmet from 'react-helmet';
-import routes from './routes';
+import routes from '../../routes';
 
-const markup = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8');
+const markup = fs.readFileSync(path.join(__dirname, '../../../dist/index.html'), 'utf8');
 
 module.exports = (req, res) => {
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -18,7 +18,7 @@ module.exports = (req, res) => {
       const reactString = renderToString(<RouterContext {...renderProps} />);
       const helmetData = Helmet.rewind();
       const htmlAttrString = helmetData.htmlAttributes.toString();
-      const headString = helmetData.title.toString() + helmetData.meta.toString() + helmetData.link.toString();
+      const headString = `${helmetData.title} ${helmetData.meta} ${helmetData.link}`;
       const html = markup
         .replace('<html>', `<html ${htmlAttrString}>`)
         .replace('<!-- helmet -->', headString)

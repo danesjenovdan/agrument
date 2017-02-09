@@ -1,5 +1,5 @@
-import db from './database';
-import { toDateTimestamp } from '../utils/date';
+import db from '../database';
+import { toDateTimestamp } from '../../utils/date';
 
 function getAgrument(req, res) {
   let query = db('posts')

@@ -1,32 +1,33 @@
+import express from 'express';
 import _ from 'lodash';
-import db from './database';
+import { requireLoggedIn, requireAdmin } from '../middleware/auth';
+import db from '../database';
 
-function getUserData(req, res) {
+const router = express.Router();
+
+// Require that the user is logged in for all requests on this router.
+router.use(requireLoggedIn);
+
+router.get('/user', (req, res) => {
   res.json(req.user);
-}
+});
 
-function getAllUsers(req, res) {
-  if (req.user.group === 'admin') {
-    db('users')
-      .select('id', 'name', 'group')
-      .then((data) => {
-        res.json({
-          users: data,
-        });
-      })
-      .catch((err) => {
-        res.status(500).json({
-          error: err.message,
-        });
+router.get('/users', requireAdmin, (req, res) => {
+  db('users')
+    .select('id', 'name', 'group')
+    .then((data) => {
+      res.json({
+        users: data,
       });
-  } else {
-    res.status(401).json({
-      error: 'Unauthorized',
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
     });
-  }
-}
+});
 
-function getPendingSubmissions(req, res) {
+router.get('/pending', (req, res) => {
   db('posts')
     .where('type', 'pending')
     .andWhere('author', req.user.id)
@@ -42,9 +43,9 @@ function getPendingSubmissions(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-function editPendingSubmission(req, res) {
+router.post('/pending/edit/:id', (req, res) => {
   // clone req.body and replace some props with undefined so they are ignored by db.update and we
   // can't for example change the id or author by mistake
   const data = _.assign({}, req.body, {
@@ -69,9 +70,9 @@ function editPendingSubmission(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-function addPendingSubmission(req, res) {
+router.post('/pending/add', (req, res) => {
   db('posts')
     .insert({
       date: Date.now(),
@@ -96,9 +97,9 @@ function addPendingSubmission(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-function submitPendingForVote(req, res) {
+router.post('/pending/submit/:id', (req, res) => {
   db('posts')
     .where('type', 'pending')
     .andWhere('author', req.user.id)
@@ -116,35 +117,9 @@ function submitPendingForVote(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-
-function publishVotableToPublic(req, res) {
-  if (req.user.group === 'admin') {
-    db('posts')
-      .where('type', 'votable')
-      .andWhere('id', req.params.id)
-      .update({
-        type: 'published',
-      })
-      .then(() => {
-        res.json({
-          success: 'Published!',
-        });
-      })
-      .catch((err) => {
-        res.status(500).json({
-          error: err.message,
-        });
-      });
-  } else {
-    res.status(401).json({
-      error: 'Unauthorized',
-    });
-  }
-}
-
-function getVotableSubmissions(req, res) {
+router.get('/votable', (req, res) => {
   db('posts')
     .where('type', 'votable')
     .orderBy('deadline', 'asc')
@@ -159,9 +134,28 @@ function getVotableSubmissions(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-function getPinnedMessages(req, res) {
+router.post('/votable/publish/:id', requireAdmin, (req, res) => {
+  db('posts')
+    .where('type', 'votable')
+    .andWhere('id', req.params.id)
+    .update({
+      type: 'published',
+    })
+    .then(() => {
+      res.json({
+        success: 'Published!',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.get('/pinned', (req, res) => {
   db('pinned')
     .orderBy('timestamp', 'desc')
     .leftOuterJoin('users', 'pinned.author', 'users.id')
@@ -176,9 +170,9 @@ function getPinnedMessages(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-function addPinnedMessage(req, res) {
+router.post('/pinned/add', (req, res) => {
   if (req.body && req.body.message) {
     db('pinned')
       .insert({
@@ -201,9 +195,9 @@ function addPinnedMessage(req, res) {
       error: 'Bad Request',
     });
   }
-}
+});
 
-function removePinnedMessage(req, res) {
+router.delete('/pinned/remove/:id', (req, res) => {
   let query;
   if (req.user.group === 'admin') {
     query = db('pinned')
@@ -227,18 +221,6 @@ function removePinnedMessage(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-export {
-  getUserData,
-  getAllUsers,
-  getPendingSubmissions,
-  editPendingSubmission,
-  addPendingSubmission,
-  submitPendingForVote,
-  publishVotableToPublic,
-  getVotableSubmissions,
-  getPinnedMessages,
-  addPinnedMessage,
-  removePinnedMessage,
-};
+export default router;

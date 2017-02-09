@@ -11,27 +11,18 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import password from 'password-hash-and-salt';
 import _ from 'lodash';
-import db from './api/database';
-import middleware from './middleware';
-import getAgrument from './api/agrument';
-import {
-  getUserData,
-  getAllUsers,
-  getPendingSubmissions,
-  submitPendingForVote,
-  editPendingSubmission,
-  addPendingSubmission,
-  getVotableSubmissions,
-  publishVotableToPublic,
-  getPinnedMessages,
-  addPinnedMessage,
-  removePinnedMessage,
-} from './api/dash';
-
+import db from './database';
+import appMiddleware from './middleware/app';
+import getAgrument from './routes/agrument';
+import dashRouter from './routes/dashboard';
 
 process.on('uncaughtException', (err) => {
   console.error(err);
   process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 });
 
 const KnexSessionStore = sessionKnex(session);
@@ -110,27 +101,6 @@ app.get('/api/logout',
 
 app.get('/api/agrument', getAgrument);
 
-const dashRouter = express.Router();
-dashRouter.use((req, res, next) => {
-  if (!req.user) {
-    res.status(401).json({
-      error: 'Unauthorized',
-    });
-  } else {
-    next();
-  }
-});
-dashRouter.get('/user', getUserData);
-dashRouter.get('/users', getAllUsers);
-dashRouter.get('/pending', getPendingSubmissions);
-dashRouter.post('/pending/edit/:id', editPendingSubmission);
-dashRouter.post('/pending/add', addPendingSubmission);
-dashRouter.post('/pending/submit/:id', submitPendingForVote);
-dashRouter.get('/votable', getVotableSubmissions);
-dashRouter.post('/votable/publish/:id', publishVotableToPublic);
-dashRouter.get('/pinned', getPinnedMessages);
-dashRouter.post('/pinned/add', addPinnedMessage);
-dashRouter.delete('/pinned/remove/:id', removePinnedMessage);
 app.use('/api/dash', dashRouter);
 
 app.get(['/api', '/api/*'], (req, res) => {
@@ -139,7 +109,7 @@ app.get(['/api', '/api/*'], (req, res) => {
   });
 });
 
-app.get('*', middleware);
+app.get('*', appMiddleware);
 
 const port = parseInt(process.env.PORT, 10) || 80;
 
