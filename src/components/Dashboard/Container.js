@@ -7,6 +7,7 @@ import PendingSubmissions from './PendingSubmissions';
 import VotableSubmissions from './VotableSubmissions';
 import Spinner from '../Spinner';
 import AssignNewAgrument from './AssignNewAgrument';
+import PendingList from './PendingList';
 
 class Container extends React.Component {
   constructor() {
@@ -40,7 +41,10 @@ class Container extends React.Component {
         <Navbar username={this.state.user.name} />
         <PinnedMessages />
         {this.state.user.group === 'admin' ? (
-          <AssignNewAgrument />
+          <div>
+            <AssignNewAgrument />
+            <PendingList />
+          </div>
         ) : null}
         <div className="row">
           <div className="col-lg-6">

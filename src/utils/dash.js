@@ -1,8 +1,10 @@
 import request from 'superagent';
 
 const GET_PENDING_URL = '/api/dash/pending';
+const LIST_ALL_PENDING_URL = '/api/dash/pending/list';
 const EDIT_PENDING_URL = '/api/dash/pending/edit';
 const ADD_PENDING_URL = '/api/dash/pending/add';
+const REMOVE_PENDING_URL = '/api/dash/pending/remove/';
 const SUBMIT_PENDING_FOR_VOTE_URL = '/api/dash/pending/submit';
 const GET_VOTABLE_URL = '/api/dash/votable';
 const PUBLISH_VOTABLE_TO_PUBLIC_URL = '/api/dash/votable/publish';
@@ -16,6 +18,10 @@ function getPending() {
   return request.get(GET_PENDING_URL);
 }
 
+function listAllPending() {
+  return request.get(LIST_ALL_PENDING_URL);
+}
+
 function editPending(id, data) {
   return request.post(`${EDIT_PENDING_URL}/${id}`)
     .send(data);
@@ -26,6 +32,10 @@ function addPending(userId) {
     .send({
       author: userId,
     });
+}
+
+function removePending(id) {
+  return request.del(`${REMOVE_PENDING_URL}/${id}`);
 }
 
 function submitPendingForVote(id) {
@@ -63,8 +73,10 @@ function getAllUsers() {
 
 export {
   getPending,
+  listAllPending,
   editPending,
   addPending,
+  removePending,
   submitPendingForVote,
   publishToPublic,
   getVotable,

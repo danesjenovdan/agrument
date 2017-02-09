@@ -83,21 +83,18 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.post('/api/login',
-  passport.authenticate('local'),
-  (req, res) => {
-    res.json({
-      login: 'ok',
-    });
+app.post('/api/login', passport.authenticate('local'), (req, res) => {
+  res.json({
+    login: 'ok',
   });
+});
 
-app.get('/api/logout',
-  (req, res) => {
-    req.logout();
-    res.json({
-      logout: 'ok',
-    });
+app.get('/api/logout', (req, res) => {
+  req.logout();
+  res.json({
+    logout: 'ok',
   });
+});
 
 app.get('/api/agrument', getAgrument);
 

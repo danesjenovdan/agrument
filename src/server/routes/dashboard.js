@@ -45,6 +45,24 @@ router.get('/pending', (req, res) => {
     });
 });
 
+router.get('/pending/list', requireAdmin, (req, res) => {
+  db('posts')
+    .whereIn('type', ['votable', 'pending'])
+    .orderBy('deadline', 'asc')
+    .leftOuterJoin('users', 'posts.author', 'users.id')
+    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.deadline', 'posts.type', 'users.name as author_name')
+    .then((data) => {
+      res.json({
+        pending: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
 router.post('/pending/edit/:id', (req, res) => {
   // clone req.body and replace some props with undefined so they are ignored by db.update and we
   // can't for example change the id or author by mistake
@@ -90,6 +108,23 @@ router.post('/pending/add', (req, res) => {
     .then(() => {
       res.json({
         success: 'Added submission!',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.delete('/pending/remove/:id', requireAdmin, (req, res) => {
+  db('posts')
+    .whereIn('type', ['votable', 'pending'])
+    .andWhere('id', req.params.id)
+    .del()
+    .then(() => {
+      res.json({
+        success: 'Removed submission message',
       });
     })
     .catch((err) => {
