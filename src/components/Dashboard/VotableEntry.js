@@ -1,49 +1,76 @@
 import React, { PropTypes } from 'react';
-import { browserHistory } from 'react-router';
-import { autobind } from 'core-decorators';
+import SubmissionPreview from './SubmissionPreview';
+import SubmissionEditor from './SubmissionEditor';
 import Button from '../FormControl/Button';
-import AgrumentEditSwitcher from './AgrumentEditSwitcher';
-import { publishToPublic } from '../../utils/dash';
 
-class VotableEntry extends React.Component {
-  constructor() {
-    super();
+import store from '../../store';
 
-    this.state = {
-      editorShown: false,
-    };
-  }
+function publishArticle(id) {
+  return () => {
+    store.trigger('votable:publish', id);
+  };
+}
 
-  @autobind
-  onEditorShowChange(value) {
-    this.setState({ editorShown: value });
-  }
+function showEditor(id) {
+  return () => {
+    store.trigger('editor:showeditor', id);
+  };
+}
 
-  @autobind
-  publishArticle() {
-    publishToPublic(this.props.data.id).end((err, res) => {
-      if (err || !res.body) {
-        console.log(err);
-      } else {
-        browserHistory.push('/');
-      }
-    });
-  }
+function discardChanges() {
+  store.trigger('editor:discardeditor');
+}
 
-  render() {
+function saveChanges(id) {
+  return () => {
+    store.trigger('votable:edit', id);
+  };
+}
+
+const VotableEntry = ({ entry, currentEditor }) => {
+  if (!currentEditor || currentEditor.id !== entry.id) {
     return (
-      <div className="component__entry component__entry--pending">
-        <AgrumentEditSwitcher data={this.props.data} onEditorShowChange={this.onEditorShowChange} />
-        {!this.state.editorShown ? (
-          <Button block value="Objavi" onClickFunc={this.publishArticle} />
-        ) : null}
+      <div className="component__entry component__entry--votable card__content clearfix">
+        <div className="row entry__content">
+          <div className="col-xs-12">
+            <SubmissionPreview entry={entry} />
+          </div>
+        </div>
+        <div className="row entry__buttons">
+          <div className="col-xs-6">
+            <Button block disabled={entry.disabled || !!currentEditor} value="Uredi" onClickFunc={showEditor(entry.id)} />
+          </div>
+          <div className="col-xs-6">
+            <Button block disabled={entry.disabled} value="Objavi" onClickFunc={publishArticle(entry.id)} />
+          </div>
+        </div>
       </div>
     );
   }
-}
+  return (
+    <div className="component__entry component__entry--votable card__content clearfix">
+      <div className="row entry__content">
+        <SubmissionEditor entry={entry} />
+      </div>
+      <div className="row entry__buttons">
+        <div className="col-xs-6">
+          <Button block value="Prekliči" disabled={entry.disabled} onClickFunc={discardChanges} />
+        </div>
+        <div className="col-xs-6">
+          <Button block value="Shrani" disabled={entry.disabled} onClickFunc={saveChanges(entry.id)} />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 VotableEntry.propTypes = {
-  data: PropTypes.shape().isRequired,
+  entry: PropTypes.shape().isRequired,
+  currentEditor: PropTypes.shape(),
+};
+
+VotableEntry.defaultProps = {
+  currentEditor: null,
 };
 
 export default VotableEntry;

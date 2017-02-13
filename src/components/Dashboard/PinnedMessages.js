@@ -1,71 +1,54 @@
-import React from 'react';
-import { autobind } from 'core-decorators';
+import React, { PropTypes } from 'react';
 import CardHeading from '../../components/Card/Heading';
-import PinnedMessage from './PinnedMessage';
-import { getPinned } from '../../utils/dash';
+import PinnedMessage, { PinnedNotice } from './PinnedMessage';
 import PinnedMessageAdd from './PinnedMessageAdd';
 
-class PinnedMessages extends React.Component {
-  constructor() {
-    super();
+import store from '../../store';
 
-    this.state = {
-      loading: true,
-      data: [],
-      error: false,
-    };
-  }
-
+class PinnedMessages extends React.PureComponent {
   componentDidMount() {
-    this.dataRequest = getPinned().end(this.updatePinnedMessages);
-  }
-
-  componentWillUnmount() {
-    if (this.dataRequest) {
-      this.dataRequest.abort();
-    }
-  }
-
-  @autobind
-  onChanged() {
-    this.dataRequest = getPinned().end(this.updatePinnedMessages);
-  }
-
-  @autobind
-  updatePinnedMessages(err, res) {
-    this.setState({ loading: false });
-    this.dataRequest = null;
-
-    if (err) {
-      console.error(err);
-      this.setState({ error: true });
-    } else if (res.body && res.body.pinned && res.body.pinned.length) {
-      this.setState({ data: res.body.pinned });
-    }
+    store.trigger('pinned:fetch');
   }
 
   render() {
-    let content;
-    if (this.state.loading) {
-      content = <div>Nalaganje...</div>;
-    } else if (this.state.error) {
-      content = <div>Napaka :(</div>;
-    } else if (this.state.data.length) {
-      content = this.state.data
-        .map(p => <PinnedMessage key={p.id} data={p} onChanged={this.onChanged} />);
-    } else {
-      content = <div>Ni sporočil.</div>;
+    const { pinned, user } = this.props;
+
+    let content = null;
+    if (pinned.isLoading && !pinned.data) {
+      content = (
+        <div className="component__horizontal-scroll-container">
+          <PinnedNotice title="Nalaganje ..." />
+        </div>
+      );
+    } else if (pinned.data) {
+      content = (
+        <div className="component__horizontal-scroll-container">
+          <PinnedMessageAdd newMessage={pinned.newMessage} />
+          {pinned.data.length
+            ? pinned.data.map(message => (
+              <PinnedMessage key={message.id} message={message} user={user} />
+            ))
+            : <PinnedNotice title="Ni sporočil."><p>Napiši nekaj novega :)</p></PinnedNotice>
+          }
+        </div>
+      );
     }
     return (
       <div>
         <CardHeading title="Napovedane teme in čvek" />
-        <div className="component__horizontal-scroll-container">
-          <PinnedMessageAdd onChanged={this.onChanged} />
-          {content}
-        </div>
+        {content}
       </div>
     );
   }
 }
+
+PinnedMessages.propTypes = {
+  pinned: PropTypes.shape().isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    group: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default PinnedMessages;

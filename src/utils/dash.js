@@ -1,88 +1,90 @@
 import request from 'superagent';
 
-const GET_PENDING_URL = '/api/dash/pending';
-const LIST_ALL_PENDING_URL = '/api/dash/pending/list';
-const EDIT_PENDING_URL = '/api/dash/pending/edit';
-const ADD_PENDING_URL = '/api/dash/pending/add';
-const REMOVE_PENDING_URL = '/api/dash/pending/remove/';
-const SUBMIT_PENDING_FOR_VOTE_URL = '/api/dash/pending/submit';
-const GET_VOTABLE_URL = '/api/dash/votable';
-const PUBLISH_VOTABLE_TO_PUBLIC_URL = '/api/dash/votable/publish';
-const GET_PINNED_URL = '/api/dash/pinned';
-const REMOVE_PINNED_URL = '/api/dash/pinned/remove';
-const ADD_PINNED_URL = '/api/dash/pinned/add';
-const USER_URL = '/api/dash/user';
-const USERS_URL = '/api/dash/users';
+const API_DASH = '/api/dash';
 
-function getPending() {
-  return request.get(GET_PENDING_URL);
+const GET_USER = `${API_DASH}/user`;
+const GET_USERS = `${API_DASH}/users`;
+const GET_SUBMISSIONS = `${API_DASH}/submissions`;
+const POST_ADD_SUBMISSION = `${API_DASH}/submissions/add`;
+const DELETE_REMOVE_SUBMISSION = `${API_DASH}/submissions/remove/:id`;
+const POST_EDIT_SUBMISSION = `${API_DASH}/submissions/edit/:id`;
+const GET_PENDING = `${API_DASH}/pending/`;
+const POST_SUBMIT_PENDING = `${API_DASH}/pending/submit/:id`;
+const GET_VOTABLE = `${API_DASH}/votable`;
+const POST_PUBLISH_VOTABLE = `${API_DASH}/votable/publish/:id`;
+const GET_PINNED = `${API_DASH}/pinned`;
+const POST_ADD_PINNED = `${API_DASH}/pinned/add`;
+const DELETE_REMOVE_PINNED = `${API_DASH}/pinned/remove/:id`;
+
+function getUser() {
+  return request.get(GET_USER);
 }
 
-function listAllPending() {
-  return request.get(LIST_ALL_PENDING_URL);
+function getUsers() {
+  return request.get(GET_USERS);
 }
 
-function editPending(id, data) {
-  return request.post(`${EDIT_PENDING_URL}/${id}`)
-    .send(data);
+function getSubmissions() {
+  return request.get(GET_SUBMISSIONS);
 }
 
-function addPending(userId) {
-  return request.post(ADD_PENDING_URL)
+function addSubmission(userId) {
+  return request.post(POST_ADD_SUBMISSION)
     .send({
       author: userId,
     });
 }
 
-function removePending(id) {
-  return request.del(`${REMOVE_PENDING_URL}/${id}`);
+function removeSubmission(id) {
+  return request.del(DELETE_REMOVE_SUBMISSION.replace(':id', id));
 }
 
-function submitPendingForVote(id) {
-  return request.post(`${SUBMIT_PENDING_FOR_VOTE_URL}/${id}`);
+function editSubmission(id, data) {
+  return request.post(POST_EDIT_SUBMISSION.replace(':id', id))
+    .send(data);
 }
 
-function publishToPublic(id) {
-  return request.post(`${PUBLISH_VOTABLE_TO_PUBLIC_URL}/${id}`);
+function getPending() {
+  return request.get(GET_PENDING);
+}
+
+function submitPending(id) {
+  return request.post(POST_SUBMIT_PENDING.replace(':id', id));
 }
 
 function getVotable() {
-  return request.get(GET_VOTABLE_URL);
+  return request.get(GET_VOTABLE);
+}
+
+function publishVotable(id) {
+  return request.post(POST_PUBLISH_VOTABLE.replace(':id', id));
 }
 
 function getPinned() {
-  return request.get(GET_PINNED_URL);
-}
-
-function removePinned(id) {
-  return request.del(`${REMOVE_PINNED_URL}/${id}`);
+  return request.get(GET_PINNED);
 }
 
 function addPinned(message) {
-  return request.post(ADD_PINNED_URL)
+  return request.post(POST_ADD_PINNED)
     .send({ message });
 }
 
-function getUser() {
-  return request.get(USER_URL);
-}
-
-function getAllUsers() {
-  return request.get(USERS_URL);
+function removePinned(id) {
+  return request.del(DELETE_REMOVE_PINNED.replace(':id', id));
 }
 
 export {
-  getPending,
-  listAllPending,
-  editPending,
-  addPending,
-  removePending,
-  submitPendingForVote,
-  publishToPublic,
-  getVotable,
-  getPinned,
-  removePinned,
-  addPinned,
   getUser,
-  getAllUsers,
+  getUsers,
+  getSubmissions,
+  addSubmission,
+  removeSubmission,
+  editSubmission,
+  getPending,
+  submitPending,
+  getVotable,
+  publishVotable,
+  getPinned,
+  addPinned,
+  removePinned,
 };

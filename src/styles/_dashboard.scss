@@ -1,10 +1,4 @@
 .dash__container {
-  .component__agrument-editor,
-  .component__agrument-preview {
-    padding: 25px;
-    background-color: #fff;
-  }
-
   .navbar {
     margin-top: 20px;
     border: 0;
@@ -87,5 +81,9 @@
 
   .component__entry {
     margin-bottom: 35px;
+  }
+
+  hr {
+    border-top-color: $agrument-darkteal;
   }
 }

@@ -1,62 +1,51 @@
-import React from 'react';
-import { browserHistory } from 'react-router';
+import React, { PropTypes } from 'react';
 import Navbar from './Navbar';
-import { getUser } from '../../utils/dash';
 import PinnedMessages from './PinnedMessages';
 import PendingSubmissions from './PendingSubmissions';
 import VotableSubmissions from './VotableSubmissions';
 import Spinner from '../Spinner';
-import AssignNewAgrument from './AssignNewAgrument';
-import PendingList from './PendingList';
+import AdminPanel from './AdminPanel';
+
+import store from '../../store';
 
 class Container extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      user: null,
-    };
-  }
-
   componentDidMount() {
-    getUser().end((err, res) => {
-      if (err || !res.ok) {
-        browserHistory.replace('/login');
-      } else {
-        this.setState({ user: res.body });
-      }
-    });
+    store.trigger('user:fetch');
   }
 
   render() {
-    if (!this.state.user) {
+    const { state } = this.props;
+    if (state.user.isLoading) {
       return (
         <div className="container dash__container">
           <Spinner />
         </div>
       );
-    }
-    return (
-      <div className="container dash__container">
-        <Navbar username={this.state.user.name} />
-        <PinnedMessages />
-        {this.state.user.group === 'admin' ? (
-          <div>
-            <AssignNewAgrument />
-            <PendingList />
-          </div>
-        ) : null}
-        <div className="row">
-          <div className="col-lg-6">
-            <PendingSubmissions />
-          </div>
-          <div className="col-lg-6">
-            <VotableSubmissions />
+    } else if (state.user.data) {
+      return (
+        <div className="container dash__container">
+          <Navbar username={state.user.data.name} />
+          <PinnedMessages pinned={state.pinned} user={state.user.data} />
+          {state.user.data.group === 'admin' && (
+            <AdminPanel state={state} />
+          )}
+          <div className="row">
+            <div className="col-lg-6">
+              <PendingSubmissions pending={state.pending} currentEditor={state.currentEditor} />
+            </div>
+            <div className="col-lg-6">
+              <VotableSubmissions votable={state.votable} currentEditor={state.currentEditor} />
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
+    return <div />;
   }
 }
+
+Container.propTypes = {
+  state: PropTypes.shape().isRequired,
+};
 
 export default Container;

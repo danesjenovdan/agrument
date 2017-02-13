@@ -9,7 +9,9 @@ const router = express.Router();
 router.use(requireLoggedIn);
 
 router.get('/user', (req, res) => {
-  res.json(req.user);
+  res.json({
+    user: req.user,
+  });
 });
 
 router.get('/users', requireAdmin, (req, res) => {
@@ -27,25 +29,7 @@ router.get('/users', requireAdmin, (req, res) => {
     });
 });
 
-router.get('/pending', (req, res) => {
-  db('posts')
-    .where('type', 'pending')
-    .andWhere('author', req.user.id)
-    .orderBy('deadline', 'asc')
-    .select()
-    .then((data) => {
-      res.json({
-        pending: data,
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: err.message,
-      });
-    });
-});
-
-router.get('/pending/list', requireAdmin, (req, res) => {
+router.get('/submissions', requireAdmin, (req, res) => {
   db('posts')
     .whereIn('type', ['votable', 'pending'])
     .orderBy('deadline', 'asc')
@@ -53,7 +37,7 @@ router.get('/pending/list', requireAdmin, (req, res) => {
     .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.deadline', 'posts.type', 'users.name as author_name')
     .then((data) => {
       res.json({
-        pending: data,
+        submissions: data,
       });
     })
     .catch((err) => {
@@ -63,34 +47,7 @@ router.get('/pending/list', requireAdmin, (req, res) => {
     });
 });
 
-router.post('/pending/edit/:id', (req, res) => {
-  // clone req.body and replace some props with undefined so they are ignored by db.update and we
-  // can't for example change the id or author by mistake
-  const data = _.assign({}, req.body, {
-    id: undefined,
-    author: undefined,
-    deadline: undefined,
-    type: undefined,
-    date: undefined,
-  });
-
-  db('posts')
-    .whereIn('type', ['votable', 'pending'])
-    .andWhere('id', req.params.id)
-    .update(data)
-    .then(() => {
-      res.json({
-        success: 'Edited submission!',
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: err.message,
-      });
-    });
-});
-
-router.post('/pending/add', (req, res) => {
+router.post('/submissions/add', requireAdmin, (req, res) => {
   db('posts')
     .insert({
       date: Date.now(),
@@ -107,7 +64,7 @@ router.post('/pending/add', (req, res) => {
     })
     .then(() => {
       res.json({
-        success: 'Added submission!',
+        success: 'Added submission',
       });
     })
     .catch((err) => {
@@ -117,14 +74,70 @@ router.post('/pending/add', (req, res) => {
     });
 });
 
-router.delete('/pending/remove/:id', requireAdmin, (req, res) => {
+router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
   db('posts')
     .whereIn('type', ['votable', 'pending'])
     .andWhere('id', req.params.id)
     .del()
     .then(() => {
       res.json({
-        success: 'Removed submission message',
+        success: 'Removed submission',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.post('/submissions/edit/:id', (req, res) => {
+  // clone req.body and replace some props with undefined so they are ignored by db.update and we
+  // can't for example change the id or author by mistake
+  let disallowed;
+  if (req.user.group === 'admin') {
+    disallowed = {
+      id: undefined,
+      author: undefined,
+      type: undefined,
+    };
+  } else {
+    disallowed = {
+      id: undefined,
+      author: undefined,
+      type: undefined,
+      deadline: undefined,
+      date: undefined,
+    };
+  }
+  const data = _.assign({}, req.body, disallowed);
+
+  db('posts')
+    .whereIn('type', ['votable', 'pending'])
+    .andWhere('id', req.params.id)
+    .update(data)
+    .then(() => {
+      res.json({
+        success: 'Edited submission',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.get('/pending', (req, res) => {
+  db('posts')
+    .where('type', 'pending')
+    .andWhere('author', req.user.id)
+    .orderBy('deadline', 'asc')
+    .leftOuterJoin('users', 'posts.author', 'users.id')
+    .select('posts.*', 'users.name as author_name')
+    .then((data) => {
+      res.json({
+        pending: data,
       });
     })
     .catch((err) => {
@@ -144,7 +157,7 @@ router.post('/pending/submit/:id', (req, res) => {
     })
     .then(() => {
       res.json({
-        success: 'Submitted for vote!',
+        success: 'Submitted for vote',
       });
     })
     .catch((err) => {
@@ -158,7 +171,8 @@ router.get('/votable', (req, res) => {
   db('posts')
     .where('type', 'votable')
     .orderBy('deadline', 'asc')
-    .select()
+    .leftOuterJoin('users', 'posts.author', 'users.id')
+    .select('posts.*', 'users.name as author_name')
     .then((data) => {
       res.json({
         votable: data,
@@ -180,7 +194,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
     })
     .then(() => {
       res.json({
-        success: 'Published!',
+        success: 'Published',
       });
     })
     .catch((err) => {

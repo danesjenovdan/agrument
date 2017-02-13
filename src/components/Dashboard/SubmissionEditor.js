@@ -16,7 +16,7 @@ const rights = [
   { value: 'pet', label: 'Five' },
 ];
 
-class AgrumentEditor extends React.Component {
+class SubmissionEditor extends React.Component {
   constructor(props) {
     super(props);
 
@@ -150,7 +150,7 @@ class AgrumentEditor extends React.Component {
   }
 }
 
-AgrumentEditor.propTypes = {
+SubmissionEditor.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.number,
     deadline: PropTypes.number,
@@ -164,4 +164,4 @@ AgrumentEditor.propTypes = {
   }).isRequired,
 };
 
-export default AgrumentEditor;
+export default SubmissionEditor;

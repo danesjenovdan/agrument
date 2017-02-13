@@ -45,6 +45,7 @@
     "express-session": "^1.15.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.5",
     "file-loader": "^0.9.0",
+    "freezer-js": "^0.11.2",
     "html-webpack-plugin": "^2.26.0",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",

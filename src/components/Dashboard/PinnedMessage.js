@@ -1,61 +1,67 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
-import { autobind } from 'core-decorators';
-import TimeAgo from 'react-timeago';
-import sloStrings from 'react-timeago/lib/language-strings/sl';
-import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import { removePinned } from '../../utils/dash';
+import LocalizedTimeAgo from '../LocalizedTimeAgo';
 
-const slFormatter = buildFormatter(sloStrings);
+import store from '../../store';
 
-class Message extends React.Component {
-
-  componentWillUnmount() {
-    if (this.dataRequest) {
-      this.dataRequest.abort();
-    }
-  }
-
-  @autobind
-  onDelete(event) {
-    const button = event.target;
-    button.disabled = true;
-    this.dataRequest = removePinned(this.props.data.id).end((err, res) => {
-      this.dataRequest = null;
-      if (err || !res.ok) {
-        console.log(err);
-      }
-      this.props.onChanged();
-    });
-  }
-
-  render() {
-    return (
-      <div className="pinned__wrapper" id={this.props.data.id}>
-        <button className="btn btn-danger btn-xs pull-right pinned__remove" onClick={this.onDelete}>×</button>
-        <div className="pinned__content">
-          <small><TimeAgo formatter={slFormatter} date={this.props.data.timestamp} /></small>
-          <h4>{this.props.data.author_name ? this.props.data.author_name : `Neznan avtor #${this.props.data.author}`}</h4>
-          <p>{this.props.data.message}</p>
-        </div>
-      </div>
-    );
-  }
+function removeMessage(id) {
+  return () => {
+    store.trigger('pinned:remove', id);
+  };
 }
 
-Message.propTypes = {
-  data: PropTypes.shape({
+const PinnedMessage = ({ message, user }) => (
+  <div className="pinned__wrapper">
+    {(message.author === user.id || user.group === 'admin') && (
+      <button
+        disabled={message.disabled}
+        className="btn btn-danger btn-xs pull-right pinned__remove"
+        onClick={removeMessage(message.id)}
+      >×</button>
+    )}
+    <div className="pinned__content">
+      <small><LocalizedTimeAgo date={message.timestamp} /></small>
+      <h4>{message.author_name ? message.author_name : `Neznan avtor #${message.author}`}</h4>
+      <p>{message.message}</p>
+    </div>
+  </div>
+);
+
+PinnedMessage.propTypes = {
+  message: PropTypes.shape({
     id: PropTypes.number.isRequired,
     author: PropTypes.number.isRequired,
     timestamp: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
     author_name: PropTypes.string,
+    disabled: PropTypes.bool,
   }).isRequired,
-  onChanged: PropTypes.func,
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    group: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
-Message.defaultProps = {
-  onChanged: _.noop,
+export default PinnedMessage;
+
+const PinnedNotice = ({ title, children }) => (
+  <div className="pinned__wrapper">
+    <div className="pinned__content">
+      <h4>{title}</h4>
+      {children}
+    </div>
+  </div>
+);
+
+PinnedNotice.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node,
 };
 
-export default Message;
+PinnedNotice.defaultProps = {
+  children: null,
+};
+
+export {
+  PinnedNotice,
+};

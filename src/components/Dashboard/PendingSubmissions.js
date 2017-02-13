@@ -1,53 +1,44 @@
-import React from 'react';
-import { autobind } from 'core-decorators';
+import React, { PropTypes } from 'react';
 import TriangleHeading from '../Card/TriangleHeading';
 import PendingEntry from './PendingEntry';
-import { getPending } from '../../utils/dash';
 
-class Pending extends React.Component {
-  constructor() {
-    super();
+import store from '../../store';
 
-    this.state = {
-      error: false,
-      pending: null,
-    };
-  }
-
+class PendingSubmissions extends React.PureComponent {
   componentDidMount() {
-    this.dataRequest = getPending().end(this.setPendingState);
-  }
-
-  componentWillUnmount() {
-    if (this.dataRequest) {
-      this.dataRequest.abort();
-    }
-  }
-
-  @autobind
-  setPendingState(err, res) {
-    this.dataRequest = null;
-
-    if (err || !res.body) {
-      console.error(err);
-      this.setState({ error: true });
-    } else if (!res.body.pending || !res.body.pending.length) {
-      console.error('No pending!');
-    } else {
-      this.setState({ pending: res.body.pending });
-    }
+    store.trigger('pending:fetch');
   }
 
   render() {
+    const { pending, currentEditor } = this.props;
+
+    let content = null;
+    if (pending.isLoading && !pending.data) {
+      content = <div>Nalaganje ...</div>;
+    } else if (pending.data) {
+      content = pending.data.map(entry => (
+        <PendingEntry key={entry.id} entry={entry} currentEditor={currentEditor} />
+      ));
+    }
     return (
       <div>
         <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
-        {this.state.pending ? (
-          this.state.pending.map(post => <PendingEntry key={post.id} data={post} />)
-        ) : null}
+        {content}
       </div>
     );
   }
 }
 
-export default Pending;
+PendingSubmissions.propTypes = {
+  pending: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    data: PropTypes.arrayOf(PropTypes.shape()),
+  }).isRequired,
+  currentEditor: PropTypes.shape(),
+};
+
+PendingSubmissions.defaultProps = {
+  currentEditor: null,
+};
+
+export default PendingSubmissions;

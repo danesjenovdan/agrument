@@ -1,89 +1,58 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
-import { autobind } from 'core-decorators';
-import { addPinned } from '../../utils/dash';
+import { PinnedNotice } from './PinnedMessage';
 
-class MessageAdd extends React.Component {
-  constructor() {
-    super();
+import store from '../../store';
 
-    this.state = {
-      loading: false,
-      error: false,
-      textareaShown: false,
-    };
-  }
-
-  componentWillUnmount() {
-    if (this.dataRequest) {
-      this.dataRequest.abort();
-    }
-  }
-
-  @autobind
-  onShowTextarea() {
-    if (!this.textarea) {
-      this.setState({ textareaShown: true });
-    }
-  }
-
-  @autobind
-  onAdd() {
-    this.setState({ loading: true });
-    this.dataRequest = addPinned(this.textarea.value).end((err, res) => {
-      this.setState({ loading: false });
-      this.dataRequest = null;
-      if (err || !res.ok) {
-        console.log(err);
-        this.setState({ error: true });
-      } else {
-        this.props.onChanged();
-        this.setState({ textareaShown: false });
-      }
-    });
-  }
-
-  @autobind
-  resetState() {
-    this.setState({ loading: false, error: false, textareaShown: true });
-    this.dataRequest = null;
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
-        <div className="pinned__wrapper">
-          <div className="pinned__content">
-            <div>Napaka :(</div>
-            <button className="btn btn-success btn-xs" onClick={this.resetState}>poskusi ponovno</button>
-          </div>
-        </div>
-      );
-    }
-    if (!this.state.textareaShown) {
-      return (
-        <button className="btn btn-default btn-xs pinned__show-textarea" onClick={this.onShowTextarea}>
-          <span>novo sporočilo</span>
-        </button>
-      );
-    }
-    return (
-      <div className="pinned__wrapper">
-        <div className="pinned__content">
-          <textarea ref={(e) => { this.textarea = e; }} />
-          <button className="btn btn-success btn-xs" disabled={this.state.loading} onClick={this.onAdd}>Potrdi</button>
-        </div>
-      </div>
-    );
-  }
+function showInput() {
+  store.trigger('pinned:showinput');
 }
 
-MessageAdd.propTypes = {
-  onChanged: PropTypes.func,
+function resetInput() {
+  store.trigger('pinned:resetinput');
+}
+
+function onInputChange(event) {
+  store.trigger('pinned:updatemessage', event.target.value);
+}
+
+function addMessage() {
+  store.trigger('pinned:add');
+}
+
+const PinnedMessageAdd = ({ newMessage }) => {
+  if (!newMessage.showInput) {
+    return (
+      <button className="btn btn-default btn-xs pinned__show-input" onClick={showInput}>
+        <span>novo sporočilo</span>
+      </button>
+    );
+  }
+  if (newMessage.error) {
+    return (
+      <PinnedNotice title="Napaka">
+        <button className="btn btn-default btn-xs" onClick={resetInput}>Poskusi ponovno</button>
+      </PinnedNotice>
+    );
+  }
+  return (
+    <PinnedNotice title="Novo sporočilo">
+      <textarea value={newMessage.message} onChange={onInputChange} />
+      <button
+        className="btn btn-success btn-xs"
+        disabled={newMessage.isLoading}
+        onClick={addMessage}
+      >Potrdi</button>
+    </PinnedNotice>
+  );
 };
 
-MessageAdd.defaultProps = {
-  onChanged: _.noop,
+PinnedMessageAdd.propTypes = {
+  newMessage: PropTypes.shape({
+    showInput: PropTypes.bool.isRequired,
+    message: PropTypes.string.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    error: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
-export default MessageAdd;
+export default PinnedMessageAdd;

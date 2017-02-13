@@ -44,3 +44,21 @@ html, body {
   backface-visibility: hidden;
   perspective: 1000px;
 }
+
+/* spin */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+.glyphicon-spin {
+  animation: spin 1000ms infinite linear;
+}
+
+.img-fullwidth {
+  width: 100%;
+}

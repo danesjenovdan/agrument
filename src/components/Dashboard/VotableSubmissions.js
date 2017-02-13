@@ -1,53 +1,44 @@
-import React from 'react';
-import { autobind } from 'core-decorators';
+import React, { PropTypes } from 'react';
 import TriangleHeading from '../Card/TriangleHeading';
 import VotableEntry from './VotableEntry';
-import { getVotable } from '../../utils/dash';
 
-class Votable extends React.Component {
-  constructor() {
-    super();
+import store from '../../store';
 
-    this.state = {
-      error: false,
-      votable: null,
-    };
-  }
-
+class VotableSubmissions extends React.PureComponent {
   componentDidMount() {
-    this.dataRequest = getVotable().end(this.setVotableState);
-  }
-
-  componentWillUnmount() {
-    if (this.dataRequest) {
-      this.dataRequest.abort();
-    }
-  }
-
-  @autobind
-  setVotableState(err, res) {
-    this.dataRequest = null;
-
-    if (err || !res.body) {
-      console.error(err);
-      this.setState({ error: true });
-    } else if (!res.body.votable || !res.body.votable.length) {
-      console.error('No votables!');
-    } else {
-      this.setState({ votable: res.body.votable });
-    }
+    store.trigger('votable:fetch');
   }
 
   render() {
+    const { votable, currentEditor } = this.props;
+
+    let content = null;
+    if (votable.isLoading && !votable.data) {
+      content = <div>Nalaganje ...</div>;
+    } else if (votable.data) {
+      content = votable.data.map(entry => (
+        <VotableEntry key={entry.id} entry={entry} currentEditor={currentEditor} />
+      ));
+    }
     return (
       <div>
         <TriangleHeading title="Agrumenti, za katere lahko glasuješ" />
-        {this.state.votable ? (
-          this.state.votable.map(post => <VotableEntry key={post.id} data={post} />)
-        ) : null}
+        {content}
       </div>
     );
   }
 }
 
-export default Votable;
+VotableSubmissions.propTypes = {
+  votable: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    data: PropTypes.arrayOf(PropTypes.shape()),
+  }).isRequired,
+  currentEditor: PropTypes.shape(),
+};
+
+VotableSubmissions.defaultProps = {
+  currentEditor: null,
+};
+
+export default VotableSubmissions;
