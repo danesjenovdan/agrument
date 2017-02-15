@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { parseDate, toSloDateString } from '../../utils/date';
+import { parseDate, toISODateString } from '../../utils/date';
 
 import store from '../../store';
 
@@ -9,8 +9,8 @@ function changeSelectedUser(event) {
 
 function changeDeadline(event) {
   const date = parseDate(event.target.value, false);
-  console.log(date);
   if (date) {
+    console.log(date);
     store.trigger('newsubmission:changedeadline', date.getTime());
   }
 }
@@ -29,8 +29,9 @@ const AssignNewAgrument = ({ users, newArticle }) => (
     </select>
     Deadline:
     <input
+      type="date"
       className="form-control"
-      defaultValue={toSloDateString(newArticle.deadline)}
+      value={toISODateString(newArticle.deadline)}
       onChange={changeDeadline}
     />
     <button
