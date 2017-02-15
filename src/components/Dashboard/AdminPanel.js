@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import AssignNewSubmission from './AssignNewSubmission';
+import AddUser from './AddUser';
 import SubmissionsTable from './SubmissionsTable';
 
 import store from '../../store';
@@ -15,6 +16,10 @@ class AdminPanel extends React.PureComponent {
     return (
       <div className="component__admin-panel">
         <hr />
+        {state.users.data && (
+          <AddUser newUser={state.newUser} />
+        )}
+        <br />
         {state.users.data && (
           <AssignNewSubmission users={state.users.data} newArticle={state.newArticle} />
         )}

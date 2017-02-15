@@ -1,5 +1,6 @@
 import express from 'express';
 import _ from 'lodash';
+import randomstring from 'randomstring';
 import { requireLoggedIn, requireAdmin } from '../middleware/auth';
 import db from '../database';
 
@@ -16,6 +17,7 @@ router.get('/user', (req, res) => {
 
 router.get('/users', requireAdmin, (req, res) => {
   db('users')
+    .where('token', null)
     .select('id', 'name', 'group')
     .then((data) => {
       res.json({
@@ -27,6 +29,38 @@ router.get('/users', requireAdmin, (req, res) => {
         error: err.message,
       });
     });
+});
+
+router.post('/users/create', requireAdmin, (req, res) => {
+  db.transaction((trx) => {
+    const tempUsername = Date.now().toString(); // db needs a unique username
+    const uniqueToken = randomstring.generate(8);
+    return trx
+      .insert({
+        username: tempUsername,
+        name: '',
+        password: '',
+        token: uniqueToken,
+      })
+      .into('users')
+      .then((ids) => {
+        const id = ids[0];
+        return trx
+          .first('id', 'token')
+          .from('users')
+          .where('id', id);
+      });
+  })
+  .then((data) => {
+    res.json({
+      user: data,
+    });
+  })
+  .catch((err) => {
+    res.status(500).json({
+      error: err.message,
+    });
+  });
 });
 
 router.get('/submissions', requireAdmin, (req, res) => {

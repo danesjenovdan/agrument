@@ -9,7 +9,7 @@ import sessionKnex from 'connect-session-knex';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import password from 'password-hash-and-salt';
+import passwordHashAndSalt from 'password-hash-and-salt';
 import _ from 'lodash';
 import db from './database';
 import appMiddleware from './middleware/app';
@@ -39,7 +39,7 @@ passport.use(new LocalStrategy((username, pass, done) => {
     .first()
     .then((user) => {
       if (user) {
-        password(pass).verifyAgainst(user.password, (error, verified) => {
+        passwordHashAndSalt(pass).verifyAgainst(user.password, (error, verified) => {
           if (error) {
             throw new Error(error);
           }
@@ -94,6 +94,65 @@ app.get('/api/logout', (req, res) => {
   res.json({
     logout: 'ok',
   });
+});
+
+function validateUsername(username) {
+  const alphanum = /^[a-z0-9]+$/i;
+  return alphanum.test(username);
+}
+
+function validateName(name) {
+  return name && name.length > 0;
+}
+
+function validatePassword(password) {
+  return password && password.length > 8; // TODO: be more strict with these
+}
+
+function validateToken(token) {
+  return token && token.length === 8;
+}
+
+app.post('/api/register', (req, res) => {
+  const { id, token, name, username, password } = req.body;
+  const cleanName = name.replace(/\s\s+/g, ' ').trim();
+  // TODO: validate input on client so they know what went wrong
+  if (validateUsername(username) &&
+    validateName(cleanName) &&
+    validatePassword(password) &&
+    validateToken(token)) {
+    passwordHashAndSalt(password).hash((error, hash) => {
+      if (error) {
+        throw new Error(error);
+      }
+      db('users')
+        .where('id', id)
+        .andWhere('token', token)
+        .update({
+          token: null,
+          name,
+          username,
+          password: hash,
+        })
+        .then((rows) => {
+          if (rows !== 1) {
+            throw new Error('update should return 1 modified row only');
+          }
+          res.json({
+            success: 'Registered',
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            error: err.message,
+          });
+        });
+    });
+  } else {
+    res.status(400).json({
+      error: 'Bad Request',
+    });
+  }
 });
 
 app.get('/api/agrument', getAgrument);

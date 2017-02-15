@@ -19,6 +19,11 @@ const store = new Freezer({
     isLoading: false,
     data: null,
   },
+  newUser: {
+    isLoading: false,
+    id: 0,
+    token: null,
+  },
   newArticle: {
     isLoading: false,
     error: false,
@@ -39,6 +44,20 @@ const store = new Freezer({
   },
   currentEditor: null,
   currentEditorRTE: null,
+  forms: {
+    login: {
+      isLoading: false,
+      username: '',
+      password: '',
+    },
+    register: {
+      isLoading: false,
+      error: false,
+      name: '',
+      username: '',
+      password: '',
+    },
+  },
 });
 
 export default store;

@@ -4,6 +4,7 @@ const API_DASH = '/api/dash';
 
 const GET_USER = `${API_DASH}/user`;
 const GET_USERS = `${API_DASH}/users`;
+const POST_CREATE_USER = `${API_DASH}/users/create`;
 const GET_SUBMISSIONS = `${API_DASH}/submissions`;
 const POST_ADD_SUBMISSION = `${API_DASH}/submissions/add`;
 const DELETE_REMOVE_SUBMISSION = `${API_DASH}/submissions/remove/:id`;
@@ -22,6 +23,10 @@ function getUser() {
 
 function getUsers() {
   return request.get(GET_USERS);
+}
+
+function createUser() {
+  return request.post(POST_CREATE_USER);
 }
 
 function getSubmissions() {
@@ -78,6 +83,7 @@ function removePinned(id) {
 export {
   getUser,
   getUsers,
+  createUser,
   getSubmissions,
   addSubmission,
   removeSubmission,

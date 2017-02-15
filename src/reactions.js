@@ -1,5 +1,6 @@
 import { browserHistory } from 'react-router';
 import * as dash from './utils/dash';
+import * as login from './utils/login';
 
 function initReactions(store) {
   store.on('user:fetch', () => {
@@ -373,6 +374,56 @@ function initReactions(store) {
           }
         });
     }
+  });
+
+  store.on('newuser:create', () => {
+    store.get().newUser.set({ isLoading: true });
+
+    dash.createUser()
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().newUser.set({ isLoading: false });
+        } else {
+          store.get().newUser.set({
+            isLoading: false,
+            id: res.body.user.id,
+            token: res.body.user.token,
+          });
+        }
+      });
+  });
+
+  store.on('registerform:discard', () => {
+    store.get().forms.register.set({
+      isLoading: false,
+      error: null,
+      name: '',
+      username: '',
+      password: '',
+    });
+  });
+
+  store.on('registerform:update', (key, value) => {
+    store.get().forms.register.set({
+      [key]: value,
+    }).now();
+  });
+
+  store.on('registerform:submit', (id, token) => {
+    const register = store.get().forms.register.set({ isLoading: true });
+
+    login.register(id, token, register.name, register.username, register.password)
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().forms.register.set({
+            isLoading: false,
+            error: true,
+          });
+        } else {
+          store.trigger('registerform:discard');
+          browserHistory.push('/login');
+        }
+      });
   });
 }
 

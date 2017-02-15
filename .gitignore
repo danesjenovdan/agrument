@@ -2,3 +2,4 @@ node_modules
 /dist
 /dist_server
 npm-debug.log
+/.vscode

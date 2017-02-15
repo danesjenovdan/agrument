@@ -14,7 +14,15 @@ export default {
     {
       path: '/login',
       getComponent(location, cb) {
-        System.import('./Pages/Login')
+        System.import('./pages/Login')
+          .then(loadRoute(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
+      path: '/register',
+      getComponent(location, cb) {
+        System.import('./pages/Register')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
@@ -22,7 +30,7 @@ export default {
     {
       path: '/dash',
       getComponent(location, cb) {
-        System.import('./Pages/Dashboard')
+        System.import('./pages/Dashboard')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
@@ -30,7 +38,7 @@ export default {
     {
       path: '/(:date)', // available as: this.props.params['date']
       getComponent(location, cb) {
-        System.import('./Pages/Agrument')
+        System.import('./pages/Agrument')
           .then(loadRoute(cb))
           .catch(errorLoading);
       },
