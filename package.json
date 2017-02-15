@@ -13,7 +13,8 @@
     "build": "npm run build:client && npm run build:server",
     "serve": "node ./dist_server/server",
     "build-serve": "npm run build && npm run serve",
-    "api": "npm run build:server && cross-env PORT=8080 npm run serve"
+    "api": "npm run build:server && cross-env PORT=8080 npm run serve",
+    "lint": "eslint src"
   },
   "dependencies": {
     "babel-cli": "^6.23.0",
