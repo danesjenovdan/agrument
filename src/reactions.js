@@ -135,6 +135,10 @@ function initReactions(store) {
     store.get().newArticle.set({ selectedUser: id });
   });
 
+  store.on('newsubmission:changedeadline', (time) => {
+    store.get().newArticle.set({ deadline: time });
+  });
+
   store.on('newsubmission:create', () => {
     if (store.get().newArticle.isLoading) {
       return;
@@ -142,7 +146,7 @@ function initReactions(store) {
 
     store.get().newArticle.set({ isLoading: true });
 
-    dash.addSubmission(store.get().newArticle.selectedUser)
+    dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.deadline)
       .end((err, res) => {
         if (err || !res.ok) {
           store.get().newArticle.set({
@@ -246,15 +250,32 @@ function initReactions(store) {
   });
 
   store.on('editor:showeditor', (id) => {
-    const sub = store.get().pending.data.find(e => e.id === id);
-
+    let sub = store.get().pending.data.find(e => e.id === id);
+    if (!sub) {
+      sub = store.get().votable.data.find(e => e.id === id);
+    }
     if (sub) {
       store.get().set({ currentEditor: sub.toJS() });
     }
   });
 
   store.on('editor:discardeditor', () => {
-    store.get().set({ currentEditor: null });
+    store.get().set({
+      currentEditor: null,
+      currentEditorRTE: null,
+    });
+  });
+
+  store.on('editor:updateeditor', (key, value) => {
+    store.get().currentEditor.set({
+      [key]: value,
+    }).now();
+  });
+
+  store.on('editor:updateeditor-rte', (value) => {
+    store.get().set({
+      currentEditorRTE: value,
+    }).now();
   });
 
   store.on('pending:edit', (id) => {
@@ -264,7 +285,13 @@ function initReactions(store) {
     if (sub && editor && editor.id === id) {
       sub.set({ disabled: true });
 
-      dash.editSubmission(id, editor)
+      const newData = editor.toJS();
+      const editorRTE = store.get().currentEditorRTE;
+      if (editorRTE) {
+        newData.content = editorRTE;
+      }
+
+      dash.editSubmission(id, newData)
         .end((err, res) => {
           if (err || !res.ok) {
             // noop
@@ -300,17 +327,25 @@ function initReactions(store) {
     }
   });
 
-  store.on('votable:edit', (id, data) => {
+  store.on('votable:edit', (id) => {
     const sub = store.get().votable.data.find(e => e.id === id);
+    const editor = store.get().currentEditor;
 
-    if (sub) {
+    if (sub && editor && editor.id === id) {
       sub.set({ disabled: true });
 
-      dash.editSubmission(id, data)
+      const newData = editor.toJS();
+      const editorRTE = store.get().currentEditorRTE;
+      if (editorRTE) {
+        newData.content = editorRTE;
+      }
+
+      dash.editSubmission(id, newData)
         .end((err, res) => {
           if (err || !res.ok) {
             // noop
           } else {
+            store.trigger('editor:discardeditor');
             store.trigger('votable:fetch');
             if (store.get().submissions.data) {
               store.trigger('submissions:fetch');

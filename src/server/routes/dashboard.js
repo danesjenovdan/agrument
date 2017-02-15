@@ -50,7 +50,7 @@ router.get('/submissions', requireAdmin, (req, res) => {
 router.post('/submissions/add', requireAdmin, (req, res) => {
   db('posts')
     .insert({
-      date: Date.now(),
+      date: req.body.date,
       author: req.body.author,
       title: '',
       content: '',
@@ -58,7 +58,7 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
       imageURL: '',
       imageCaption: '',
       hasEmbed: 0,
-      deadline: Date.now(),
+      deadline: req.body.deadline,
       rights: '',
       type: 'pending',
     })
@@ -99,12 +99,14 @@ router.post('/submissions/edit/:id', (req, res) => {
     disallowed = {
       id: undefined,
       author: undefined,
+      author_name: undefined,
       type: undefined,
     };
   } else {
     disallowed = {
       id: undefined,
       author: undefined,
+      author_name: undefined,
       type: undefined,
       deadline: undefined,
       date: undefined,

@@ -50,7 +50,9 @@ const VotableEntry = ({ entry, currentEditor }) => {
   return (
     <div className="component__entry component__entry--votable card__content clearfix">
       <div className="row entry__content">
-        <SubmissionEditor entry={entry} />
+        <div className="col-xs-12">
+          <SubmissionEditor entry={currentEditor} />
+        </div>
       </div>
       <div className="row entry__buttons">
         <div className="col-xs-6">

@@ -23,6 +23,7 @@ const store = new Freezer({
     isLoading: false,
     error: false,
     selectedUser: null,
+    deadline: Date.now(),
   },
   submissions: {
     isLoading: false,
@@ -37,6 +38,7 @@ const store = new Freezer({
     data: null,
   },
   currentEditor: null,
+  currentEditorRTE: null,
 });
 
 export default store;

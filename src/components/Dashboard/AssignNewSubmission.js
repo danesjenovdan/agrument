@@ -1,9 +1,18 @@
 import React, { PropTypes } from 'react';
+import { parseDate, toSloDateString } from '../../utils/date';
 
 import store from '../../store';
 
 function changeSelectedUser(event) {
   store.trigger('newsubmission:changeuser', +event.target.value);
+}
+
+function changeDeadline(event) {
+  const date = parseDate(event.target.value, false);
+  console.log(date);
+  if (date) {
+    store.trigger('newsubmission:changedeadline', date.getTime());
+  }
 }
 
 function createSubmission() {
@@ -18,7 +27,17 @@ const AssignNewAgrument = ({ users, newArticle }) => (
         <option key={user.id} value={user.id}>{user.name} ({user.group})</option>
       ))}
     </select>
-    <button className="btn btn-default" disabled={newArticle.isLoading} onClick={createSubmission}>Ustvari</button>
+    Deadline:
+    <input
+      className="form-control"
+      defaultValue={toSloDateString(newArticle.deadline)}
+      onChange={changeDeadline}
+    />
+    <button
+      className="btn btn-default"
+      disabled={newArticle.isLoading}
+      onClick={createSubmission}
+    >Ustvari</button>
   </div>
 );
 
@@ -28,6 +47,7 @@ AssignNewAgrument.propTypes = {
     isLoading: false,
     error: false,
     selectedUser: null,
+    deadline: 0,
   }).isRequired,
 };
 

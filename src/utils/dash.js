@@ -28,10 +28,12 @@ function getSubmissions() {
   return request.get(GET_SUBMISSIONS);
 }
 
-function addSubmission(userId) {
+function addSubmission(userId, deadline) {
   return request.post(POST_ADD_SUBMISSION)
     .send({
       author: userId,
+      deadline,
+      date: deadline,
     });
 }
 

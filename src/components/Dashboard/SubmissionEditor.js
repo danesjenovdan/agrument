@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react';
 import Select from 'react-select';
-import { autobind } from 'core-decorators';
 import _ from 'lodash';
-import RichTextEditor from '../RichTextEditor';
+import { autobind } from 'core-decorators';
+import SimpleRichTextEditor from '../SimpleRichTextEditor';
+import { toSloDateString } from '../../utils/date';
+import TimeAgo from '../LocalizedTimeAgo';
 import Checkbox from '../FormControl/Checkbox';
 import ImageEdit from './ImageEdit';
-import LocalizedTimeAgo from '../LocalizedTimeAgo';
-import { editPending } from '../../utils/dash';
+
+import store from '../../store';
 
 const rights = [
   { value: 'ena', label: 'One' },
@@ -16,151 +18,159 @@ const rights = [
   { value: 'pet', label: 'Five' },
 ];
 
-class SubmissionEditor extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      content: RichTextEditor ? RichTextEditor.createValueFromString(props.data.content, 'html') : '',
-      data: props.data,
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ data: nextProps.data });
-  }
-
-  @autobind
-  onTitleChange(event) {
-    this.state.data.title = event.target.value;
-    this.setState({ data: this.state.data });
-  }
-
-  @autobind
-  onContentChange(value) {
-    this.setState({ content: value });
-  }
-
-  @autobind
-  onRightsChange(value) {
-    let rightsString = value;
-    if (_.isArray(rightsString)) {
-      rightsString = rightsString.map(e => e.value).join(',');
+function onValueChange(key) {
+  return (event) => {
+    let value = event;
+    if (event.target) {
+      value = event.target.type === 'checkbox' ? Number(event.target.checked) : event.target.value;
+    } else if (_.isArray(value)) {
+      value = value.map(e => e.value).join(',');
     }
-    this.state.data.rights = rightsString;
-    this.setState({ data: this.state.data });
-  }
+    store.trigger('editor:updateeditor', key, value);
+  };
+}
 
+class SubmissionEditor extends React.Component {
   @autobind
-  onImageChange(value) {
-    this.state.data.image = value;
-    this.setState({ data: this.state.data });
-  }
-
-  @autobind
-  onHasEmbedChange(event) {
-    this.state.data.hasEmbed = event.target.checked;
-    this.setState({ data: this.state.data });
-  }
-
-  @autobind
-  onEmbedCodeChange(event) {
-    this.state.data.embedCode = event.target.value;
-    this.setState({ data: this.state.data });
-  }
-
-  @autobind
-  onSubmitAgrument(event) {
-    event.preventDefault();
-    this.save();
-  }
-
-  save(callback) {
-    const content = this.state.content.toString('html');
-    this.state.data.content = content;
-
-    const data = {
-      title: this.state.data.title,
-      content,
-      imageURL: this.state.data.image,
-      rights: this.state.data.rights,
-      hasEmbed: this.state.data.hasEmbed,
-      embedCode: this.state.data.embedCode,
-    };
-
-    editPending(this.state.data.id, data)
-      .end((err, res) => {
-        if (callback) {
-          callback(err, res);
-        }
-      });
+  onRTEChange(value) {
+    store.trigger('editor:updateeditor-rte', value);
+    this.content = value;
   }
 
   render() {
+    const { entry } = this.props;
     return (
-      <div className="component__agrument-editor">
-        <p className="lead">Deadline: <LocalizedTimeAgo date={this.state.data.deadline} /></p>
-        <form action="https://httpbin.org/get" onSubmit={this.onSubmitAgrument}>
-          <div className="form-group">
+      <article className="component__submission-editor">
+        <section className="row clearfix">
+          <div className="col-sm-6">
+            <div>
+              <strong>Deadline: </strong>
+              <span>
+                {toSloDateString(entry.deadline)} (<TimeAgo date={entry.deadline} />)
+          </span>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div>
+              <strong>Objava: </strong>
+              <span>
+                {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
+          </span>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div>
+              <strong>Avtor: </strong>
+              <span>
+                {entry.author_name || `Neznan avtor #${entry.author}`}
+              </span>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div>
+              <strong>Pravice: </strong>
+              <span>
+                <Select
+                  multi
+                  name="rights"
+                  value={entry.rights}
+                  options={rights}
+                  onChange={onValueChange('rights')}
+                  placeholder="Izberi eno ali dve pravici"
+                />
+              </span>
+            </div>
+          </div>
+        </section>
+        <hr />
+        <section>
+          <h3>
             <input
+              placeholder="Dodaj naslov"
+              value={entry.title}
+              onChange={onValueChange('title')}
               className="form-control"
-              name="title"
-              placeholder="Naslov agrumenta"
-              defaultValue={this.state.data.title}
-              onChange={this.onTitleChange}
+            />
+          </h3>
+          <div className="form-group">
+            <SimpleRichTextEditor
+              format="html"
+              value={this.content || entry.content}
+              onChange={this.onRTEChange}
             />
           </div>
-          <div className="form-group">
-            {RichTextEditor ? (
-              <RichTextEditor value={this.state.content} onChange={this.onContentChange} />
-            ) : null}
-          </div>
-          <div className="form-group">
-            <Select
-              multi
-              name="rights"
-              value={this.state.data.rights}
-              options={rights}
-              onChange={this.onRightsChange}
-              placeholder="Izberi eno ali dve pravici"
+        </section>
+        <hr />
+        <section>
+          <div>
+            <Checkbox
+              label="Uporabi posebni embed"
+              checked={!!entry.hasEmbed}
+              onChange={onValueChange('hasEmbed')}
             />
           </div>
-          {this.state.data.image ? (
-            <div className="form-group text-center">
-              <img src={this.state.data.image} alt="og" className="img-responsive img-thumbnail" />
-            </div>
-          ) : null}
-          <div className="form-group">
-            <div className="col-sm-6">
-              <ImageEdit onDone={this.onImageChange} />
-            </div>
-            <div className="col-sm-6">
-              <Checkbox label="Uporabi posebni embed" onChange={this.onHasEmbedChange} checked={!!this.state.data.hasEmbed} />
-            </div>
-            <div className="clearfix" />
+          {!!entry.hasEmbed && (
+            <textarea
+              placeholder="Prilepi embed kodo"
+              value={entry.embedCode || ''}
+              onChange={onValueChange('embedCode')}
+              className="form-control"
+            />
+          )}
+        </section>
+        <hr />
+        <section className="row clearfix">
+          <div className="col-sm-3">
+            <strong>og description: </strong>
           </div>
-          {this.state.data.hasEmbed ? (
-            <div className="form-group">
-              <textarea className="form-control" placeholder="Prilepi embed kodo" defaultValue={this.state.data.embedCode} onChange={this.onEmbedCodeChange} />
+          <div className="col-sm-9">
+            <input
+              value={entry.description}
+              onChange={onValueChange('description')}
+              className="form-control"
+            />
+          </div>
+          <div>
+            <div className="col-sm-3">
+              <strong>og image: </strong>
             </div>
-          ) : null}
-        </form>
-      </div>
+            <div className="col-sm-9">
+              <ImageEdit onDone={onValueChange('imageURL')} />
+            </div>
+          </div>
+          <div className="col-sm-3">
+            <strong>caption: </strong>
+          </div>
+          <div className="col-sm-9">
+            <input
+              value={entry.imageCaption}
+              onChange={onValueChange('imageCaption')}
+              className="form-control"
+            />
+          </div>
+        </section>
+      </article >
     );
   }
 }
 
 SubmissionEditor.propTypes = {
-  data: PropTypes.shape({
-    id: PropTypes.number,
-    deadline: PropTypes.number,
-    author: PropTypes.number,
-    title: PropTypes.string,
-    content: PropTypes.string,
-    image: PropTypes.string,
-    rights: PropTypes.string,
-    hasEmbed: PropTypes.number,
+  entry: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    date: PropTypes.number.isRequired,
+    author: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    imageURL: PropTypes.string.isRequired,
+    imageCaption: PropTypes.string.isRequired,
+    hasEmbed: PropTypes.number.isRequired,
     embedCode: PropTypes.string,
+    embedHeight: PropTypes.string,
+    deadline: PropTypes.number.isRequired,
+    rights: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    author_name: PropTypes.string,
   }).isRequired,
 };
 

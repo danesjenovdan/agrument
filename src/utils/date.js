@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-function parseDate(input) {
+function parseDate(input, defaultToNow = true) {
   let dateObj = null;
   if (_.isInteger(input)) {
     dateObj = new Date(input);
@@ -9,7 +9,7 @@ function parseDate(input) {
     const str = String(input);
     if (str.indexOf('.') !== -1) {
       const parts = str.split('.');
-      if (parts.length === 3) {
+      if (parts.length === 3 && parts[2].length === 4) {
         const day = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10);
         const year = parseInt(parts[2], 10);
@@ -19,7 +19,7 @@ function parseDate(input) {
       }
     } else if (str.indexOf('-') !== -1) {
       const parts = str.split('-');
-      if (parts.length === 3) {
+      if (parts.length === 3 && parts[0].length === 4) {
         const year = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10);
         const day = parseInt(parts[2], 10);
@@ -29,7 +29,7 @@ function parseDate(input) {
       }
     }
   }
-  if (!dateObj) {
+  if (!dateObj && defaultToNow) {
     dateObj = new Date();
     dateObj.setUTCHours(0, 0, 0, 0);
   }
@@ -53,6 +53,7 @@ function toDateTimestamp(date) {
 }
 
 export {
+  parseDate,
   toISODateString,
   toSloDateString,
   toDateTimestamp,
