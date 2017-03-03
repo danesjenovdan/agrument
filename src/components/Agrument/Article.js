@@ -53,9 +53,9 @@ class Article extends React.Component {
               <InputImmutable value={this.state.shortUrl || this.state.longUrl} />
             </div>
             <div className="agrument_social-buttons">
-              <PulseIconButton iconName="facebook" onClickFunc={() => shareOnFacebook(this.props.data.title, this.state.longUrl)} />
-              <PulseIconButton iconName="twitter" onClickFunc={() => shareOnTwitter(this.props.data.title, this.state.longUrl)} />
-              <PulseIconButton iconName="googleplus" onClickFunc={() => shareOnGooglePlus(this.props.data.title, this.state.longUrl)} />
+              <PulseIconButton iconName="facebook" onClick={() => shareOnFacebook(this.props.data.title, this.state.longUrl)} />
+              <PulseIconButton iconName="twitter" onClick={() => shareOnTwitter(this.props.data.title, this.state.longUrl)} />
+              <PulseIconButton iconName="googleplus" onClick={() => shareOnGooglePlus(this.props.data.title, this.state.longUrl)} />
             </div>
           </div>
           <div className="col-md-10">

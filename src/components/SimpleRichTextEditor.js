@@ -53,7 +53,7 @@ class SimpleRichTextEditor extends React.Component {
       // to parse anything unnecessarily.
       this._currentValue = [format, stringValue];
       if (onChange && stringValue !== this.props.value) {
-        onChange(stringValue);
+        onChange(stringValue, editorValue);
       }
     }
   }

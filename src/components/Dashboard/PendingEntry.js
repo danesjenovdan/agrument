@@ -38,10 +38,10 @@ const PendingEntry = ({ entry, currentEditor }) => {
         </div>
         <div className="row entry__buttons">
           <div className="col-xs-6">
-            <Button block disabled={entry.disabled || !!currentEditor} value="Uredi" onClickFunc={showEditor(entry.id)} />
+            <Button block disabled={entry.disabled || !!currentEditor} value="Uredi" onClick={showEditor(entry.id)} />
           </div>
           <div className="col-xs-6">
-            <Button block disabled={entry.disabled} value="Oddaj" onClickFunc={submitForVoting(entry.id)} />
+            <Button block disabled={entry.disabled} value="Oddaj" onClick={submitForVoting(entry.id)} />
           </div>
         </div>
       </div>
@@ -56,10 +56,10 @@ const PendingEntry = ({ entry, currentEditor }) => {
       </div>
       <div className="row entry__buttons">
         <div className="col-xs-6">
-          <Button block value="Prekliči" disabled={entry.disabled} onClickFunc={discardChanges} />
+          <Button block value="Prekliči" disabled={entry.disabled} onClick={discardChanges} />
         </div>
         <div className="col-xs-6">
-          <Button block value="Shrani" disabled={entry.disabled} onClickFunc={saveChanges(entry.id)} />
+          <Button block value="Shrani" disabled={entry.disabled} onClick={saveChanges(entry.id)} />
         </div>
       </div>
     </div>

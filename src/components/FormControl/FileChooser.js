@@ -32,7 +32,7 @@ class FileChooser extends React.Component {
     return (
       <div className={classes}>
         <input style={{ display: 'none' }} type="file" onChange={this.handleChange} ref={(input) => { this.input = input; }} />
-        <Button value={this.props.value} onClickFunc={this.onClick} />
+        <Button value={this.props.value} onClick={this.onClick} />
       </div>
     );
   }
@@ -40,8 +40,13 @@ class FileChooser extends React.Component {
 
 FileChooser.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.string,
+  value: PropTypes.string.isRequired,
   inline: PropTypes.bool,
+};
+
+FileChooser.defaultProps = {
+  onChange: () => { },
+  inline: false,
 };
 
 export default FileChooser;

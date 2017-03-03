@@ -5,6 +5,7 @@ import PendingSubmissions from './PendingSubmissions';
 import VotableSubmissions from './VotableSubmissions';
 import Spinner from '../Spinner';
 import AdminPanel from './AdminPanel';
+import Blurb from './Blurb';
 
 import store from '../../store';
 
@@ -25,6 +26,7 @@ class Container extends React.Component {
       return (
         <div className="container dash__container">
           <Navbar username={state.user.data.name} />
+          <Blurb />
           <PinnedMessages pinned={state.pinned} user={state.user.data} />
           {state.user.data.group === 'admin' && (
             <AdminPanel state={state} />
@@ -34,7 +36,11 @@ class Container extends React.Component {
               <PendingSubmissions pending={state.pending} currentEditor={state.currentEditor} />
             </div>
             <div className="col-lg-6">
-              <VotableSubmissions votable={state.votable} currentEditor={state.currentEditor} />
+              <VotableSubmissions
+                user={state.user.data}
+                votable={state.votable}
+                currentEditor={state.currentEditor}
+              />
             </div>
           </div>
         </div>

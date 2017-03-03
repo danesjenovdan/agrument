@@ -27,7 +27,7 @@ function saveChanges(id) {
   };
 }
 
-const VotableEntry = ({ entry, currentEditor }) => {
+const VotableEntry = ({ entry, currentEditor, user }) => {
   if (!currentEditor || currentEditor.id !== entry.id) {
     return (
       <div className="component__entry component__entry--votable card__content clearfix">
@@ -38,10 +38,12 @@ const VotableEntry = ({ entry, currentEditor }) => {
         </div>
         <div className="row entry__buttons">
           <div className="col-xs-6">
-            <Button block disabled={entry.disabled || !!currentEditor} value="Uredi" onClickFunc={showEditor(entry.id)} />
+            <Button block disabled={entry.disabled || !!currentEditor} value="Uredi" onClick={showEditor(entry.id)} />
           </div>
           <div className="col-xs-6">
-            <Button block disabled={entry.disabled} value="Objavi" onClickFunc={publishArticle(entry.id)} />
+            {user.group === 'admin' &&
+              <Button block disabled={entry.disabled} value="Objavi" onClick={publishArticle(entry.id)} />
+            }
           </div>
         </div>
       </div>
@@ -56,10 +58,10 @@ const VotableEntry = ({ entry, currentEditor }) => {
       </div>
       <div className="row entry__buttons">
         <div className="col-xs-6">
-          <Button block value="Prekliči" disabled={entry.disabled} onClickFunc={discardChanges} />
+          <Button block value="Prekliči" disabled={entry.disabled} onClick={discardChanges} />
         </div>
         <div className="col-xs-6">
-          <Button block value="Shrani" disabled={entry.disabled} onClickFunc={saveChanges(entry.id)} />
+          <Button block value="Shrani" disabled={entry.disabled} onClick={saveChanges(entry.id)} />
         </div>
       </div>
     </div>
@@ -69,6 +71,11 @@ const VotableEntry = ({ entry, currentEditor }) => {
 VotableEntry.propTypes = {
   entry: PropTypes.shape().isRequired,
   currentEditor: PropTypes.shape(),
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    group: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 VotableEntry.defaultProps = {

@@ -2,21 +2,16 @@ import React, { PropTypes } from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
 import { autobind } from 'core-decorators';
+import { withRouter } from 'react-router';
 import SimpleRichTextEditor from '../SimpleRichTextEditor';
 import { toSloDateString } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
 import Checkbox from '../FormControl/Checkbox';
 import ImageEdit from './ImageEdit';
+import { rights } from '../../utils/rights';
+import stateToText from '../../utils/draft-js-export-text';
 
 import store from '../../store';
-
-const rights = [
-  { value: 'ena', label: 'One' },
-  { value: 'dve', label: 'Two' },
-  { value: 'tri', label: 'Three' },
-  { value: 'stiri', label: 'Four' },
-  { value: 'pet', label: 'Five' },
-];
 
 function onValueChange(key) {
   return (event) => {
@@ -30,9 +25,22 @@ function onValueChange(key) {
   };
 }
 
+function onBeforeUnload(event) {
+  event.returnValue = 'Changes you made may not be saved.'; // eslint-disable-line no-param-reassign
+}
+
 class SubmissionEditor extends React.Component {
+  componentDidMount() {
+    window.addEventListener('beforeunload', onBeforeUnload);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', onBeforeUnload);
+  }
+
   @autobind
-  onRTEChange(value) {
+  onRTEChange(value, editorValue) {
+    // console.log(stateToText(editorValue.getEditorState().getCurrentContent()));
     store.trigger('editor:updateeditor-rte', value);
     this.content = value;
   }
@@ -52,14 +60,6 @@ class SubmissionEditor extends React.Component {
           </div>
           <div className="col-sm-6">
             <div>
-              <strong>Objava: </strong>
-              <span>
-                {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
-          </span>
-            </div>
-          </div>
-          <div className="col-sm-6">
-            <div>
               <strong>Avtor: </strong>
               <span>
                 {entry.author_name || `Neznan avtor #${entry.author}`}
@@ -67,6 +67,14 @@ class SubmissionEditor extends React.Component {
             </div>
           </div>
           <div className="col-sm-6">
+            <div>
+              <strong>Objava: </strong>
+              <span>
+                {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
+          </span>
+            </div>
+          </div>
+          <div className="col-sm-12">
             <div>
               <strong>Pravice: </strong>
               <span>
@@ -174,4 +182,4 @@ SubmissionEditor.propTypes = {
   }).isRequired,
 };
 
-export default SubmissionEditor;
+export default withRouter(SubmissionEditor);

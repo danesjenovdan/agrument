@@ -1,17 +1,23 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 
-const Button = ({ value, block, external, children, type = 'button', href, disabled, onClickFunc }) => {
-  const inside = typeof children === 'undefined' ? value : children;
+const Button = ({ value, block, external, children, type, href, disabled, onClick }) => {
+  const inside = !children ? value : children;
   const classes = classnames(
     'component__button',
     'btn',
     { 'btn-block': block },
     { 'disabled ': disabled },
   );
-  if (typeof href === 'undefined') {
+  if (!href) {
     return (
-      <button className={classes} value={value} type={type} onClick={onClickFunc}>{inside}</button>
+      <button
+        className={classes}
+        value={value}
+        type={type}
+        onClick={onClick}
+        disabled={disabled}
+      >{inside}</button>
     );
   }
   const target = {};
@@ -19,7 +25,7 @@ const Button = ({ value, block, external, children, type = 'button', href, disab
     target.target = '_blank';
     target.rel = 'noopener noreferrer';
   }
-  return (<a className={classes} href={href} {...target} onClick={onClickFunc}>{inside}</a>);
+  return (<a className={classes} href={href} {...target} onClick={onClick}>{inside}</a>);
 };
 
 Button.propTypes = {
@@ -30,7 +36,18 @@ Button.propTypes = {
   type: PropTypes.string,
   href: PropTypes.string,
   disabled: PropTypes.bool,
-  onClickFunc: PropTypes.func,
+  onClick: PropTypes.func,
+};
+
+Button.defaultProps = {
+  value: '',
+  block: false,
+  external: false,
+  children: null,
+  type: 'button',
+  href: '',
+  disabled: false,
+  onClick: () => { },
 };
 
 export default Button;

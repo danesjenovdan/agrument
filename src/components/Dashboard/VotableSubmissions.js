@@ -10,14 +10,14 @@ class VotableSubmissions extends React.PureComponent {
   }
 
   render() {
-    const { votable, currentEditor } = this.props;
+    const { votable, currentEditor, user } = this.props;
 
     let content = null;
     if (votable.isLoading && !votable.data) {
       content = <div>Nalaganje ...</div>;
     } else if (votable.data) {
       content = votable.data.map(entry => (
-        <VotableEntry key={entry.id} entry={entry} currentEditor={currentEditor} />
+        <VotableEntry key={entry.id} entry={entry} currentEditor={currentEditor} user={user} />
       ));
     }
     return (
@@ -35,6 +35,7 @@ VotableSubmissions.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape()),
   }).isRequired,
   currentEditor: PropTypes.shape(),
+  user: PropTypes.shape().isRequired,
 };
 
 VotableSubmissions.defaultProps = {

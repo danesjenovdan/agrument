@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { toSloDateString } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
+import { getRightFromLetter } from '../../utils/rights';
 
 const SubmissionPreview = ({ entry }) => (
   <article className="component__submission-preview">
@@ -15,14 +16,6 @@ const SubmissionPreview = ({ entry }) => (
       </div>
       <div className="col-sm-6">
         <div>
-          <strong>Objava: </strong>
-          <span>
-            {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
-          </span>
-        </div>
-      </div>
-      <div className="col-sm-6">
-        <div>
           <strong>Avtor: </strong>
           <span>
             {entry.author_name || `Neznan avtor #${entry.author}`}
@@ -31,9 +24,17 @@ const SubmissionPreview = ({ entry }) => (
       </div>
       <div className="col-sm-6">
         <div>
+          <strong>Objava: </strong>
+          <span>
+            {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
+          </span>
+        </div>
+      </div>
+      <div className="col-sm-12">
+        <div>
           <strong>Pravice: </strong>
           <span>
-            {entry.rights}
+            {entry.rights.split(',').map(getRightFromLetter).join(', ')}
           </span>
         </div>
       </div>

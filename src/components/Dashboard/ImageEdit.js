@@ -62,7 +62,7 @@ class ImageEdit extends React.Component {
   render() {
     return (
       <div>
-        <Button value="Naloži sliko" onClickFunc={this.openModal} />
+        <Button value="Naloži sliko" onClick={this.openModal} />
         <Portal closeOnEsc isOpened={this.state.modalOpen} onClose={this.closeModal}>
           <Modal title="Naloži sliko">
             <div className="modal-body">
@@ -73,7 +73,7 @@ class ImageEdit extends React.Component {
                   </div>
                   <div className="col-md-6">
                     <Input inline placeholder="Prilepi link" ref={(linkInput) => { this.linkInput = linkInput; }} />
-                    <Button value="Naloži preko linka" onClickFunc={this.onLoadLink} />
+                    <Button value="Naloži preko linka" onClick={this.onLoadLink} />
                   </div>
                 </div>
               </div>
@@ -103,6 +103,10 @@ class ImageEdit extends React.Component {
 
 ImageEdit.propTypes = {
   onDone: PropTypes.func,
+};
+
+ImageEdit.defaultProps = {
+  onDone: () => { },
 };
 
 export default ImageEdit;

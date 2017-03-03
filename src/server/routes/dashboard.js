@@ -51,16 +51,16 @@ router.post('/users/create', requireAdmin, (req, res) => {
           .where('id', id);
       });
   })
-  .then((data) => {
-    res.json({
-      user: data,
+    .then((data) => {
+      res.json({
+        user: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
     });
-  })
-  .catch((err) => {
-    res.status(500).json({
-      error: err.message,
-    });
-  });
 });
 
 router.get('/submissions', requireAdmin, (req, res) => {
@@ -82,20 +82,35 @@ router.get('/submissions', requireAdmin, (req, res) => {
 });
 
 router.post('/submissions/add', requireAdmin, (req, res) => {
-  db('posts')
-    .insert({
-      date: req.body.date,
-      author: req.body.author,
-      title: '',
-      content: '',
-      description: '',
-      imageURL: '',
-      imageCaption: '',
-      hasEmbed: 0,
-      deadline: req.body.deadline,
-      rights: '',
-      type: 'pending',
-    })
+  db.transaction((trx) => {
+    const date = req.body.date;
+    const deadline = req.body.deadline;
+    return trx
+      .select('id')
+      .from('posts')
+      .where('date', date)
+      .orWhere('deadline', deadline)
+      .then((rows) => {
+        if (rows && rows.length !== 0) {
+          throw new Error('Invalid date or deadline');
+        }
+        return trx
+          .insert({
+            date: req.body.date,
+            author: req.body.author,
+            title: '',
+            content: '',
+            description: '',
+            imageURL: '',
+            imageCaption: '',
+            hasEmbed: 0,
+            deadline: req.body.deadline,
+            rights: '',
+            type: 'pending',
+          })
+          .into('posts');
+      });
+  })
     .then(() => {
       res.json({
         success: 'Added submission',

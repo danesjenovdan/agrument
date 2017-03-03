@@ -63,14 +63,14 @@ class SubscribeForm extends React.Component {
       content = (
         <div className="agrument__reset-container">
           <p>HVALA!</p>
-          <Button block type="reset" value="Osveži formo" onClickFunc={this.resetForm} />
+          <Button block type="reset" value="Osveži formo" onClick={this.resetForm} />
         </div>
       );
     } else {
       content = (
         <div className="agrument__reset-container">
           <p>NAPAKA!</p>
-          <Button block type="reset" value="Osveži formo" onClickFunc={this.resetForm} />
+          <Button block type="reset" value="Osveži formo" onClick={this.resetForm} />
         </div>
       );
     }
