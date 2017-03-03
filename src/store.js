@@ -1,5 +1,7 @@
 import Freezer from 'freezer-js';
 
+import { parseDate } from './utils/date';
+
 const store = new Freezer({
   user: {
     isLoading: false,
@@ -28,7 +30,7 @@ const store = new Freezer({
     isLoading: false,
     error: false,
     selectedUser: null,
-    deadline: Date.now(),
+    deadline: parseDate(Date.now()).getTime(),
   },
   submissions: {
     isLoading: false,
