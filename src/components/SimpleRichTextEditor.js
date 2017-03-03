@@ -4,15 +4,15 @@
  */
 
 import React from 'react';
-import RichTextEditor from 'react-rte';
 import { autobind } from 'core-decorators';
+import RichTextEditor from './RichTextEditor';
 
 /* eslint-disable no-underscore-dangle, react/prop-types */
 class SimpleRichTextEditor extends React.Component {
   constructor() {
     super();
     this.state = {
-      editorValue: RichTextEditor.createEmptyValue(),
+      editorValue: RichTextEditor && RichTextEditor.createEmptyValue(),
     };
   }
 
@@ -61,10 +61,13 @@ class SimpleRichTextEditor extends React.Component {
   render() {
     const { value, format, onChange } = this.props; // eslint-disable-line no-unused-vars
     return (
-      <RichTextEditor
-        value={this.state.editorValue}
-        onChange={this._onChange}
-      />
+      <div>
+        {
+          RichTextEditor
+            ? <RichTextEditor value={this.state.editorValue} onChange={this._onChange} />
+            : <div />
+        }
+      </div>
     );
   }
 }
