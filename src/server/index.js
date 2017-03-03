@@ -31,7 +31,7 @@ const app = express();
 app.disable('x-powered-by');
 
 // serve static files first so you dont create new sessions for static files
-app.use(express.static(path.resolve(__dirname, '../dist')));
+app.use(express.static(path.resolve(__dirname, '../../dist')));
 
 passport.use(new LocalStrategy((username, pass, done) => {
   db('users')

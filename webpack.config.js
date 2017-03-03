@@ -81,30 +81,35 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: [
+        use: isProd ? ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'sass-loader'] }) : [
           {
-            loader: 'style-loader?sourceMap',
+            loader: 'style-loader',
           },
           {
-            loader: isProd ? ExtractTextPlugin.extract({
-              loader: 'css-loader?sourceMap',
-            }) : 'css-loader?sourceMap',
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
           },
           {
-            loader: 'sass-loader?sourceMap',
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
           },
         ],
       },
       {
         test: /\.css$/,
-        use: [
+        use: isProd ? ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }) : [
           {
-            loader: 'style-loader?sourceMap',
+            loader: 'style-loader',
           },
           {
-            loader: isProd ? ExtractTextPlugin.extract({
-              loader: 'css-loader?sourceMap',
-            }) : 'css-loader?sourceMap',
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
           },
         ],
       },
