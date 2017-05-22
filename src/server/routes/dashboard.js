@@ -81,6 +81,55 @@ router.get('/submissions', requireAdmin, (req, res) => {
     });
 });
 
+router.post('/submissions/addbulk', requireAdmin, (req, res) => {
+  db.transaction((trx) => {
+    const all = req.body.map((entry) => {
+      const obj = {
+        title: entry.title,
+        description: entry.description,
+        content: entry.content,
+        date: entry.date,
+        deadline: entry.date,
+        rights: entry.rights,
+        type: entry.type,
+        hasEmbed: entry.hasEmbed,
+        author: entry.author,
+        imageURL: entry.imageURL,
+        imageCaption: entry.imageCaption,
+        imageCaptionURL: entry.imageCaptionURL,
+      };
+
+      const date = obj.date;
+      const deadline = obj.deadline;
+      return trx
+        .select('id')
+        .from('posts')
+        .where('date', date)
+        .orWhere('deadline', deadline)
+        .then((rows) => {
+          if (rows && rows.length !== 0) {
+            throw new Error('Invalid date or deadline');
+          }
+          return trx
+            .insert(obj)
+            .into('posts');
+        });
+    });
+
+    return Promise.all(all);
+  })
+    .then(() => {
+      res.json({
+        success: 'Bulk added submissions',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
 router.post('/submissions/add', requireAdmin, (req, res) => {
   db.transaction((trx) => {
     const date = req.body.date;

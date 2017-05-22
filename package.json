@@ -12,7 +12,7 @@
     "build:server": "rimraf dist_server && cross-env NODE_ENV=production babel src -d dist_server",
     "build": "npm run build:client && npm run build:server",
     "serve": "node ./dist_server/server",
-    "build-serve": "npm run build && npm run serve",
+    "build-serve": "npm run build && cross-env PORT=8005 npm run serve",
     "api": "npm run build:server && cross-env PORT=8080 npm run serve",
     "lint": "eslint src"
   },

@@ -7,6 +7,7 @@ const GET_USERS = `${API_DASH}/users`;
 const POST_CREATE_USER = `${API_DASH}/users/create`;
 const GET_SUBMISSIONS = `${API_DASH}/submissions`;
 const POST_ADD_SUBMISSION = `${API_DASH}/submissions/add`;
+const POST_ADD_BULK_SUBMISSION = `${API_DASH}/submissions/addbulk`;
 const DELETE_REMOVE_SUBMISSION = `${API_DASH}/submissions/remove/:id`;
 const POST_EDIT_SUBMISSION = `${API_DASH}/submissions/edit/:id`;
 const GET_PENDING = `${API_DASH}/pending/`;
@@ -40,6 +41,11 @@ function addSubmission(userId, deadline) {
       deadline,
       date: deadline,
     });
+}
+
+function addBulkSubmission(data) {
+  return request.post(POST_ADD_BULK_SUBMISSION)
+    .send(data);
 }
 
 function removeSubmission(id) {
@@ -86,6 +92,7 @@ export {
   createUser,
   getSubmissions,
   addSubmission,
+  addBulkSubmission,
   removeSubmission,
   editSubmission,
   getPending,
