@@ -3,3 +3,4 @@ node_modules
 /dist_server
 npm-debug.log
 /.vscode
+mydb.sqlite
