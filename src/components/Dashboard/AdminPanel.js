@@ -54,9 +54,12 @@ class AdminPanel extends React.PureComponent {
         {state.submissions.data && (
           <SubmissionsTable submissions={state.submissions.data} />
         )}
-        <hr />
-        <textarea ref={(e) => { this.bulkarea = e; }} />
-        <button onClick={bulkUp.bind(this)}>bulk upload</button>
+        {/*
+          THIS IS A COMMENT
+          <hr />
+          <textarea ref={(e) => { this.bulkarea = e; }} />
+          <button onClick={bulkUp.bind(this)}>bulk upload</button>
+        */}
       </div >
     );
   }

@@ -33,6 +33,9 @@ app.disable('x-powered-by');
 // serve static files first so you dont create new sessions for static files
 app.use(express.static(path.resolve(__dirname, '../../dist')));
 
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(express.urlencoded({ limit: '5mb' }));
+
 passport.use(new LocalStrategy((username, pass, done) => {
   db('users')
     .where('username', username)

@@ -60,6 +60,14 @@ const store = new Freezer({
       password: '',
     },
   },
+  votes: {
+    isLoading: false,
+    data: null,
+  },
+  editable: {
+    isLoading: false,
+    data: null,
+  },
 });
 
 export default store;

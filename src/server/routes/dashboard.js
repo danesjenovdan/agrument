@@ -131,6 +131,7 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
 });
 
 router.post('/submissions/add', requireAdmin, (req, res) => {
+  console.log(req);
   db.transaction((trx) => {
     const date = req.body.date;
     const deadline = req.body.deadline;
@@ -370,6 +371,99 @@ router.delete('/pinned/remove/:id', (req, res) => {
         error: err.message,
       });
     });
+});
+
+router.get('/edit/:date', (req, res) => {
+  db('posts')
+    .where('date', req.params.date)
+    .select('*')
+    .then((data) => {
+      console.log(data);
+      res.json({
+        data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+  // db('posts')
+  // .where('type', 'votable')
+  // .orderBy('deadline', 'asc')
+  // .leftOuterJoin('users', 'posts.author', 'users.id')
+  // .select('posts.*', 'users.name as author_name')
+
+router.get('/votes', (req, res) => {
+  db('votes')
+    .select('id', 'author', 'post', 'vote')
+    .then((data) => {
+      res.json({
+        votes: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.post('/vote/:option', (req, res) => {
+  if (req.body) {
+    console.log(req.body);
+    db('votes')
+      .select('id', 'author', 'post', 'vote')
+      .where('post', req.body.data.post)
+      .andWhere('author', req.user.id)
+      .then((data) => {
+        console.log(data);
+        if (data.length === 0) {
+          // NO VOTE, pls insert
+          db('votes')
+            .insert({
+              author: req.user.id,
+              post: req.body.data.post,
+              vote: req.params.option,
+            })
+            .then(() => {
+              res.json({
+                success: `Successfully voted ${req.params.option}`,
+              });
+            })
+            .catch((err) => {
+              res.status(500).json({
+                error: err.message,
+              });
+            });
+        } else {
+          // user already voted, pls update
+          db('votes')
+            .where('post', req.body.data.post)
+            .andWhere('author', req.user.id)
+            .update({
+              vote: req.params.option,
+            })
+            .then(() => {
+              res.json({
+                success: `Successfully updated vote with ${req.params.option}`,
+              });
+            })
+            .catch((err) => {
+              res.status(500).json({
+                error: err.message,
+              });
+            });
+        }
+      });
+  } else {
+    console.log(req);
+    res.status(400).json({
+      error: 'Bad Request',
+    });
+  }
 });
 
 export default router;

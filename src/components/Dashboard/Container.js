@@ -23,6 +23,7 @@ class Container extends React.Component {
         </div>
       );
     } else if (state.user.data) {
+      console.log(state);
       return (
         <div className="container dash__container">
           <Navbar username={state.user.data.name} />
@@ -40,6 +41,7 @@ class Container extends React.Component {
                 user={state.user.data}
                 votable={state.votable}
                 currentEditor={state.currentEditor}
+                votes={state.votes}
               />
             </div>
           </div>

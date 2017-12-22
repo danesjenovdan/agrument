@@ -180,6 +180,12 @@
   &:hover {
     color: #fff;
   }
+
+  background-color: $agrument-teal;
+
+  &:hover {
+    background-color: $agrument-darkteal;
+  }
 }
 
 .component__spinner {

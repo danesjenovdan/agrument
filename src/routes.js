@@ -43,5 +43,13 @@ export default {
           .catch(errorLoading);
       },
     },
+    {
+      path: '/edit/(:date)',
+      getComponent(location, cb) {
+        System.import('./pages/EditAgrument')
+          .then(loadRoute(cb))
+          .catch(errorLoading);
+      },
+    },
   ],
 };

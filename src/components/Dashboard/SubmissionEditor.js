@@ -66,14 +66,6 @@ class SubmissionEditor extends React.Component {
               </span>
             </div>
           </div>
-          <div className="col-sm-6">
-            <div>
-              <strong>Objava: </strong>
-              <span>
-                {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
-          </span>
-            </div>
-          </div>
           <div className="col-sm-12">
             <div>
               <strong>Pravice: </strong>
@@ -100,7 +92,7 @@ class SubmissionEditor extends React.Component {
               className="form-control"
             />
           </h3>
-          <div className="form-group">
+          <div className="form-group theeditor">
             <SimpleRichTextEditor
               format="html"
               value={this.content || entry.content}
@@ -108,7 +100,6 @@ class SubmissionEditor extends React.Component {
             />
           </div>
         </section>
-        <hr />
         <section>
           <div>
             <Checkbox
@@ -128,10 +119,10 @@ class SubmissionEditor extends React.Component {
         </section>
         <hr />
         <section className="row clearfix">
-          <div className="col-sm-3">
+          <div className="col-sm-3 og-description-container">
             <strong>og description: </strong>
           </div>
-          <div className="col-sm-9">
+          <div className="col-sm-9 og-description-container">
             <input
               value={entry.description}
               onChange={onValueChange('description')}
@@ -139,17 +130,17 @@ class SubmissionEditor extends React.Component {
             />
           </div>
           <div>
-            <div className="col-sm-3">
+            <div className="col-sm-3 og-image-container">
               <strong>og image: </strong>
             </div>
-            <div className="col-sm-9">
+            <div className="col-sm-9 og-image-container">
               <ImageEdit onDone={onValueChange('imageURL')} />
             </div>
           </div>
-          <div className="col-sm-3">
+          <div className="col-sm-3 og-caption-container">
             <strong>caption: </strong>
           </div>
-          <div className="col-sm-9">
+          <div className="col-sm-9 og-caption-container">
             <input
               value={entry.imageCaption}
               onChange={onValueChange('imageCaption')}

@@ -141,15 +141,25 @@ function initReactions(store) {
   });
 
   store.on('newsubmission:create', () => {
+    console.log('asd');
     if (store.get().newArticle.isLoading) {
+      console.log('blasd');
       return;
     }
 
+    console.log('getting store');
     store.get().newArticle.set({ isLoading: true });
 
+    console.log('about to addSubmission');
     dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.deadline)
       .end((err, res) => {
+        console.log(err, res);
         if (err || !res.ok) {
+          if (res.body.error.indexOf('date or deadline')) {
+            alert('Nekaj je narobe z datumom. Verjetno že obstaja deadline na ta datum.');
+          } else {
+            alert(`Nekaj je šlo na robe. Ne vemo čisto kaj, morda ti to pomaga: ${res.body.error}`);
+          }
           store.get().newArticle.set({
             isLoading: false,
             error: true,
@@ -250,6 +260,30 @@ function initReactions(store) {
       });
   });
 
+  store.on('editable:fetch', (date) => {
+    if (store.get().editable.isLoading) {
+      return;
+    }
+
+    store.get().editable.set({ isLoading: true });
+
+    console.log(date.getTime());
+    dash.getEditable(date.getTime())
+      .end((err, res) => {
+        console.log(res);
+        if (err || !res.ok) {
+          store.get().editable.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().editable.set({
+            isLoading: false,
+            data: res.body.editable,
+          });
+        }
+      });
+  });
+
   store.on('editor:showeditor', (id) => {
     let sub = store.get().pending.data.find(e => e.id === id);
     if (!sub) {
@@ -279,7 +313,9 @@ function initReactions(store) {
     }).now();
   });
 
+  // THIS IS SAVING ON EDIT
   store.on('pending:edit', (id) => {
+    console.log('edit');
     const sub = store.get().pending.data.find(e => e.id === id);
     const editor = store.get().currentEditor;
 
@@ -307,8 +343,11 @@ function initReactions(store) {
     }
   });
 
+  // THIS IS FIRST SUBMISSION (author finished editing)
   store.on('pending:submit', (id) => {
     const sub = store.get().pending.data.find(e => e.id === id);
+
+    console.log('asdfasdfasdfasdfsfasdf');
 
     if (sub) {
       sub.set({ disabled: true });
@@ -341,8 +380,10 @@ function initReactions(store) {
         newData.content = editorRTE;
       }
 
+      console.log('old', newData);
       dash.editSubmission(id, newData)
         .end((err, res) => {
+          console.log('new', newData);
           if (err || !res.ok) {
             // noop
           } else {
@@ -422,6 +463,77 @@ function initReactions(store) {
         } else {
           store.trigger('registerform:discard');
           browserHistory.push('/login');
+        }
+      });
+  });
+
+  store.on('votes:fetch', () => {
+    if (store.get().votes.isLoading) {
+      return;
+    }
+
+    store.get().votes.set({ isLoading: true });
+
+    dash.getVotes()
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().votes.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().votes.set({
+            isLoading: false,
+            data: res.body.votes,
+          });
+        }
+      });
+  });
+
+  store.on('vote:for', (data) => {
+    dash.voteFor(data)
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().votes.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().votes.set({
+            isLoading: false,
+            // data: res.body.data,
+          });
+          store.trigger('votes:fetch');
+        }
+      });
+  });
+  store.on('vote:against', (data) => {
+    dash.voteAgainst(data)
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().votes.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().votes.set({
+            isLoading: false,
+            // data: res.body.data,
+          });
+          store.trigger('votes:fetch');
+        }
+      });
+  });
+  store.on('vote:veto', (data) => {
+    dash.voteVeto(data)
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().votes.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().votes.set({
+            isLoading: false,
+            // data: res.body.data,
+          });
+          store.trigger('votes:fetch');
         }
       });
   });

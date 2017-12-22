@@ -61,20 +61,22 @@ class ImageEdit extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="col-md-6">
         <Button value="Naloži sliko" onClick={this.openModal} />
         <Portal closeOnEsc isOpened={this.state.modalOpen} onClose={this.closeModal}>
           <Modal title="Naloži sliko">
             <div className="modal-body">
               <div className="row">
                 <div className="form-inline">
-                  <div className="col-md-6">
+                  <div className="col-md-4 col-md-offset-4">
                     <FileChooser inline value="Uploadaj sliko" onChange={this.onFileSelected} />
                   </div>
-                  <div className="col-md-6">
+                  {/* <div className="col-md-4">
                     <Input inline placeholder="Prilepi link" ref={(linkInput) => { this.linkInput = linkInput; }} />
-                    <Button value="Naloži preko linka" onClick={this.onLoadLink} />
                   </div>
+                  <div className="col-md-4">
+                    <Button value="Naloži preko linka" onClick={this.onLoadLink} />
+                  </div> */}
                 </div>
               </div>
               <div className="row">
@@ -91,8 +93,8 @@ class ImageEdit extends React.Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-default" onClick={this.closeModal}>Zapri</button>
-              <button type="button" className="btn btn-primary" onClick={this.onDone}>Shrani</button>
+              <button type="button" className="btn btn-default component__button" onClick={this.closeModal}>Zapri</button>
+              <button type="button" className="btn btn-primary component__button" onClick={this.onDone}>Shrani</button>
             </div>
           </Modal>
         </Portal>

@@ -96,4 +96,48 @@
       color: #000;
     }
   }
+
+  .mr {
+    margin-right: 10px;
+  }
+
+  .Select-menu-outer {
+    background: #ffffff;
+    z-index: 9999;
+  }
+
+  .theeditor > div > div > div:last-child { // FUCK react
+    height: 300px;
+
+    .public-DraftEditor-content {
+      font-family: 'Titillium Web', sans-serif;
+    }
+  }
+
+  .og-image-container,
+  .og-description-container,
+  .og-caption-container {
+    margin-bottom: 10px;
+
+    strong {
+      margin-right: 20px;
+      font-size: 16px;
+    }
+  }
+
+  .voting {
+    margin-top: 20px;
+  }
+
+  .author {
+    font-weight: bold;
+    text-align: center;
+  }
+  .option {
+    background: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+  }
 }

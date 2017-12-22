@@ -22,14 +22,14 @@ const SubmissionPreview = ({ entry }) => (
           </span>
         </div>
       </div>
-      <div className="col-sm-6">
+      {/* <div className="col-sm-6">
         <div>
           <strong>Objava: </strong>
           <span>
             {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
           </span>
         </div>
-      </div>
+      </div> */}
       <div className="col-sm-12">
         <div>
           <strong>Pravice: </strong>
@@ -50,15 +50,15 @@ const SubmissionPreview = ({ entry }) => (
     </section>
     <hr />
     <section>
-      <div>
+      <div className="og-description-container">
         <strong>og description: </strong>
         {entry.description}
       </div>
-      <div>
+      <div className="og-image-container">
         <strong>og image: </strong>
         <img src={entry.imageURL} className="img-responsive img-thumbnail img-fullwidth" style={{ width: '50%' }} alt="og cover" />
       </div>
-      <div>
+      <div className="og-caption-container">
         <strong>caption: </strong>
         {entry.imageCaption}
       </div>

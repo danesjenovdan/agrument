@@ -7,17 +7,18 @@ import store from '../../store';
 class VotableSubmissions extends React.PureComponent {
   componentDidMount() {
     store.trigger('votable:fetch');
+    store.trigger('votes:fetch');
   }
 
   render() {
-    const { votable, currentEditor, user } = this.props;
+    const { votable, currentEditor, user, votes } = this.props;
 
     let content = null;
     if (votable.isLoading && !votable.data) {
       content = <div>Nalaganje ...</div>;
     } else if (votable.data) {
       content = votable.data.map(entry => (
-        <VotableEntry key={entry.id} entry={entry} currentEditor={currentEditor} user={user} />
+        <VotableEntry key={entry.id} entry={entry} currentEditor={currentEditor} user={user} votes={votes} />
       ));
     }
     return (
@@ -36,10 +37,12 @@ VotableSubmissions.propTypes = {
   }).isRequired,
   currentEditor: PropTypes.shape(),
   user: PropTypes.shape().isRequired,
+  votes: PropTypes.shape().isRequired,
 };
 
 VotableSubmissions.defaultProps = {
   currentEditor: null,
+  votes: {},
 };
 
 export default VotableSubmissions;

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import SubmissionPreview from './SubmissionPreview';
 import SubmissionEditor from './SubmissionEditor';
 import Button from '../FormControl/Button';
+import Votes from './Votes';
 
 import store from '../../store';
 
@@ -21,14 +22,35 @@ function discardChanges() {
   store.trigger('editor:discardeditor');
 }
 
+// function getVotes() {
+//   store.trigger('votes:fetch');
+// }
+
+function voteFor(user, post) {
+  return () => {
+    store.trigger('vote:for', { user, post });
+  };
+}
+function voteAgainst(user, post) {
+  return () => {
+    store.trigger('vote:against', { user, post });
+  };
+}
+function voteVeto(user, post) {
+  return () => {
+    store.trigger('vote:veto', { user, post });
+  };
+}
+
 function saveChanges(id) {
   return () => {
     store.trigger('votable:edit', id);
   };
 }
 
-const VotableEntry = ({ entry, currentEditor, user }) => {
+const VotableEntry = ({ entry, currentEditor, user, votes }) => {
   if (!currentEditor || currentEditor.id !== entry.id) {
+    console.log(entry);
     return (
       <div className="component__entry component__entry--votable card__content clearfix">
         <div className="row entry__content">
@@ -46,6 +68,20 @@ const VotableEntry = ({ entry, currentEditor, user }) => {
             }
           </div>
         </div>
+        <div className="row voting">
+          <div className="col-md-4">
+            <Button block value="Glasuj ZA" onClick={voteFor(user.id, entry.id)} />
+          </div>
+          <div className="col-md-4">
+            <Button block value="Glasuj PROTI" onClick={voteAgainst(user.id, entry.id)} />
+          </div>
+          <div className="col-md-4">
+            <Button block value="Vloži VETO" onClick={voteVeto(user.id, entry.id)} />
+          </div>
+        </div>
+        <hr />
+        <h3>Rezultati glasovanja</h3>
+        <Votes votes={votes} />
       </div>
     );
   }
@@ -76,10 +112,14 @@ VotableEntry.propTypes = {
     name: PropTypes.string.isRequired,
     group: PropTypes.string.isRequired,
   }).isRequired,
+  userAlreadyVoted: PropTypes.bool,
+  votes: PropTypes.shape().isRequired,
 };
 
 VotableEntry.defaultProps = {
   currentEditor: null,
+  userAlreadyVoted: false,
+  votes: {},
 };
 
 export default VotableEntry;

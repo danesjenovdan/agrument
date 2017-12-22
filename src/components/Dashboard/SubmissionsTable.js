@@ -11,16 +11,13 @@ function removeSubmission(id) {
 
 const SubmissionsTable = ({ submissions }) => (
   <div>
-    <h3>Agrumenti ki čakajo na oddajo:</h3>
+    <h3>Agrumenti, ki čakajo na oddajo:</h3>
     <table className="table table-bordered">
       <thead>
         <tr>
           <th>id</th>
           <th>deadline</th>
-          <th>date</th>
           <th>avtor</th>
-          <th>naslov</th>
-          <th>type</th>
           <th>izbriši</th>
         </tr>
       </thead>
@@ -29,10 +26,7 @@ const SubmissionsTable = ({ submissions }) => (
           <tr key={entry.id}>
             <td>{entry.id}</td>
             <td>{toSloDateString(entry.deadline)}</td>
-            <td>{toSloDateString(entry.date)}</td>
             <td>{entry.author_name}</td>
-            <td>{entry.title}</td>
-            <td>{entry.type}</td>
             <td>
               <button
                 className="btn btn-danger btn-xs"

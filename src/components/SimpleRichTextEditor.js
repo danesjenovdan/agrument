@@ -7,6 +7,8 @@ import React from 'react';
 import { autobind } from 'core-decorators';
 import RichTextEditor from './RichTextEditor';
 
+const MAX_LENGTH = 1000;
+
 /* eslint-disable no-underscore-dangle, react/prop-types */
 class SimpleRichTextEditor extends React.Component {
   constructor() {
@@ -59,16 +61,34 @@ class SimpleRichTextEditor extends React.Component {
   }
 
   render() {
+    const toolbarConfig = {
+      display: ['LINK_BUTTONS', 'HISTORY_BUTTONS'],
+      // INLINE_STYLE_BUTTONS: [
+      //   {label: 'Bold', style: 'BOLD'},
+      //   {label: 'Italic', style: 'ITALIC'},
+      //   {label: 'Underline', style: 'UNDERLINE'}
+      // ],
+    };
     const { value, format, onChange } = this.props; // eslint-disable-line no-unused-vars
     return (
       <div>
         {
           RichTextEditor
-            ? <RichTextEditor value={this.state.editorValue} onChange={this._onChange} />
+            ? <RichTextEditor value={this.state.editorValue} onChange={this._onChange} toolbarConfig={toolbarConfig} handleBeforeInput={this._handleBeforeInput} />
             : <div />
         }
       </div>
     );
+  }
+
+  @autobind
+  _handleBeforeInput() {
+    const currentContent = this.state.editorValue._editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText('').length;
+
+    if (currentContentLength > MAX_LENGTH - 1) {
+        return 'handled';
+    }
   }
 }
 

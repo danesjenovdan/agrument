@@ -20,14 +20,14 @@ function createSubmission() {
 }
 
 const AssignNewAgrument = ({ users, newArticle }) => (
-  <div className="form-inline">
-    Ustvari nov agrument za:
+  <div className="form-inline mr">
+    Ustvari nov agrument za:&nbsp;
     <select value={newArticle.selectedUser} className="form-control" onChange={changeSelectedUser}>
       {users.map(user => (
         <option key={user.id} value={user.id}>{user.name} ({user.group})</option>
       ))}
     </select>
-    Deadline:
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deadline:&nbsp;
     <input
       type="date"
       className="form-control"

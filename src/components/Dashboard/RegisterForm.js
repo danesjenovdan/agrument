@@ -30,7 +30,7 @@ const RegisterForm = ({ data, location }) => (
         <input className="form-control" value={data.username} onChange={onValueChange('username')} />
         </div>
         <div className="col-md-8 col-md-offset-2">
-          Geslo:
+          Geslo (naj bo dolgo vsaj 8 znakov):
         <input className="form-control" type="password" value={data.password} onChange={onValueChange('password')} />
         </div>
         <div className="col-md-8 col-md-offset-2">
