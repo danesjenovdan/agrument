@@ -1,11 +1,8 @@
 {
-  "name": "djnd-react",
+  "name": "agrument-react",
   "version": "1.0.0",
   "private": true,
-  "description": "Danes je nov dan - React",
-  "engines": {
-    "node": ">=6"
-  },
+  "description": "agrument - react",
   "scripts": {
     "start": "webpack-dev-server --progress --config webpack.config.js",
     "build:client": "rimraf dist && cross-env NODE_ENV=production webpack --progress --config webpack.config.js",
@@ -50,7 +47,7 @@
     "file-loader": "^0.10.0",
     "freezer-js": "^0.11.2",
     "html-webpack-plugin": "^2.28.0",
-    "knex": "^0.12.6",
+    "knex": "^0.14.2",
     "lodash": "^4.17.4",
     "mysql": "^2.13.0",
     "node-sass": "^4.5.0",

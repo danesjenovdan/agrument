@@ -1,6 +1,4 @@
-import knex from 'knex';
-
-const db = knex({
+module.exports = {
   client: 'sqlite3',
   connection: {
     filename: './db.sqlite3',
@@ -8,6 +6,4 @@ const db = knex({
     charset: 'utf8',
   },
   useNullAsDefault: true,
-});
-
-export default db;
+};

@@ -267,10 +267,8 @@ function initReactions(store) {
 
     store.get().editable.set({ isLoading: true });
 
-    console.log(date.getTime());
     dash.getEditable(date.getTime())
       .end((err, res) => {
-        console.log(res);
         if (err || !res.ok) {
           store.get().editable.set({
             isLoading: false,

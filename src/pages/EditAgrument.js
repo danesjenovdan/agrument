@@ -15,18 +15,15 @@ class EditAgrument extends React.Component {
 
     const stringDate = this.props.params.date;
     let d = new Date();
-    d.setDate(parseInt(stringDate.split('.')[0], 10));
-    d.setMonth(parseInt((stringDate.split('.')[1] - 1), 10));
-    d.setFullYear(parseInt(stringDate.split('.')[2], 10));
-    d.setHours(1);
-    d.setMinutes(0);
-    d.setSeconds(0);
-    d.setMilliseconds(0);
+    d.setUTCDate(parseInt(stringDate.split('.')[0], 10));
+    d.setUTCMonth(parseInt((stringDate.split('.')[1] - 1), 10));
+    d.setUTCFullYear(parseInt(stringDate.split('.')[2], 10));
+    d.setUTCHours(0);
+    d.setUTCMinutes(0);
+    d.setUTCSeconds(0);
+    d.setUTCMilliseconds(0);
 
     store.trigger('editable:fetch', d);
-
-    console.log('props');
-    console.log(this.props);
   }
 
   @autobind
@@ -57,7 +54,6 @@ class EditAgrument extends React.Component {
         </div>
       );
     } else if (state.user.data) {
-      console.log(state);
       return (
         <div>
           <Helmet title="Dashboard" />
@@ -68,7 +64,7 @@ class EditAgrument extends React.Component {
               subTitle="Dashboard"
               small
             />
-            {/* <SubmissionEditor entry={state.currentEditor} /> */}
+            <SubmissionEditor entry={store.get().editable} />
           </div>
         </div>
       );
@@ -83,7 +79,7 @@ class EditAgrument extends React.Component {
               subTitle="Dashboard"
               small
             />
-
+            {'napaka'}
           </div>
         </div>
       );
