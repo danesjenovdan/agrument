@@ -1,6 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import Portal from 'react-portal';
-import Cropper from 'react-cropper';
+// import Cropper from 'react-cropper';
 import { autobind } from 'core-decorators';
 import Modal from '../Modal';
 import Button from '../FormControl/Button';
@@ -81,14 +81,14 @@ class ImageEdit extends React.Component {
               </div>
               <div className="row">
                 <div className="col-md-12">
-                  <Cropper
+                  {/* <Cropper
                     src={this.state.image}
                     ref={(cropper) => { this.cropper = cropper; }}
                     style={{ width: '100%', maxHeight: '80vh' }}
                     zoomable={false}
                     autoCropArea={1}
                     viewMode={1}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>

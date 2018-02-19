@@ -1,9 +1,8 @@
-import { browserHistory } from 'react-router';
 import * as dash from './utils/dash';
 import * as login from './utils/login';
 
 function initReactions(store) {
-  store.on('user:fetch', () => {
+  store.on('user:fetch', (history) => {
     if (store.get().user.isLoading) {
       return;
     }
@@ -17,7 +16,7 @@ function initReactions(store) {
             isLoading: false,
             data: null,
           });
-          browserHistory.replace('/login');
+          history.replace('/login');
         } else {
           store.get().user.set({
             isLoading: false,

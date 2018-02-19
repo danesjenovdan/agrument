@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-import Helmet from 'react-helmet';
+import React from 'react'; import PropTypes from 'prop-types';
+// import Helmet from 'react-helmet';
 import { autobind } from 'core-decorators';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
@@ -11,7 +11,7 @@ import store from '../store';
 class EditAgrument extends React.Component {
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
-    store.trigger('user:fetch');
+    store.trigger('user:fetch', this.context.history);
 
     const stringDate = this.props.params.date;
     let d = new Date();
@@ -39,7 +39,7 @@ class EditAgrument extends React.Component {
     if (state.user.isLoading) {
       return (
         <div>
-          <Helmet title="Dashboard" />
+          {/* <Helmet title="Dashboard" /> */}
           <SideMenu />
           <div className="container-fluid">
             <Header
@@ -56,7 +56,7 @@ class EditAgrument extends React.Component {
     } else if (state.user.data) {
       return (
         <div>
-          <Helmet title="Dashboard" />
+          {/* <Helmet title="Dashboard" /> */}
           <SideMenu />
           <div className="container-fluid">
             <Header
@@ -71,7 +71,7 @@ class EditAgrument extends React.Component {
     } else {
       return (
         <div>
-          <Helmet title="Dashboard" />
+          {/* <Helmet title="Dashboard" /> */}
           <SideMenu />
           <div className="container-fluid">
             <Header

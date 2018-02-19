@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-import { browserHistory, withRouter } from 'react-router';
+import React from 'react'; import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { autobind } from 'core-decorators';
 import Button from '../FormControl/Button';
 import Input from '../FormControl/Input';
@@ -32,7 +32,7 @@ class LoginForm extends React.Component {
             this.setState({ error: true });
             console.log(err);
           } else if (res.ok) {
-            browserHistory.replace('/dash');
+            this.context.history.replace('/dash');
           }
         });
     }

@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
-import Helmet from 'react-helmet';
+import React from 'react';
+import PropTypes from 'prop-types';
+// import Helmet from 'react-helmet';
 
 import store from '../store';
 import initReactions from '../reactions';
@@ -7,6 +8,11 @@ import initReactions from '../reactions';
 initReactions(store);
 
 class App extends React.Component {
+  getChildContext() {
+    const state = store.get();
+    return { state };
+  }
+
   componentDidMount() {
     // re-render the app on store updates
     store.on('update', () => {
@@ -17,21 +23,27 @@ class App extends React.Component {
 
   render() {
     const { children } = this.props;
-    const state = store.get();
+    // const state = store.get();
     return (
       <div>
-        <Helmet
+        {/* <Helmet
           defaultTitle="Agrument"
           titleTemplate="%s - Agrument"
-        />
-        {React.Children.map(children, child => React.cloneElement(child, { state }))}
+        /> */}
+        {/* {React.Children.map(children, child => React.cloneElement(child, { state }))} */}
+        {children}
       </div>
     );
   }
 }
 
 App.propTypes = {
-  children: PropTypes.element.isRequired,
+  // children: PropTypes.element.isRequired,
+  children: PropTypes.any.isRequired,
+};
+
+App.childContextTypes = {
+  state: PropTypes.shape(),
 };
 
 export default App;

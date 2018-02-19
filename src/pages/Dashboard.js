@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-import Helmet from 'react-helmet';
+import React from 'react'; import PropTypes from 'prop-types';
+// import Helmet from 'react-helmet';
 import { autobind } from 'core-decorators';
 import Header from '../components/Header';
 import DashContainer from '../components/Dashboard/Container';
@@ -7,7 +7,9 @@ import SideMenu from '../components/SideMenu';
 
 class Dashboard extends React.Component {
   componentDidMount() {
-    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    // this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    console.warn('------------------------');
+    console.warn(this.context);
   }
 
   @autobind
@@ -19,10 +21,10 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { state } = this.props;
+    const { state } = this.context;
     return (
       <div>
-        <Helmet title="Dashboard" />
+        {/* <Helmet title="Dashboard" /> */}
         <SideMenu />
         <div className="container-fluid">
           <Header
@@ -39,12 +41,16 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   state: PropTypes.shape(),
-  router: PropTypes.shape().isRequired,
-  route: PropTypes.shape().isRequired,
+  // router: PropTypes.shape().isRequired,
+  // route: PropTypes.shape().isRequired,
 };
 
 Dashboard.defaultProps = {
   state: {},
+};
+
+Dashboard.contextTypes = {
+  state: PropTypes.shape(),
 };
 
 export default Dashboard;

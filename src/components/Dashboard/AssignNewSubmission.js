@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import { parseDate, toISODateString } from '../../utils/date';
 
 import store from '../../store';

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import Navbar from './Navbar';
 import PinnedMessages from './PinnedMessages';
 import PendingSubmissions from './PendingSubmissions';
@@ -11,7 +11,7 @@ import store from '../../store';
 
 class Container extends React.Component {
   componentDidMount() {
-    store.trigger('user:fetch');
+    store.trigger('user:fetch', this.context.history);
   }
 
   render() {

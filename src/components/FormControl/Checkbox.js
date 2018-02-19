@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import { uniqueId } from 'lodash';
 import classnames from 'classnames';
 import { autobind } from 'core-decorators';

@@ -1,8 +1,7 @@
-import React, { PropTypes } from 'react';
-import Helmet from 'react-helmet';
-import Waypoint from 'react-waypoint';
+import React from 'react'; import PropTypes from 'prop-types';
+// import Helmet from 'react-helmet';
+// import Waypoint from 'react-waypoint';
 import { concat } from 'lodash';
-import { browserHistory } from 'react-router';
 import { autobind } from 'core-decorators';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
@@ -27,18 +26,18 @@ class Feed extends React.Component {
   componentDidMount() {
     this.dataRequest = getInitialPost(this.props.params.date).end(this.setInitialArticleState);
 
-    this.cancelListen = browserHistory.listen((event) => {
-      if (event.state && event.state.postId && event.action === 'POP') {
-        const elem = document.querySelector(`#post-${event.state.postId}`);
-        if (elem) {
-          this.dontChangeURLOnScroll = true;
-          setTimeout(() => {
-            elem.scrollIntoView(true);
-            this.dontChangeURLOnScroll = false;
-          }, 0);
-        }
-      }
-    });
+    // this.cancelListen = this.context.history.listen((event) => {
+    //   if (event.state && event.state.postId && event.action === 'POP') {
+    //     const elem = document.querySelector(`#post-${event.state.postId}`);
+    //     if (elem) {
+    //       this.dontChangeURLOnScroll = true;
+    //       setTimeout(() => {
+    //         elem.scrollIntoView(true);
+    //         this.dontChangeURLOnScroll = false;
+    //       }, 0);
+    //     }
+    //   }
+    // });
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -131,7 +130,7 @@ class Feed extends React.Component {
     }
     const newPath = `/${toSloDateString(post.date)}`;
     if (window.location.pathname !== newPath) {
-      browserHistory.push({ pathname: newPath, state: { postId: +post.id } });
+      this.context.history.push({ pathname: newPath, state: { postId: +post.id } });
       this.setState({ activePost: post });
     }
   }
@@ -156,7 +155,8 @@ class Feed extends React.Component {
         content.push(<div key="load-below" className="agrument__spinner-container">
           {this.state.loading ?
             <Spinner /> :
-            <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
+            // <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
+            null}
         </div>);
       }
     } else if (this.state.loading) {
@@ -168,21 +168,21 @@ class Feed extends React.Component {
         <h1>NAPAKA :(</h1>
       </div>);
     }
-    const meta = this.state.activePost ? (
-      <Helmet
-        title={this.state.activePost.title}
-        meta={[
-          { name: 'description', content: this.state.activePost.description },
-          { property: 'og:title', content: this.state.activePost.title },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:description', content: this.state.activePost.description },
-          { property: 'og:image', content: this.state.activePost.imageURL },
-        ]}
-      />
-    ) : null;
+    // const meta = this.state.activePost ? (
+    //   <Helmet
+    //     title={this.state.activePost.title}
+    //     meta={[
+    //       { name: 'description', content: this.state.activePost.description },
+    //       { property: 'og:title', content: this.state.activePost.title },
+    //       { property: 'og:type', content: 'article' },
+    //       { property: 'og:description', content: this.state.activePost.description },
+    //       { property: 'og:image', content: this.state.activePost.imageURL },
+    //     ]}
+    //   />
+    // ) : null;
     return (
       <div className="agrument__feed">
-        {meta}
+        {/* {meta} */}
         {content}
       </div>
     );

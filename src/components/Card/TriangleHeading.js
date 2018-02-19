@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 
 const TriangleHeading = ({ title }) => (
   <div className="card__header card__header--triangle">

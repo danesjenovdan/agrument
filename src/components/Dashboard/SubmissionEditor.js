@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
 import { autobind } from 'core-decorators';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import SimpleRichTextEditor from '../SimpleRichTextEditor';
 import { toSloDateString } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';

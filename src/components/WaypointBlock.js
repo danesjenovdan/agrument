@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-import Waypoint from 'react-waypoint';
+import React from 'react'; import PropTypes from 'prop-types';
+// import Waypoint from 'react-waypoint';
 import { autobind } from 'core-decorators';
 
 class WaypointBlock extends React.Component {
@@ -16,9 +16,9 @@ class WaypointBlock extends React.Component {
   render() {
     return (
       <div>
-        <Waypoint onEnter={(event) => { this.handleWaypointEnter(event, 'top'); }} bottomOffset="50%" />
+        {/* <Waypoint onEnter={(event) => { this.handleWaypointEnter(event, 'top'); }} bottomOffset="50%" /> */}
         {this.props.children}
-        <Waypoint onEnter={(event) => { this.handleWaypointEnter(event, 'bottom'); }} topOffset="50%" />
+        {/* <Waypoint onEnter={(event) => { this.handleWaypointEnter(event, 'bottom'); }} topOffset="50%" /> */}
       </div>
     );
   }

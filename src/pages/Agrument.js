@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import AgrumentContainer from '../components/Agrument/Container';
 import SideMenu from '../components/SideMenu';

@@ -3,11 +3,23 @@
  */
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory } from 'react-router';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import 'react-select/dist/react-select.css';
 import 'cropperjs/dist/cropper.css';
 
-import rootRoute from './routes';
+// import rootRoute from './routes';
+import App from './containers/App';
+import Agrument from './pages/Agrument';
+import Dashboard from './pages/Dashboard';
 import './styles/general.scss';
 
-render(<Router history={browserHistory} routes={rootRoute} scrollStrategy="none" />, document.getElementById('root'));
+const RootComponent = () => (
+  <BrowserRouter>
+    <App>
+      <Route exact path="/" component={Agrument} />
+      <Route path="/dash" component={Dashboard} />
+    </App>
+  </BrowserRouter>
+);
+
+render(<RootComponent />, document.getElementById('root'));
