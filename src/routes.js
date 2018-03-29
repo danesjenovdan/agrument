@@ -11,30 +11,30 @@ function loadRoute(cb) {
 export default {
   component: App,
   childRoutes: [
-    {
-      path: '/login',
-      getComponent(location, cb) {
-        System.import('./pages/Login')
-          .then(loadRoute(cb))
-          .catch(errorLoading);
-      },
-    },
-    {
-      path: '/register',
-      getComponent(location, cb) {
-        System.import('./pages/Register')
-          .then(loadRoute(cb))
-          .catch(errorLoading);
-      },
-    },
-    {
-      path: '/dash',
-      getComponent(location, cb) {
-        System.import('./pages/Dashboard')
-          .then(loadRoute(cb))
-          .catch(errorLoading);
-      },
-    },
+    // {
+    //   path: '/login',
+    //   getComponent(location, cb) {
+    //     System.import('./pages/Login')
+    //       .then(loadRoute(cb))
+    //       .catch(errorLoading);
+    //   },
+    // },
+    // {
+    //   path: '/register',
+    //   getComponent(location, cb) {
+    //     System.import('./pages/Register')
+    //       .then(loadRoute(cb))
+    //       .catch(errorLoading);
+    //   },
+    // },
+    // {
+    //   path: '/dash',
+    //   getComponent(location, cb) {
+    //     System.import('./pages/Dashboard')
+    //       .then(loadRoute(cb))
+    //       .catch(errorLoading);
+    //   },
+    // },
     {
       path: '/(:date)', // available as: this.props.params['date']
       getComponent(location, cb) {

@@ -140,24 +140,19 @@ function initReactions(store) {
   });
 
   store.on('newsubmission:create', () => {
-    console.log('asd');
     if (store.get().newArticle.isLoading) {
-      console.log('blasd');
       return;
     }
 
-    console.log('getting store');
     store.get().newArticle.set({ isLoading: true });
 
-    console.log('about to addSubmission');
     dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.deadline)
       .end((err, res) => {
-        console.log(err, res);
         if (err || !res.ok) {
           if (res.body.error.indexOf('date or deadline')) {
             alert('Nekaj je narobe z datumom. Verjetno že obstaja deadline na ta datum.');
           } else {
-            alert(`Nekaj je šlo na robe. Ne vemo čisto kaj, morda ti to pomaga: ${res.body.error}`);
+            alert(`Nekaj je šlo narobe. Ne vemo čisto kaj, morda ti to pomaga: ${res.body.error}`);
           }
           store.get().newArticle.set({
             isLoading: false,
@@ -312,7 +307,6 @@ function initReactions(store) {
 
   // THIS IS SAVING ON EDIT
   store.on('pending:edit', (id) => {
-    console.log('edit');
     const sub = store.get().pending.data.find(e => e.id === id);
     const editor = store.get().currentEditor;
 
@@ -343,8 +337,6 @@ function initReactions(store) {
   // THIS IS FIRST SUBMISSION (author finished editing)
   store.on('pending:submit', (id) => {
     const sub = store.get().pending.data.find(e => e.id === id);
-
-    console.log('asdfasdfasdfasdfsfasdf');
 
     if (sub) {
       sub.set({ disabled: true });
@@ -377,10 +369,8 @@ function initReactions(store) {
         newData.content = editorRTE;
       }
 
-      console.log('old', newData);
       dash.editSubmission(id, newData)
         .end((err, res) => {
-          console.log('new', newData);
           if (err || !res.ok) {
             // noop
           } else {
@@ -447,7 +437,7 @@ function initReactions(store) {
     }).now();
   });
 
-  store.on('registerform:submit', (id, token) => {
+  store.on('registerform:submit', (id, token, history) => {
     const register = store.get().forms.register.set({ isLoading: true });
 
     login.register(id, token, register.name, register.username, register.password)
@@ -459,7 +449,7 @@ function initReactions(store) {
           });
         } else {
           store.trigger('registerform:discard');
-          browserHistory.push('/login');
+          history.push('/login');
         }
       });
   });
@@ -502,6 +492,7 @@ function initReactions(store) {
         }
       });
   });
+
   store.on('vote:against', (data) => {
     dash.voteAgainst(data)
       .end((err, res) => {
@@ -518,6 +509,7 @@ function initReactions(store) {
         }
       });
   });
+
   store.on('vote:veto', (data) => {
     dash.voteVeto(data)
       .end((err, res) => {

@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { autobind } from 'core-decorators';
 import Button from '../FormControl/Button';
 import Input from '../FormControl/Input';
-import { login, logout } from '../../utils/login';
+import { login, logout as logoutFunc } from '../../utils/login';
+import { parseSearch } from '../../utils/url';
 
 class LoginForm extends React.Component {
   constructor() {
@@ -16,8 +17,9 @@ class LoginForm extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.location.search.indexOf('logout=true') !== -1) {
-      logout().end();
+    const { logout } = parseSearch(this.props.location.search);
+    if (logout) {
+      logoutFunc().end();
     }
   }
 

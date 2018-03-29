@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import Navbar from './Navbar';
-import PinnedMessages from './PinnedMessages';
 import PendingSubmissions from './PendingSubmissions';
 import VotableSubmissions from './VotableSubmissions';
 import Spinner from '../Spinner';
 import AdminPanel from './AdminPanel';
 import Blurb from './Blurb';
-
 
 import store from '../../store';
 
@@ -30,7 +28,7 @@ class Container extends React.Component {
         <div className="container dash__container">
           <Navbar username={state.user.data.name} />
           <Blurb />
-          <PinnedMessages pinned={state.pinned} user={state.user.data} />
+          {/* <PinnedMessages pinned={state.pinned} user={state.user.data} /> */}
           {state.user.data.group === 'admin' && (
             <AdminPanel state={state} />
           )}

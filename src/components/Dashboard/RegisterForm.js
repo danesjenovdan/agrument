@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import querystring from 'querystring';
 import Input from '../FormControl/Input';
 import Button from '../FormControl/Button';
+import { parseSearch } from '../../utils/url';
 
 import store from '../../store';
 
@@ -14,18 +14,18 @@ function onValueChange(key) {
   };
 }
 
-function onFormSubmit(id, token) {
+function onFormSubmit(id, token, history) {
   return (event) => {
     event.preventDefault();
-    store.trigger('registerform:submit', id, token);
+    store.trigger('registerform:submit', id, token, history);
   };
 }
 
-const RegisterForm = ({ data, location }) => {
-  const { id, token } = querystring.parse(location.search);
+const RegisterForm = ({ data, location, history }) => {
+  const { id, token } = parseSearch(location.search);
   return (
     <div className="container dash__container">
-      <form onSubmit={onFormSubmit(id, token)}>
+      <form onSubmit={onFormSubmit(id, token, history)}>
         <div className="row">
           <div className="col-md-4 col-md-offset-4">
             <div className="form-group">
@@ -55,6 +55,7 @@ const RegisterForm = ({ data, location }) => {
 
 RegisterForm.propTypes = {
   location: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
   data: PropTypes.shape({
     isLoading: PropTypes.bool,
     error: PropTypes.bool,

@@ -11,7 +11,7 @@ const Navbar = ({ username }) => (
       <ul className="nav navbar-nav navbar-right">
         <li><a href="http://djnd.si/short/" target="_blank" rel="noopener noreferrer">Shortener</a></li>
         <li><Link to="/">Agrument</Link></li>
-        <li><Link to={{ pathname: '/login', query: { logout: true } }}>Odjavi se!</Link></li>
+        <li><Link to="/login?logout=true">Odjavi se!</Link></li>
       </ul>
     </div>
   </nav>
