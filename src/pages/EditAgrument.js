@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 // import Helmet from 'react-helmet';
 import { autobind } from 'core-decorators';
 import Header from '../components/Header';
-import SideMenu from '../components/SideMenu';
 import Spinner from '../components/Spinner';
 import SubmissionEditor from '../components/Dashboard/SubmissionEditor';
 
@@ -41,7 +40,6 @@ class EditAgrument extends React.Component {
       return (
         <div>
           {/* <Helmet title="Dashboard" /> */}
-          <SideMenu />
           <div className="container-fluid">
             <Header
               title="Agrument"
@@ -58,7 +56,6 @@ class EditAgrument extends React.Component {
       return (
         <div>
           {/* <Helmet title="Dashboard" /> */}
-          <SideMenu />
           <div className="container-fluid">
             <Header
               title="Agrument"
@@ -73,7 +70,6 @@ class EditAgrument extends React.Component {
       return (
         <div>
           {/* <Helmet title="Dashboard" /> */}
-          <SideMenu />
           <div className="container-fluid">
             <Header
               title="Agrument"

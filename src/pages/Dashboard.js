@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { autobind } from 'core-decorators';
 import Header from '../components/Header';
 import DashContainer from '../components/Dashboard/Container';
-import SideMenu from '../components/SideMenu';
 
 class Dashboard extends React.Component {
   @autobind
@@ -20,7 +19,6 @@ class Dashboard extends React.Component {
     return (
       <div>
         {/* <Helmet title="Dashboard" /> */}
-        <SideMenu />
         <div className="container-fluid">
           <Header
             title="Agrument"

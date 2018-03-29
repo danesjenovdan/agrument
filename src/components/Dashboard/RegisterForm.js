@@ -44,7 +44,7 @@ const RegisterForm = ({ data, location, history }) => {
               {data.error ? (
                 <h4 className="text-center">Napaka pri registraciji!</h4>
               ) : null}
-              <Button type="submit" className="btn-block" disabled={data.isLoading}>Registriraj se!</Button>
+              <Button type="submit" block disabled={data.isLoading}>Registriraj se!</Button>
             </div>
           </div>
         </div>

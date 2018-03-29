@@ -60,7 +60,7 @@ class LoginForm extends React.Component {
                 {this.state.error ? (
                   <h4 className="text-center">Napaka pri prijavi!</h4>
                 ) : null}
-                <Button type="submit" className="btn-block">Prijavi se!</Button>
+                <Button type="submit" block>Prijavi se!</Button>
               </div>
             </div>
           </div>
