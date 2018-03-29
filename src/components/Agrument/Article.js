@@ -32,20 +32,23 @@ class Article extends React.Component {
   render() {
     const date = new Date(this.props.data.date).toLocaleDateString('sl');
     let cover;
-    if (!this.props.data.iframeURL) {
-      cover = <img src={this.props.data.imageURL} className="img-responsive agrument__image" alt={this.props.data.imageSource} />;
+    if (!this.props.data.embedCode) {
+      cover = <img src={this.props.data.imageURL} className="img-responsive agrument__image" alt={this.props.data.imageCaption} />;
     } else {
       cover = (
-        <div className="embed-responsive" style={{ paddingBottom: this.props.data.iframeHeight }}>
-          <iframe className="embed-responsive-item" src={this.props.data.iframeURL} />
-        </div>
+        <div
+          className="embed-responsive"
+          style={{ paddingBottom: this.props.data.embedHeight }}
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: this.props.data.embedCode }}
+        />
       );
     }
     return (
       <article className="agrument__article" id={`post-${this.props.data.id}`} data-id={this.props.data.id}>
         <h1 className="agrument__title">{this.props.data.title}</h1>
         {cover}
-        <div className="agrument__source"><a href={this.props.data.imageURL}>{this.props.data.imageSource}</a></div>
+        <div className="agrument__source"><a href={this.props.data.imageCaptionURL}>{this.props.data.imageCaption}</a></div>
         <div className="row">
           <div className="col-md-2">
             <div className="agrument__date">{date}</div>
@@ -60,7 +63,11 @@ class Article extends React.Component {
             </div>
           </div>
           <div className="col-md-10">
-            <div className="agrument__text" dangerouslySetInnerHTML={{ __html: this.props.data.content }} />
+            <div
+              className="agrument__text"
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: this.props.data.content }}
+            />
           </div>
         </div>
       </article>
@@ -70,14 +77,15 @@ class Article extends React.Component {
 
 Article.propTypes = {
   data: PropTypes.shape({
-    id: PropTypes.number,
-    title: PropTypes.string,
-    date: PropTypes.number,
-    content: PropTypes.string,
-    imageURL: PropTypes.string,
-    imageSource: PropTypes.string,
-    iframeURL: PropTypes.string,
-    iframeHeight: PropTypes.string,
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    date: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+    imageURL: PropTypes.string.isRequired,
+    imageCaption: PropTypes.string.isRequired,
+    imageCaptionURL: PropTypes.string.isRequired,
+    embedCode: PropTypes.string,
+    embedHeight: PropTypes.string,
   }).isRequired,
 };
 

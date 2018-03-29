@@ -149,7 +149,7 @@ function initReactions(store) {
     dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.deadline)
       .end((err, res) => {
         if (err || !res.ok) {
-          if (res.body.error.indexOf('date or deadline')) {
+          if (res.body.error.indexOf('date or deadline') !== -1) {
             alert('Nekaj je narobe z datumom. Verjetno že obstaja deadline na ta datum.');
           } else {
             alert(`Nekaj je šlo narobe. Ne vemo čisto kaj, morda ti to pomaga: ${res.body.error}`);

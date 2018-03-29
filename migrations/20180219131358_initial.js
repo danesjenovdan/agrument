@@ -30,7 +30,7 @@ exports.up = (knex, Promise) => (
           table.integer('deadline').notNullable();
           table.string('rights').notNullable();
           table.string('type').notNullable().defaultTo('pending');
-          table.string('imageCaptionURL');
+          table.string('imageCaptionURL').notNullable();
         });
       }
     }),

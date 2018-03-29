@@ -131,7 +131,6 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
 });
 
 router.post('/submissions/add', requireAdmin, (req, res) => {
-  console.log(req);
   db.transaction((trx) => {
     const date = req.body.date;
     const deadline = req.body.deadline;
@@ -153,6 +152,7 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
             description: '',
             imageURL: '',
             imageCaption: '',
+            imageCaptionURL: '',
             hasEmbed: 0,
             deadline: req.body.deadline,
             rights: '',
@@ -378,7 +378,6 @@ router.get('/edit/:date', (req, res) => {
     .where('date', req.params.date)
     .select('*')
     .then((data) => {
-      console.log(data);
       res.json({
         data,
       });
@@ -413,13 +412,11 @@ router.get('/votes', (req, res) => {
 
 router.post('/vote/:option', (req, res) => {
   if (req.body) {
-    console.log(req.body);
     db('votes')
       .select('id', 'author', 'post', 'vote')
       .where('post', req.body.data.post)
       .andWhere('author', req.user.id)
       .then((data) => {
-        console.log(data);
         if (data.length === 0) {
           // NO VOTE, pls insert
           db('votes')
@@ -459,7 +456,6 @@ router.post('/vote/:option', (req, res) => {
         }
       });
   } else {
-    console.log(req);
     res.status(400).json({
       error: 'Bad Request',
     });
