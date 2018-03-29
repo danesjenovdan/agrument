@@ -1,13 +1,15 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const Button = ({ value, block, external, children, type, href, disabled, onClick }) => {
+const Button = ({ value, block, external, children, type, href, disabled, onClick, className }) => {
   const inside = !children ? value : children;
   const classes = classnames(
     'component__button',
     'btn',
     { 'btn-block': block },
     { 'disabled ': disabled },
+    className,
   );
   if (!href) {
     return (
@@ -37,6 +39,7 @@ Button.propTypes = {
   href: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
+  className: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -48,6 +51,7 @@ Button.defaultProps = {
   href: '',
   disabled: false,
   onClick: () => { },
+  className: '',
 };
 
 export default Button;

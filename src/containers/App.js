@@ -1,49 +1,40 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-// import Helmet from 'react-helmet';
+import React, { Fragment } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import SideMenu from '../components/SideMenu';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
+import Dashboard from '../pages/Dashboard';
+import Agrument from '../pages/Agrument';
 
 import store from '../store';
 import initReactions from '../reactions';
 
 initReactions(store);
 
-class App extends React.Component {
-  getChildContext() {
-    const state = store.get();
-    return { state };
-  }
+// TODO: lazy loading and other routes
+// import rootRoute from './routes';
 
+class App extends React.Component {
   componentDidMount() {
-    // re-render the app on store updates
     store.on('update', () => {
-      console.log('App.forceUpdate');
       this.forceUpdate();
     });
   }
 
   render() {
-    const { children } = this.props;
-    // const state = store.get();
+    const state = store.get();
     return (
-      <div>
-        {/* <Helmet
-          defaultTitle="Agrument"
-          titleTemplate="%s - Agrument"
-        /> */}
-        {/* {React.Children.map(children, child => React.cloneElement(child, { state }))} */}
-        {children}
-      </div>
+      <Fragment>
+        <SideMenu />
+        <Switch>
+          <Route path="/login" render={() => <Login state={state} />} />
+          <Route path="/register" render={() => <Register state={state} />} />
+          <Route path="/dash" render={() => <Dashboard state={state} />} />
+          <Route path="/" render={() => <Agrument state={state} />} />
+        </Switch>
+      </Fragment>
     );
   }
 }
-
-App.propTypes = {
-  // children: PropTypes.element.isRequired,
-  children: PropTypes.any.isRequired,
-};
-
-App.childContextTypes = {
-  state: PropTypes.shape(),
-};
 
 export default App;

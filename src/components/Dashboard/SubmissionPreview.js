@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { toSloDateString } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
 import { getRightFromLetter } from '../../utils/rights';

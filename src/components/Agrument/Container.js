@@ -1,16 +1,16 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Feed from './Feed';
 import Sidebar from './Sidebar';
 
-const Container = ({ params }) => (
+const Container = () => (
   <div className="container agrument__container">
     <StickyContainer>
       <Link to="/dash">Dash</Link> { /* TODO: remove this link */ }
       <div className="row">
         <div className="col-md-9">
-          <Feed params={params} />
+          <Feed />
         </div>
         <div className="col-md-3 hidden-xs hidden-sm">
           <Sticky>
@@ -21,9 +21,5 @@ const Container = ({ params }) => (
     </StickyContainer>
   </div>
 );
-
-Container.propTypes = {
-  params: PropTypes.shape({ date: PropTypes.string }),
-};
 
 export default Container;

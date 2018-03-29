@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { autobind } from 'core-decorators';
 import Button from '../FormControl/Button';
@@ -15,7 +16,7 @@ class LoginForm extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.location.query.logout === 'true') {
+    if (this.props.location.search.indexOf('logout=true') !== -1) {
       logout().end();
     }
   }
@@ -30,9 +31,9 @@ class LoginForm extends React.Component {
         .end((err, res) => {
           if (err) {
             this.setState({ error: true });
-            console.log(err);
+            console.log(err); // eslint-disable-line no-console
           } else if (res.ok) {
-            this.context.history.replace('/dash');
+            this.props.history.replace('/dash');
           }
         });
     }
@@ -41,18 +42,25 @@ class LoginForm extends React.Component {
   render() {
     return (
       <div className="container dash__container">
-        {this.state.error ? (
-          <div>Napaka pri vpisu!</div>
-        ) : null}
         <form action="/api/login" method="post" onSubmit={this.onSubmitForm}>
-          <div>
-            <Input placeholder="username" ref={(e) => { this.username = e; }} />
-          </div>
-          <div>
-            <Input placeholder="password" type="password" ref={(e) => { this.password = e; }} />
-          </div>
-          <div>
-            <Button type="submit">Login</Button>
+          <div className="row">
+            <div className="col-md-4 col-md-offset-4">
+              <div className="form-group">
+                <h3>Prijava</h3>
+              </div>
+              <div className="form-group">
+                <Input placeholder="username" ref={(e) => { this.username = e; }} />
+              </div>
+              <div className="form-group">
+                <Input placeholder="password" type="password" ref={(e) => { this.password = e; }} />
+              </div>
+              <div className="form-group">
+                {this.state.error ? (
+                  <h4 className="text-center">Napaka pri prijavi!</h4>
+                ) : null}
+                <Button type="submit" className="btn-block">Prijavi se!</Button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -61,11 +69,8 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  location: PropTypes.shape({
-    query: PropTypes.shape({
-      logout: PropTypes.string,
-    }),
-  }).isRequired,
+  location: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
 };
 
 export default withRouter(LoginForm);

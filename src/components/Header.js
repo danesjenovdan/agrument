@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 const Header = ({ title, subTitle, small }) => {
@@ -24,9 +25,13 @@ const Header = ({ title, subTitle, small }) => {
 };
 
 Header.propTypes = {
-  title: PropTypes.string,
-  subTitle: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  subTitle: PropTypes.string.isRequired,
   small: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  small: false,
 };
 
 export default Header;

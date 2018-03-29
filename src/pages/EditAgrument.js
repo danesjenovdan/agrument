@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 // import Helmet from 'react-helmet';
 import { autobind } from 'core-decorators';
 import Header from '../components/Header';

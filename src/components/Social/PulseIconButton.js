@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const PulseButton = ({ iconName, onClick }) => (
   <button className="component__social-pulse-btn" onClick={onClick}>

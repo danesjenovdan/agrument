@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const Content = ({ children }) => (
   <div className="card__content">
@@ -11,7 +12,7 @@ const Content = ({ children }) => (
 );
 
 Content.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
 };
 
 export default Content;

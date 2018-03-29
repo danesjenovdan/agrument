@@ -1,4 +1,6 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import Navbar from './Navbar';
 import PinnedMessages from './PinnedMessages';
 import PendingSubmissions from './PendingSubmissions';
@@ -7,11 +9,12 @@ import Spinner from '../Spinner';
 import AdminPanel from './AdminPanel';
 import Blurb from './Blurb';
 
+
 import store from '../../store';
 
 class Container extends React.Component {
   componentDidMount() {
-    store.trigger('user:fetch', this.context.history);
+    store.trigger('user:fetch', this.props.history);
   }
 
   render() {
@@ -23,7 +26,6 @@ class Container extends React.Component {
         </div>
       );
     } else if (state.user.data) {
-      console.log(state);
       return (
         <div className="container dash__container">
           <Navbar username={state.user.data.name} />
@@ -54,6 +56,7 @@ class Container extends React.Component {
 
 Container.propTypes = {
   state: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
 };
 
-export default Container;
+export default withRouter(Container);

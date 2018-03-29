@@ -1,4 +1,5 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import InputImmutable from '../FormControl/InputImmutableAutoFocus';
 import PulseIconButton from '../Social/PulseIconButton';
 import { shareOnFacebook, shareOnTwitter, shareOnGooglePlus } from '../../utils/social';
