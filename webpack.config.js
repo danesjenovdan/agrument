@@ -127,6 +127,7 @@ module.exports = {
                 'react',
               ],
               plugins: [
+                'transform-object-rest-spread',
                 'transform-decorators-legacy',
                 'transform-runtime',
                 'lodash',
