@@ -266,11 +266,12 @@ function initReactions(store) {
         if (err || !res.ok) {
           store.get().editable.set({
             isLoading: false,
+            error: true,
           });
         } else {
           store.get().editable.set({
             isLoading: false,
-            data: res.body.editable,
+            data: res.body.data,
           });
         }
       });

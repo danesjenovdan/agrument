@@ -17,11 +17,11 @@ const POST_PUBLISH_VOTABLE = `${API_DASH}/votable/publish/:id`;
 const GET_PINNED = `${API_DASH}/pinned`;
 const POST_ADD_PINNED = `${API_DASH}/pinned/add`;
 const DELETE_REMOVE_PINNED = `${API_DASH}/pinned/remove/:id`;
+const GET_EDITABLE = `${API_DASH}/edit/:date`;
 const GET_VOTES = `${API_DASH}/votes`;
 const VOTE_FOR = `${API_DASH}/vote/for`;
 const VOTE_AGAINST = `${API_DASH}/vote/against`;
 const VOTE_VETO = `${API_DASH}/vote/veto`;
-const EDITABLE = `${API_DASH}/edit`;
 
 function getUser() {
   return request.get(GET_USER);
@@ -91,29 +91,27 @@ function removePinned(id) {
   return request.del(DELETE_REMOVE_PINNED.replace(':id', id));
 }
 
+function getEditable(date) {
+  return request.get(GET_EDITABLE.replace(':date', date));
+}
+
 function getVotes() {
   return request.get(GET_VOTES);
 }
+
 function voteFor(data) {
-  console.log(data);
   return request.post(VOTE_FOR)
     .send({ data });
 }
+
 function voteAgainst(data) {
-  console.log(data);
   return request.post(VOTE_AGAINST)
     .send({ data });
 }
+
 function voteVeto(data) {
-  console.log(data);
   return request.post(VOTE_VETO)
     .send({ data });
-}
-
-function getEditable(date) {
-  console.log(date);
-  return request.get(`${EDITABLE}/${date}`)
-    .send({ date });
 }
 
 export {

@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import Helmet from 'react-helmet';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { autobind } from 'core-decorators';
+import Spinner from '../components/Spinner';
 import Header from '../components/Header';
 import DashContainer from '../components/Dashboard/Container';
+import DashContainerEdit from '../components/Dashboard/ContainerEdit';
+
+import store from '../store';
 
 class Dashboard extends React.Component {
+  componentDidMount() {
+    store.trigger('user:fetch', this.props.history);
+  }
+
   @autobind
   routerWillLeave() {
     if (this.props.state.currentEditor || this.props.state.currentEditorRTE) {
@@ -16,6 +25,19 @@ class Dashboard extends React.Component {
 
   render() {
     const { state } = this.props;
+    let content = null;
+    if (state.user.isLoading) {
+      content = (
+        <Spinner />
+      );
+    } else if (state.user.data) {
+      content = (
+        <Switch>
+          <Route path="/dash/edit/:date" render={() => <DashContainerEdit state={state} />} />
+          <Route path="/dash" render={() => <DashContainer state={state} />} />
+        </Switch>
+      );
+    }
     return (
       <div>
         {/* <Helmet title="Dashboard" /> */}
@@ -25,7 +47,7 @@ class Dashboard extends React.Component {
             subTitle="Dashboard"
             small
           />
-          <DashContainer state={state} />
+          {content}
         </div>
       </div>
     );
@@ -34,6 +56,7 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   state: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
 };
 
-export default Dashboard;
+export default withRouter(Dashboard);

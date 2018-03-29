@@ -374,9 +374,19 @@ router.delete('/pinned/remove/:id', (req, res) => {
 });
 
 router.get('/edit/:date', (req, res) => {
-  db('posts')
-    .where('date', req.params.date)
-    .select('*')
+  let query;
+  if (req.user.group === 'admin') {
+    query = db('posts')
+      .where('date', req.params.date)
+      .first();
+  } else {
+    query = db('posts')
+      .where('date', req.params.date)
+      .andWhere('author', req.user.id)
+      .first();
+  }
+
+  query
     .then((data) => {
       res.json({
         data,

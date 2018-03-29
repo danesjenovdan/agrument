@@ -42,12 +42,22 @@ const SubmissionPreview = ({ entry }) => (
     </section>
     <hr />
     <section>
-      {entry.hasEmbed
-        ? <div className="embed-responsive" style={{ paddingBottom: entry.embedHeight || '56.25%' }} dangerouslySetInnerHTML={{ __html: entry.embedCode }} />
-        : <img src={entry.imageURL} className="img-responsive img-fullwidth" alt="og cover" />
-      }
+      {entry.hasEmbed ? (
+        <div
+          className="embed-responsive"
+          style={{ paddingBottom: entry.embedHeight || '56.25%' }}
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: entry.embedCode }}
+        />
+      ) : (
+        <img src={entry.imageURL} className="img-responsive img-fullwidth" alt="og cover" />
+      )}
       <h3>{entry.title}</h3>
-      <div className="agrument__text" dangerouslySetInnerHTML={{ __html: entry.content }} />
+      <div
+        className="agrument__text"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: entry.content }}
+      />
     </section>
     <hr />
     <section>
