@@ -27,7 +27,11 @@ class EditAgrument extends React.Component {
       );
     } else if (state.editable.data) {
       content = (
-        <SubmissionEditor entry={state.editable.data} />
+        <div className="row">
+          <div className="col-md-8 col-md-offset-2">
+            <SubmissionEditor entry={state.editable.data} />
+          </div>
+        </div>
       );
     } else {
       content = 'napaka';
