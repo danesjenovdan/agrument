@@ -169,6 +169,28 @@ function initReactions(store) {
       });
   });
 
+  store.on('published:fetch', () => {
+    if (store.get().published.isLoading) {
+      return;
+    }
+
+    store.get().published.set({ isLoading: true });
+
+    dash.getPublished()
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().published.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().published.set({
+            isLoading: false,
+            data: res.body.published,
+          });
+        }
+      });
+  });
+
   store.on('submissions:fetch', () => {
     if (store.get().submissions.isLoading) {
       return;

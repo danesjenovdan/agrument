@@ -143,6 +143,7 @@ class Feed extends React.Component {
         content.push(<div key="load-above" className="agrument__spinner-container">
           {this.state.loading ? <Spinner /> : <Button key="load-above-btn" onClick={() => this.lazyLoadAbove()} value="^ Naloži ^" />}
         </div>);
+        // TODO: use RenderSpinner HOC
       }
 
       const articles = this.state.data.map(post => (
@@ -159,11 +160,13 @@ class Feed extends React.Component {
             // <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
             null}
         </div>);
+        // TODO: use RenderSpinner HOC
       }
     } else if (this.state.loading) {
       content.push(<div key="load-main" className="agrument__spinner-container">
         <Spinner />
       </div>);
+      // TODO: use RenderSpinner HOC
     } else {
       content.push(<div key="load-main" className="agrument__spinner-container">
         <h1>NAPAKA :(</h1>

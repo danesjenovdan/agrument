@@ -32,6 +32,10 @@ const store = new Freezer({
     selectedUser: null,
     deadline: parseDate(Date.now()).getTime(),
   },
+  published: {
+    isLoading: false,
+    data: null,
+  },
   submissions: {
     isLoading: false,
     data: null,

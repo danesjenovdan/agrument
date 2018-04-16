@@ -5,6 +5,7 @@ const API_DASH = '/api/dash';
 const GET_USER = `${API_DASH}/user`;
 const GET_USERS = `${API_DASH}/users`;
 const POST_CREATE_USER = `${API_DASH}/users/create`;
+const GET_PUBLISHED = `${API_DASH}/published`;
 const GET_SUBMISSIONS = `${API_DASH}/submissions`;
 const POST_ADD_SUBMISSION = `${API_DASH}/submissions/add`;
 const POST_ADD_BULK_SUBMISSION = `${API_DASH}/submissions/addbulk`;
@@ -33,6 +34,10 @@ function getUsers() {
 
 function createUser() {
   return request.post(POST_CREATE_USER);
+}
+
+function getPublished() {
+  return request.get(GET_PUBLISHED);
 }
 
 function getSubmissions() {
@@ -118,6 +123,7 @@ export {
   getUser,
   getUsers,
   createUser,
+  getPublished,
   getSubmissions,
   addSubmission,
   addBulkSubmission,

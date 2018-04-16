@@ -1,31 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
 import Navbar from './Navbar';
-import PendingSubmissions from './PendingSubmissions';
-import VotableSubmissions from './VotableSubmissions';
-import AdminPanel from './AdminPanel';
-import Blurb from './Blurb';
+import Edit from './subpages/Edit';
+import List from './subpages/List';
+import Main from './subpages/Main';
 
 const Container = ({ state }) => (
   <div className="container dash__container">
     <Navbar username={state.user.data.name} />
-    <Blurb />
-    {state.user.data.group === 'admin' && (
-      <AdminPanel state={state} />
-    )}
-    <div className="row">
-      <div className="col-lg-6">
-        <PendingSubmissions pending={state.pending} currentEditor={state.currentEditor} />
-      </div>
-      <div className="col-lg-6">
-        <VotableSubmissions
-          user={state.user.data}
-          votable={state.votable}
-          currentEditor={state.currentEditor}
-          votes={state.votes}
-        />
-      </div>
-    </div>
+    <Switch>
+      <Route path="/dash/edit/:date" render={() => <Edit state={state} />} />
+      <Route path="/dash/list" render={() => <List state={state} />} />
+      <Route path="/dash" render={() => <Main state={state} />} />
+    </Switch>
   </div>
 );
 

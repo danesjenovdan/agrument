@@ -187,6 +187,7 @@
 
 .component__spinner {
   $size: 48px;
+  text-align: center;
 
   @keyframes spinner {
     0%   { transform: rotate(0deg);   }
@@ -198,7 +199,7 @@
     width: $size;
     height: $size;
     border-style: solid;
-    border-color: #4281f4;
+    border-color: $agrument-teal;
     border-width: $size / 4;
     border-right-color: transparent !important;
     border-radius: 50% !important;

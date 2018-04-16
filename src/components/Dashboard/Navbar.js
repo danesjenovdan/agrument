@@ -8,9 +8,13 @@ const Navbar = ({ username }) => (
       <div className="navbar-header">
         <span className="navbar-brand">Zdravo {username}!</span>
       </div>
+      <ul className="nav navbar-nav">
+        <li><Link to="/dash">Dashboard</Link></li>
+        <li><Link to="/dash/list">Seznam agrumentov</Link></li>
+      </ul>
       <ul className="nav navbar-nav navbar-right">
-        <li><a href="http://djnd.si/short/" target="_blank" rel="noopener noreferrer">Shortener</a></li>
         <li><Link to="/">Agrument</Link></li>
+        <li><a href="https://djnd.si/short/" target="_blank" rel="noopener noreferrer">Shortener</a></li>
         <li><Link to="/login?logout=true">Odjavi se!</Link></li>
       </ul>
     </div>

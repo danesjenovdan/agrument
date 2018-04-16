@@ -63,6 +63,24 @@ router.post('/users/create', requireAdmin, (req, res) => {
     });
 });
 
+router.get('/published', requireAdmin, (req, res) => {
+  db('posts')
+    .where('type', 'published')
+    .orderBy('deadline', 'asc')
+    .leftOuterJoin('users', 'posts.author', 'users.id')
+    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.deadline', 'posts.type', 'users.name as author_name')
+    .then((data) => {
+      res.json({
+        published: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
 router.get('/submissions', requireAdmin, (req, res) => {
   db('posts')
     .whereIn('type', ['votable', 'pending'])
@@ -388,9 +406,15 @@ router.get('/edit/:date', (req, res) => {
 
   query
     .then((data) => {
-      res.json({
-        data,
-      });
+      if (data) {
+        res.json({
+          data,
+        });
+      } else {
+        res.status(404).json({
+          error: 'Not Found',
+        });
+      }
     })
     .catch((err) => {
       res.status(500).json({
@@ -398,12 +422,6 @@ router.get('/edit/:date', (req, res) => {
       });
     });
 });
-
-  // db('posts')
-  // .where('type', 'votable')
-  // .orderBy('deadline', 'asc')
-  // .leftOuterJoin('users', 'posts.author', 'users.id')
-  // .select('posts.*', 'users.name as author_name')
 
 router.get('/votes', (req, res) => {
   db('votes')
