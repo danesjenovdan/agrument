@@ -35,11 +35,6 @@
     "css-loader": "^0.26.1",
     "draft-js": "^0.10.0",
     "draft-js-utils": "^0.1.7",
-    "eslint": "^3.15.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.9.0",
     "express": "^4.16.3",
     "express-session": "^1.15.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.5",
@@ -60,13 +55,13 @@
     "react-cropper": "^0.10.1",
     "react-dom": "^16.3.1",
     "react-helmet": "^5.2.0",
-    "react-portal": "^3.0.0",
+    "react-portal": "^4.1.5",
     "react-router-dom": "^4.2.2",
     "react-rte": "^0.11.0",
     "react-select": "^1.0.0-rc.2",
-    "react-sticky": "^5.0.5",
+    "react-sticky": "^6.0.2",
     "react-timeago": "^4.1.9",
-    "react-waypoint": "^5.1.0",
+    "react-waypoint": "^8.0.1",
     "rimraf": "^2.5.4",
     "sass-loader": "^6.0.0",
     "sqlite3": "^4.0.0",
@@ -75,5 +70,12 @@
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.3.0",
     "webpack-md5-hash": "0.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0"
   }
 }
