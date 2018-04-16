@@ -5,19 +5,19 @@ import { PinnedNotice } from './PinnedMessage';
 import store from '../../store';
 
 function showInput() {
-  store.trigger('pinned:showinput');
+  store.emit('pinned:showinput');
 }
 
 function resetInput() {
-  store.trigger('pinned:resetinput');
+  store.emit('pinned:resetinput');
 }
 
 function onInputChange(event) {
-  store.trigger('pinned:updatemessage', event.target.value);
+  store.emit('pinned:updatemessage', event.target.value);
 }
 
 function addMessage() {
-  store.trigger('pinned:add');
+  store.emit('pinned:add');
 }
 
 const PinnedMessageAdd = ({ newMessage }) => {

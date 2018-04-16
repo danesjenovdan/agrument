@@ -8,7 +8,7 @@ import store from '../../store';
 
 class PinnedMessages extends React.PureComponent {
   componentDidMount() {
-    store.trigger('pinned:fetch');
+    store.emit('pinned:fetch');
   }
 
   render() {

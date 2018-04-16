@@ -5,7 +5,6 @@
   ],
   "plugins": [
     "transform-object-rest-spread",
-    "transform-decorators-legacy",
-    [ "system-import-transformer", { "modules": "common" } ]
+    "transform-class-properties"
   ]
 }

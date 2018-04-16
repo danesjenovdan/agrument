@@ -5,7 +5,7 @@ import store from '../../../store';
 
 class List extends React.Component {
   componentDidMount() {
-    store.trigger('published:fetch');
+    store.emit('published:fetch');
   }
 
   render() {

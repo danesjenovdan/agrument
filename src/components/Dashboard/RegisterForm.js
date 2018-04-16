@@ -10,14 +10,14 @@ import store from '../../store';
 function onValueChange(key) {
   return (event) => {
     const value = event.target.value;
-    store.trigger('registerform:update', key, value);
+    store.emit('registerform:update', key, value);
   };
 }
 
 function onFormSubmit(id, token, history) {
   return (event) => {
     event.preventDefault();
-    store.trigger('registerform:submit', id, token, history);
+    store.emit('registerform:submit', id, token, history);
   };
 }
 

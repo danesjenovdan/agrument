@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import store from '../../store';
 
 function createUser() {
-  store.trigger('newuser:create');
+  store.emit('newuser:create');
 }
 
 function getURL(id, token) {

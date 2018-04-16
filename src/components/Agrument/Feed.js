@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import Helmet from 'react-helmet';
+import Helmet from 'react-helmet';
 // import Waypoint from 'react-waypoint';
 import { concat } from 'lodash';
-import { autobind } from 'core-decorators';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
@@ -67,8 +66,7 @@ class Feed extends React.Component {
     }
   }
 
-  @autobind
-  setInitialArticleState(err, res) {
+  setInitialArticleState = (err, res) => {
     this.setState({ loading: false });
     this.dataRequest = null;
 
@@ -184,6 +182,7 @@ class Feed extends React.Component {
     //     ]}
     //   />
     // ) : null;
+    // TODO: convert helmet to tags
     return (
       <div className="agrument__feed">
         {/* {meta} */}

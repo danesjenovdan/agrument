@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import Helmet from 'react-helmet';
+import Helmet from 'react-helmet';
 import Header from '../components/Header';
 import RegisterForm from '../components/Dashboard/RegisterForm';
 
 const Register = ({ state }) => (
   <div>
-    {/* <Helmet title="Register" /> */}
+    <Helmet>
+      <title>Register</title>
+    </Helmet>
     <div className="container-fluid">
       <Header
         title="Agrument"

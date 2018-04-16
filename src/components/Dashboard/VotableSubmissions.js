@@ -7,8 +7,8 @@ import store from '../../store';
 
 class VotableSubmissions extends React.PureComponent {
   componentDidMount() {
-    store.trigger('votable:fetch');
-    store.trigger('votes:fetch');
+    store.emit('votable:fetch');
+    store.emit('votes:fetch');
   }
 
   render() {

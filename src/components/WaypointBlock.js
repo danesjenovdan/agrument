@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import Waypoint from 'react-waypoint';
-import { autobind } from 'core-decorators';
 
 class WaypointBlock extends React.Component {
 
-  @autobind
-  handleWaypointEnter(event, position) {
+  handleWaypointEnter = (event, position) => {
     if ((event.previousPosition === 'below' && position === 'top') || (event.previousPosition === 'above' && position === 'bottom')) {
       if (this.props.onEnterFunc) {
         this.props.onEnterFunc();

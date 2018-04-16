@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { uniqueId } from 'lodash';
 import classnames from 'classnames';
-import { autobind } from 'core-decorators';
 
 class Checkbox extends React.Component {
   componentWillMount() {
@@ -10,8 +9,7 @@ class Checkbox extends React.Component {
     this.setState({ id, checked: false });
   }
 
-  @autobind
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({ checked: event.target.checked });
     if (this.props.onChange) {
       this.props.onChange(event);

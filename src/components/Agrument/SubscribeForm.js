@@ -1,6 +1,5 @@
 import React from 'react';
 import request from 'superagent';
-import { autobind } from 'core-decorators';
 import Input from '../FormControl/Input';
 import Checkbox from '../FormControl/Checkbox';
 import Button from '../FormControl/Button';
@@ -18,8 +17,7 @@ class SubscribeForm extends React.Component {
     };
   }
 
-  @autobind
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
     if (validateEmail(this.emailInput.value)) {
       this.setState({ disableButton: true });
@@ -43,8 +41,7 @@ class SubscribeForm extends React.Component {
     }
   }
 
-  @autobind
-  resetForm() {
+  resetForm = () => {
     this.setState({ formSubmitted: false, error: false, disableButton: false });
   }
 

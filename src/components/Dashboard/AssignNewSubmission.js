@@ -5,19 +5,19 @@ import { parseDate, toISODateString } from '../../utils/date';
 import store from '../../store';
 
 function changeSelectedUser(event) {
-  store.trigger('newsubmission:changeuser', +event.target.value);
+  store.emit('newsubmission:changeuser', +event.target.value);
 }
 
 function changeDeadline(event) {
   const date = parseDate(event.target.value, false);
   if (date) {
     console.log(date);
-    store.trigger('newsubmission:changedeadline', date.getTime());
+    store.emit('newsubmission:changedeadline', date.getTime());
   }
 }
 
 function createSubmission() {
-  store.trigger('newsubmission:create');
+  store.emit('newsubmission:create');
 }
 
 const AssignNewAgrument = ({ users, newArticle }) => (

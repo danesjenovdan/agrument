@@ -59,7 +59,7 @@ function initReactions(store) {
           if (err || !res.ok) {
             // noop
           } else {
-            store.trigger('pinned:fetch');
+            store.emit('pinned:fetch');
           }
         });
     }
@@ -82,7 +82,7 @@ function initReactions(store) {
             isLoading: false,
             error: false,
           });
-          store.trigger('pinned:fetch');
+          store.emit('pinned:fetch');
         }
       });
   });
@@ -163,8 +163,8 @@ function initReactions(store) {
             isLoading: false,
             error: false,
           });
-          store.trigger('submissions:fetch');
-          store.trigger('pending:fetch');
+          store.emit('submissions:fetch');
+          store.emit('pending:fetch');
         }
       });
   });
@@ -225,8 +225,8 @@ function initReactions(store) {
           if (err || !res.ok) {
             // noop
           } else {
-            store.trigger('submissions:fetch');
-            store.trigger(`${type}:fetch`);
+            store.emit('submissions:fetch');
+            store.emit(`${type}:fetch`);
           }
         });
     }
@@ -347,10 +347,10 @@ function initReactions(store) {
           if (err || !res.ok) {
             // noop
           } else {
-            store.trigger('editor:discardeditor');
-            store.trigger('pending:fetch');
+            store.emit('editor:discardeditor');
+            store.emit('pending:fetch');
             if (store.get().submissions.data) {
-              store.trigger('submissions:fetch');
+              store.emit('submissions:fetch');
             }
           }
         });
@@ -369,10 +369,10 @@ function initReactions(store) {
           if (err || !res.ok) {
             // noop
           } else {
-            store.trigger('pending:fetch');
-            store.trigger('votable:fetch');
+            store.emit('pending:fetch');
+            store.emit('votable:fetch');
             if (store.get().submissions.data) {
-              store.trigger('submissions:fetch');
+              store.emit('submissions:fetch');
             }
           }
         });
@@ -397,10 +397,10 @@ function initReactions(store) {
           if (err || !res.ok) {
             // noop
           } else {
-            store.trigger('editor:discardeditor');
-            store.trigger('votable:fetch');
+            store.emit('editor:discardeditor');
+            store.emit('votable:fetch');
             if (store.get().submissions.data) {
-              store.trigger('submissions:fetch');
+              store.emit('submissions:fetch');
             }
           }
         });
@@ -418,9 +418,9 @@ function initReactions(store) {
           if (err || !res.ok) {
             // noop
           } else {
-            store.trigger('votable:fetch');
+            store.emit('votable:fetch');
             if (store.get().submissions.data) {
-              store.trigger('submissions:fetch');
+              store.emit('submissions:fetch');
             }
           }
         });
@@ -471,7 +471,7 @@ function initReactions(store) {
             error: true,
           });
         } else {
-          store.trigger('registerform:discard');
+          store.emit('registerform:discard');
           history.push('/login');
         }
       });
@@ -511,7 +511,7 @@ function initReactions(store) {
             isLoading: false,
             // data: res.body.data,
           });
-          store.trigger('votes:fetch');
+          store.emit('votes:fetch');
         }
       });
   });
@@ -528,7 +528,7 @@ function initReactions(store) {
             isLoading: false,
             // data: res.body.data,
           });
-          store.trigger('votes:fetch');
+          store.emit('votes:fetch');
         }
       });
   });
@@ -545,7 +545,7 @@ function initReactions(store) {
             isLoading: false,
             // data: res.body.data,
           });
-          store.trigger('votes:fetch');
+          store.emit('votes:fetch');
         }
       });
   });

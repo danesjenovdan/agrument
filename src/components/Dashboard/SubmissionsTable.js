@@ -6,7 +6,7 @@ import store from '../../store';
 
 function removeSubmission(id) {
   return () => {
-    store.trigger('submissions:remove', id);
+    store.emit('submissions:remove', id);
   };
 }
 

@@ -36,8 +36,8 @@ function bulkUp() {
 
 class AdminPanel extends React.PureComponent {
   componentDidMount() {
-    store.trigger('users:fetch');
-    store.trigger('submissions:fetch');
+    store.emit('users:fetch');
+    store.emit('submissions:fetch');
   }
 
   render() {

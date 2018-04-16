@@ -9,43 +9,43 @@ import store from '../../store';
 
 function publishArticle(id) {
   return () => {
-    store.trigger('votable:publish', id);
+    store.emit('votable:publish', id);
   };
 }
 
 function showEditor(id) {
   return () => {
-    store.trigger('editor:showeditor', id);
+    store.emit('editor:showeditor', id);
   };
 }
 
 function discardChanges() {
-  store.trigger('editor:discardeditor');
+  store.emit('editor:discardeditor');
 }
 
 // function getVotes() {
-//   store.trigger('votes:fetch');
+//   store.emit('votes:fetch');
 // }
 
 function voteFor(user, post) {
   return () => {
-    store.trigger('vote:for', { user, post });
+    store.emit('vote:for', { user, post });
   };
 }
 function voteAgainst(user, post) {
   return () => {
-    store.trigger('vote:against', { user, post });
+    store.emit('vote:against', { user, post });
   };
 }
 function voteVeto(user, post) {
   return () => {
-    store.trigger('vote:veto', { user, post });
+    store.emit('vote:veto', { user, post });
   };
 }
 
 function saveChanges(id) {
   return () => {
-    store.trigger('votable:edit', id);
+    store.emit('votable:edit', id);
   };
 }
 

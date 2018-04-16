@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { autobind } from 'core-decorators';
 import Button from '../FormControl/Button';
 import Input from '../FormControl/Input';
 import { login, logout as logoutFunc } from '../../utils/login';
@@ -23,8 +22,7 @@ class LoginForm extends React.Component {
     }
   }
 
-  @autobind
-  onSubmitForm(event) {
+  onSubmitForm = (event) => {
     event.preventDefault();
     this.setState({ error: false });
 

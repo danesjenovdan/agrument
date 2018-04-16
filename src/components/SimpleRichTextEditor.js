@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import { autobind } from 'core-decorators';
 import RichTextEditor from './RichTextEditor';
 
 const MAX_LENGTH = 1000;
@@ -26,8 +25,7 @@ class SimpleRichTextEditor extends React.Component {
     this._updateStateFromProps(newProps);
   }
 
-  @autobind
-  _updateStateFromProps(newProps) {
+  _updateStateFromProps = (newProps) => {
     const { value, format } = newProps;
     if (this._currentValue != null) {
       const [currentValue, currentFormat] = this._currentValue;
@@ -42,8 +40,7 @@ class SimpleRichTextEditor extends React.Component {
     this._currentValue = [format, value];
   }
 
-  @autobind
-  _onChange(editorValue) {
+  _onChange = (editorValue) => {
     const { format, onChange } = this.props;
     const oldEditorValue = this.state.editorValue;
     this.setState({ editorValue });
@@ -81,8 +78,7 @@ class SimpleRichTextEditor extends React.Component {
     );
   }
 
-  @autobind
-  _handleBeforeInput() {
+  _handleBeforeInput = () => {
     const currentContent = this.state.editorValue._editorState.getCurrentContent();
     const currentContentLength = currentContent.getPlainText('').length;
 

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Portal from 'react-portal';
 // import Cropper from 'react-cropper';
-import { autobind } from 'core-decorators';
 import Modal from '../Modal';
 import Button from '../FormControl/Button';
 import FileChooser from '../FormControl/FileChooser';
@@ -18,8 +17,7 @@ class ImageEdit extends React.Component {
     };
   }
 
-  @autobind
-  onFileSelected(event) {
+  onFileSelected = (event) => {
     event.preventDefault();
     let files;
     if (event.dataTransfer) {
@@ -34,29 +32,25 @@ class ImageEdit extends React.Component {
     reader.readAsDataURL(files[0]);
   }
 
-  @autobind
-  onLoadLink(event) {
+  onLoadLink = (event) => {
     event.preventDefault();
     if (this.linkInput) {
       this.setState({ image: this.linkInput.value });
     }
   }
 
-  @autobind
-  onDone() {
+  onDone = () => {
     if (this.props.onDone && this.cropper && this.cropper.getCroppedCanvas()) {
       this.props.onDone(this.cropper.getCroppedCanvas().toDataURL('image/jpeg'));
       this.closeModal();
     }
   }
 
-  @autobind
-  openModal() {
+  openModal = () => {
     this.setState({ modalOpen: true });
   }
 
-  @autobind
-  closeModal() {
+  closeModal = () => {
     this.setState({ modalOpen: false });
   }
 

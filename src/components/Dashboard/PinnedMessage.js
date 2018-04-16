@@ -6,7 +6,7 @@ import store from '../../store';
 
 function removeMessage(id) {
   return () => {
-    store.trigger('pinned:remove', id);
+    store.emit('pinned:remove', id);
   };
 }
 

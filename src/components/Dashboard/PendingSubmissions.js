@@ -7,7 +7,7 @@ import store from '../../store';
 
 class PendingSubmissions extends React.PureComponent {
   componentDidMount() {
-    store.trigger('pending:fetch');
+    store.emit('pending:fetch');
   }
 
   render() {

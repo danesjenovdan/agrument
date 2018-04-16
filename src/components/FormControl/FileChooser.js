@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
-import { autobind } from 'core-decorators';
 import Button from './Button';
 
 class FileChooser extends React.Component {
@@ -11,15 +10,13 @@ class FileChooser extends React.Component {
     this.setState({ id });
   }
 
-  @autobind
-  onClick() {
+  onClick = () => {
     if (this.input) {
       this.input.click();
     }
   }
 
-  @autobind
-  handleChange(event) {
+  handleChange = (event) => {
     if (this.props.onChange) {
       this.props.onChange(event);
     }

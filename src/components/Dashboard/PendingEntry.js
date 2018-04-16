@@ -8,23 +8,23 @@ import store from '../../store';
 
 function submitForVoting(id) {
   return () => {
-    store.trigger('pending:submit', id);
+    store.emit('pending:submit', id);
   };
 }
 
 function showEditor(id) {
   return () => {
-    store.trigger('editor:showeditor', id);
+    store.emit('editor:showeditor', id);
   };
 }
 
 function discardChanges() {
-  store.trigger('editor:discardeditor');
+  store.emit('editor:discardeditor');
 }
 
 function saveChanges(id) {
   return () => {
-    store.trigger('pending:edit', id);
+    store.emit('pending:edit', id);
   };
 }
 

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
-import { autobind } from 'core-decorators';
 import { withRouter } from 'react-router-dom';
 import SimpleRichTextEditor from '../SimpleRichTextEditor';
 import { toSloDateString } from '../../utils/date';
@@ -22,7 +21,7 @@ function onValueChange(key) {
     } else if (_.isArray(value)) {
       value = value.map(e => e.value).join(',');
     }
-    store.trigger('editor:updateeditor', key, value);
+    store.emit('editor:updateeditor', key, value);
   };
 }
 
@@ -39,10 +38,9 @@ class SubmissionEditor extends React.Component {
     window.removeEventListener('beforeunload', onBeforeUnload);
   }
 
-  @autobind
-  onRTEChange(value, editorValue) {
+  onRTEChange = (value, editorValue) => {
     // console.log(stateToText(editorValue.getEditorState().getCurrentContent()));
-    store.trigger('editor:updateeditor-rte', value);
+    store.emit('editor:updateeditor-rte', value);
     this.content = value;
   }
 

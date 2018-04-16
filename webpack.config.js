@@ -128,7 +128,7 @@ module.exports = {
               ],
               plugins: [
                 'transform-object-rest-spread',
-                'transform-decorators-legacy',
+                'transform-class-properties',
                 'transform-runtime',
                 'lodash',
               ],
