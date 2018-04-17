@@ -178,10 +178,9 @@
     color: #fff;
   }
 
-  background-color: $agrument-teal;
-
-  &:hover {
-    background-color: $agrument-darkteal;
+  &.disabled,
+  &[disabled] {
+    filter: grayscale(100);
   }
 }
 

@@ -64,11 +64,39 @@ router.post('/users/create', requireAdmin, (req, res) => {
 });
 
 router.get('/published', requireAdmin, (req, res) => {
-  db('posts')
-    .where('type', 'published')
-    .orderBy('deadline', 'asc')
+  let afterDate = null;
+  let afterOffset = null;
+  if (req.query.after && req.query.after.indexOf('+') !== -1) {
+    const parts = req.query.after.split('+');
+    afterDate = parts[0];
+    afterOffset = Number(parts[1]) || 0;
+  }
+
+  let query = db('posts')
+    .where('type', 'published');
+
+  if (afterDate) {
+    query = query
+      .andWhere('date', '<=', afterDate);
+  }
+
+  if (req.query.q) {
+    query = query
+      .andWhere('title', 'like', `%${req.query.q}%`);
+  }
+
+  query = query
+    .orderBy('date', 'desc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
     .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.deadline', 'posts.type', 'users.name as author_name')
+    .limit(21); // one more than is needed to see if there are any more pages after this
+
+  if (afterOffset != null) {
+    query = query
+      .offset(afterOffset);
+  }
+
+  query
     .then((data) => {
       res.json({
         published: data,

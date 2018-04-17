@@ -52,7 +52,7 @@ class Feed extends React.Component {
     if (this.oldHeight) {
       const newHeight = document.body.scrollHeight;
       const diff = newHeight - this.oldHeight;
-      document.body.scrollTop += diff;
+      document.body.scrollTop += diff; // TODO: should be document.documentElement
       this.oldHeight = null;
     }
   }

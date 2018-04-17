@@ -6,6 +6,8 @@
   },
   "rules": {
     "react/jsx-filename-extension": "off",
-    "no-multi-assign": "off"
+    "no-multi-assign": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "prefer-destructuring": ["error", { "array": false, "object": true }]
   }
 }

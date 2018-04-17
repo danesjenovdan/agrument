@@ -23,7 +23,7 @@
   .component__button {
     background-color: $agrument-teal;
 
-    &:hover {
+    &:not(.disabled):hover {
       background-color: $agrument-darkteal;
     }
   }

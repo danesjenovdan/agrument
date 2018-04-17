@@ -9,7 +9,7 @@ import store from '../../store';
 
 function onValueChange(key) {
   return (event) => {
-    const value = event.target.value;
+    const { value } = event.target;
     store.emit('registerform:update', key, value);
   };
 }

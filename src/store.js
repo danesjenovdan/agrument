@@ -34,6 +34,7 @@ const store = new Freezer({
   },
   published: {
     isLoading: false,
+    searchQuery: '',
     data: null,
   },
   submissions: {

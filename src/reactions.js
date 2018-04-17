@@ -1,5 +1,6 @@
 import * as dash from './utils/dash';
 import * as login from './utils/login';
+import _ from 'lodash';
 
 function initReactions(store) {
   store.on('user:fetch', (history) => {
@@ -169,14 +170,14 @@ function initReactions(store) {
       });
   });
 
-  store.on('published:fetch', () => {
+  store.on('published:fetch', (date, offset) => {
     if (store.get().published.isLoading) {
       return;
     }
 
     store.get().published.set({ isLoading: true });
 
-    dash.getPublished()
+    dash.getPublished(date, offset, store.get().published.searchQuery)
       .end((err, res) => {
         if (err || !res.ok) {
           store.get().published.set({
@@ -189,6 +190,15 @@ function initReactions(store) {
           });
         }
       });
+  });
+
+  const debouncedPublishedFetch = _.debounce(() => {
+    store.emit('published:fetch');
+  }, 500);
+
+  store.on('published:updatesearchquery', (value) => {
+    store.get().published.set({ searchQuery: value }).now();
+    debouncedPublishedFetch();
   });
 
   store.on('submissions:fetch', () => {
@@ -215,7 +225,7 @@ function initReactions(store) {
 
   store.on('submissions:remove', (id) => {
     const sub = store.get().submissions.data.find(e => e.id === id);
-    const type = sub.type;
+    const { type } = sub;
 
     if (sub) {
       sub.set({ disabled: true });

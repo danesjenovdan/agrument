@@ -1,27 +1,130 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Button from '../../FormControl/Button';
+import RenderSpinner from '../../../hoc/RenderSpinner';
+import { toSloDateString } from '../../../utils/date';
 
 import store from '../../../store';
 
+const PER_PAGE = 20;
+
 class List extends React.Component {
+  state = {
+    firstDateForOffset: null,
+    currentPageOffset: 0,
+  };
+
   componentDidMount() {
     store.emit('published:fetch');
   }
 
+  onOlderClick = () => {
+    const { state } = this.props;
+    if (state.published.isLoading) {
+      return;
+    }
+    if (state.published.data && state.published.data.length > PER_PAGE) {
+      const offsetDate = this.state.firstDateForOffset || state.published.data[0].date;
+      const newOffset = this.state.currentPageOffset + PER_PAGE;
+      store.emit('published:fetch', offsetDate, newOffset);
+      this.setState({
+        firstDateForOffset: offsetDate,
+        currentPageOffset: newOffset,
+      });
+      document.documentElement.scrollTop = 0;
+    }
+  }
+
+  onNewerClick = () => {
+    const { state } = this.props;
+    if (state.published.isLoading) {
+      return;
+    }
+    if (this.state.currentPageOffset > 0) {
+      const offsetDate = this.state.firstDateForOffset || state.published.data[0].date;
+      const newOffset = Math.max(0, this.state.currentPageOffset - PER_PAGE);
+      store.emit('published:fetch', offsetDate, newOffset);
+      this.setState({
+        firstDateForOffset: offsetDate,
+        currentPageOffset: newOffset,
+      });
+      document.documentElement.scrollTop = 0;
+    }
+  }
+
+  onSearchQueryChange = (event) => {
+    store.emit('published:updatesearchquery', event.target.value);
+    this.setState({
+      firstDateForOffset: null,
+      currentPageOffset: 0,
+    });
+  }
+
+  isOlderDisabled = () => {
+    const { state } = this.props;
+    if (state.published.isLoading) {
+      return true;
+    }
+    if (state.published.data && state.published.data.length > PER_PAGE) {
+      return false;
+    }
+    return true;
+  }
+
+  isNewerDisabled = () => {
+    const { state } = this.props;
+    if (state.published.isLoading || this.state.firstDateForOffset == null) {
+      return true;
+    }
+    if (this.state.currentPageOffset > 0) {
+      return false;
+    }
+    return true;
+  }
+
   render() {
     const { state } = this.props;
-
-    let content = null;
-    if (state.published.data) {
-      content = state.published.data.map(e => e.title);
-    }
-    // TODO: spinner and proper table display
-
     return (
       <div className="row">
-        <div className="col-md-8 col-md-offset-2">
-          {content}
+        <div className="col-md-12">
+          <div className="form-group">
+            <input className="form-control" placeholder="Iskanje..." value={state.published.searchQuery} onChange={this.onSearchQueryChange} />
+          </div>
         </div>
+        <RenderSpinner isLoading={state.published.isLoading} hasData={state.published.data}>
+          <div className="col-md-12">
+            <table className="table table-hover table-agrument-list">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Datum</th>
+                  <th>Avtor</th>
+                  <th>Naslov</th>
+                  <th>Uredi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {state.published.data && state.published.data.slice(0, PER_PAGE).map(e => (
+                  <tr key={e.id}>
+                    <td>{e.id}</td>
+                    <td>{toSloDateString(e.date)}</td>
+                    <td>{e.author_name}</td>
+                    <td>{e.title}</td>
+                    <td><Link to={`/dash/edit/${toSloDateString(e.date)}`}><i className="glyphicon glyphicon-edit" /></Link></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="col-md-12">
+            <div className="text-center">
+              <Button value="Novejši" disabled={this.isNewerDisabled()} onClick={this.onNewerClick} />
+              {' '}
+              <Button value="Starejši" disabled={this.isOlderDisabled()} onClick={this.onOlderClick} />
+            </div>
+          </div>
+        </RenderSpinner>
       </div>
     );
   }

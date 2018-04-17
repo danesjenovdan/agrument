@@ -8,12 +8,18 @@
     .container-fluid {
       background: #fff;
     }
+
+    a.active {
+      background-color: #eee !important;
+      color: $agrument-darkteal !important;
+      cursor: default;
+    }
   }
 
   .component__button {
     background-color: $agrument-teal;
 
-    &:hover {
+    &:not(.disabled):hover {
       background-color: $agrument-darkteal;
     }
   }
@@ -99,6 +105,43 @@
     }
   }
 
+  .table-agrument-list {
+    table-layout: fixed;
+
+    th,
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th:nth-child(1) {
+      width: 50px;
+    }
+
+    th:nth-child(2) {
+      width: 90px;
+    }
+
+    th:nth-child(3) {
+      width: 150px;
+    }
+
+    th:nth-child(5) {
+      width: 70px;
+    }
+
+    td .btn.btn-xs {
+      border: 0;
+      border-radius: 0;
+      font-size: 10px;
+      line-height: 1;
+      height: 18px;
+      margin-right: 5px;
+    }
+  }
+
+  // TODO:
   .mr {
     margin-right: 10px;
   }

@@ -36,8 +36,17 @@ function createUser() {
   return request.post(POST_CREATE_USER);
 }
 
-function getPublished() {
-  return request.get(GET_PUBLISHED);
+function getPublished(date, offset, searchQuery) {
+  let req = request.get(GET_PUBLISHED);
+  const queryObj = {};
+  if (searchQuery) {
+    queryObj.q = searchQuery;
+  }
+  if (date && offset != null) {
+    queryObj.after = `${date}+${offset}`;
+  }
+  req = req.query(queryObj);
+  return req;
 }
 
 function getSubmissions() {

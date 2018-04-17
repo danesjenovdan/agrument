@@ -8,7 +8,7 @@ import Main from './subpages/Main';
 
 const Container = ({ state }) => (
   <div className="container dash__container">
-    <Navbar username={state.user.data.name} />
+    <Navbar user={state.user.data} />
     <Switch>
       <Route path="/dash/edit/:date" render={() => <Edit state={state} />} />
       <Route path="/dash/list" render={() => <List state={state} />} />
