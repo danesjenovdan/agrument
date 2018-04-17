@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Button from '../../FormControl/Button';
+import TriangleHeading from '../../Card/TriangleHeading';
 import RenderSpinner from '../../../hoc/RenderSpinner';
 import { toSloDateString } from '../../../utils/date';
 
@@ -88,43 +89,42 @@ class List extends React.Component {
     return (
       <div className="row">
         <div className="col-md-12">
-          <div className="form-group">
-            <input className="form-control" placeholder="Iskanje..." value={state.published.searchQuery} onChange={this.onSearchQueryChange} />
-          </div>
-        </div>
-        <RenderSpinner isLoading={state.published.isLoading} hasData={state.published.data}>
-          <div className="col-md-12">
-            <table className="table table-hover table-agrument-list">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Datum</th>
-                  <th>Avtor</th>
-                  <th>Naslov</th>
-                  <th>Uredi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {state.published.data && state.published.data.slice(0, PER_PAGE).map(e => (
-                  <tr key={e.id}>
-                    <td>{e.id}</td>
-                    <td>{toSloDateString(e.date)}</td>
-                    <td>{e.author_name}</td>
-                    <td>{e.title}</td>
-                    <td><Link to={`/dash/edit/${toSloDateString(e.date)}`}><i className="glyphicon glyphicon-edit" /></Link></td>
+          <RenderSpinner isLoading={state.published.isLoading} hasData={state.published.data}>
+            <TriangleHeading title="Agrumenti, ki so že objavljeni" />
+            <div className="card__content clearfix">
+              <div className="form-group">
+                <input className="form-control" placeholder="Iskanje..." value={state.published.searchQuery} onChange={this.onSearchQueryChange} />
+              </div>
+              <table className="table table-hover table-agrument-list">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Datum</th>
+                    <th>Avtor</th>
+                    <th>Naslov</th>
+                    <th>Uredi</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="col-md-12">
-            <div className="text-center">
-              <Button value="Novejši" disabled={this.isNewerDisabled()} onClick={this.onNewerClick} />
-              {' '}
-              <Button value="Starejši" disabled={this.isOlderDisabled()} onClick={this.onOlderClick} />
+                </thead>
+                <tbody>
+                  {state.published.data && state.published.data.slice(0, PER_PAGE).map(e => (
+                    <tr key={e.id}>
+                      <td>{e.id}</td>
+                      <td>{toSloDateString(e.date)}</td>
+                      <td>{e.author_name}</td>
+                      <td>{e.title}</td>
+                      <td><Link to={`/dash/edit/${toSloDateString(e.date)}`}><i className="glyphicon glyphicon-edit" /></Link></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="text-center">
+                <Button value="Novejši" disabled={this.isNewerDisabled()} onClick={this.onNewerClick} />
+                {' '}
+                <Button value="Starejši" disabled={this.isOlderDisabled()} onClick={this.onOlderClick} />
+              </div>
             </div>
-          </div>
-        </RenderSpinner>
+          </RenderSpinner>
+        </div>
       </div>
     );
   }

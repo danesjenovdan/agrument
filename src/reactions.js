@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import * as dash from './utils/dash';
 import * as login from './utils/login';
-import _ from 'lodash';
 
 function initReactions(store) {
   store.on('user:fetch', (history) => {
