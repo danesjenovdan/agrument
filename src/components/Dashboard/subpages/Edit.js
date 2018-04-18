@@ -27,7 +27,7 @@ class Edit extends React.Component {
             error={state.editable.error}
           >
             {data => (
-              <SubmissionEditor entry={data} />
+              <SubmissionEditor key={data.id} entry={data} />
             )}
           </RenderSpinner>
         </div>

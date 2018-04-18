@@ -33,7 +33,7 @@ const AssignNewSubmission = ({ users, newArticle }) => (
       </div>
     </div>
     <div className="form-group">
-      <label htmlFor="newarticle-date" className="col-sm-2 control-label">Deadline</label>
+      <label htmlFor="newarticle-date" className="col-sm-2 control-label">Datum</label>
       <div className="col-sm-10">
         <input id="newarticle-date" type="date" className="form-control" value={toISODateString(newArticle.deadline)} onChange={changeDeadline} />
       </div>

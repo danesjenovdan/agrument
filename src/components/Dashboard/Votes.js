@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import store from '../../store';
 
 const Votes = ({ votes }) => {
+  return null;
     console.log(store.get().users.data);
     const voteMap = {
         for: 'ZA',

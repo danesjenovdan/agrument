@@ -161,8 +161,7 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
         imageCaptionURL: entry.imageCaptionURL,
       };
 
-      const date = obj.date;
-      const deadline = obj.deadline;
+      const { date, deadline } = obj;
       return trx
         .select('id')
         .from('posts')
@@ -194,8 +193,7 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
 
 router.post('/submissions/add', requireAdmin, (req, res) => {
   db.transaction((trx) => {
-    const date = req.body.date;
-    const deadline = req.body.deadline;
+    const { date, deadline } = req.body;
     return trx
       .select('id')
       .from('posts')
@@ -439,16 +437,17 @@ router.get('/edit/:date', (req, res) => {
   let query;
   if (req.user.group === 'admin') {
     query = db('posts')
-      .where('date', req.params.date)
-      .first();
+      .where('date', req.params.date);
   } else {
     query = db('posts')
       .where('date', req.params.date)
-      .andWhere('author', req.user.id)
-      .first();
+      .andWhere('author', req.user.id);
   }
 
   query
+    .leftOuterJoin('users', 'posts.author', 'users.id')
+    .select('posts.*', 'users.name as author_name')
+    .first()
     .then((data) => {
       if (data) {
         res.json({

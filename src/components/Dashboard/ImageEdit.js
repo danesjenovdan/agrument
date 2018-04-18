@@ -55,6 +55,7 @@ class ImageEdit extends React.Component {
   }
 
   render() {
+    return null;
     return (
       <div className="col-md-6">
         <Button value="Naloži sliko" onClick={this.openModal} />

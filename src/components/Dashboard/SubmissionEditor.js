@@ -13,6 +13,12 @@ import stateToText from '../../utils/draft-js-export-text';
 
 import store from '../../store';
 
+const TYPE_TEXT = {
+  published: 'Objavljen',
+  votable: 'Na glasovanju',
+  pending: 'Čaka na oddajo',
+};
+
 function onValueChange(key) {
   return (event) => {
     let value = event;
@@ -25,19 +31,7 @@ function onValueChange(key) {
   };
 }
 
-function onBeforeUnload(event) {
-  event.returnValue = 'Changes you made may not be saved.'; // eslint-disable-line no-param-reassign
-}
-
 class SubmissionEditor extends React.Component {
-  componentDidMount() {
-    window.addEventListener('beforeunload', onBeforeUnload);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('beforeunload', onBeforeUnload);
-  }
-
   onRTEChange = (value, editorValue) => {
     // console.log(stateToText(editorValue.getEditorState().getCurrentContent()));
     store.emit('editor:updateeditor-rte', value);
@@ -48,42 +42,41 @@ class SubmissionEditor extends React.Component {
     const { entry } = this.props;
     return (
       <article className="component__submission-editor">
-        <section className="row clearfix">
-          <div className="col-sm-6">
-            <div>
-              <strong>Deadline: </strong>
-              <span>
-                {toSloDateString(entry.deadline)} (<TimeAgo date={entry.deadline} />)
-          </span>
+        <div className="form-horizontal">
+          <div className="form-group">
+            <strong className="col-sm-2 text-right">Datum</strong>
+            <div className="col-sm-4">
+              {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
+            </div>
+            <strong className="col-sm-2 text-right">Avtor</strong>
+            <div className="col-sm-4">
+              {entry.author_name || `Neznan avtor #${entry.author}`}
             </div>
           </div>
-          <div className="col-sm-6">
-            <div>
-              <strong>Avtor: </strong>
-              <span>
-                {entry.author_name || `Neznan avtor #${entry.author}`}
-              </span>
+          <div className="form-group">
+            <label htmlFor="submissioneditor-rights" className="col-sm-2 control-label">Pravice</label>
+            <div className="col-sm-10">
+              <Select
+                multi
+                id="submissioneditor-rights"
+                name="rights"
+                value={entry.rights}
+                options={rights}
+                onChange={onValueChange('rights')}
+                placeholder="Izberi eno ali dve pravici"
+              />
             </div>
           </div>
-          <div className="col-sm-12">
-            <div>
-              <strong>Pravice: </strong>
-              <span>
-                <Select
-                  multi
-                  name="rights"
-                  value={entry.rights}
-                  options={rights}
-                  onChange={onValueChange('rights')}
-                  placeholder="Izberi eno ali dve pravici"
-                />
-              </span>
+          <div className="form-group">
+            <strong className="col-sm-2 text-right">Stanje</strong>
+            <div className="col-sm-10">
+              {TYPE_TEXT[entry.type]}
             </div>
           </div>
-        </section>
+        </div>
         <hr />
         <section>
-          <h3>
+          <h3 className="form-group form-group-lg">
             <input
               placeholder="Dodaj naslov"
               value={entry.title}
@@ -99,7 +92,39 @@ class SubmissionEditor extends React.Component {
             />
           </div>
         </section>
-        <section>
+        <hr />
+        <div className="form-group">
+          <label htmlFor="submissioneditor-ogdesc" className="control-label">Opis za og</label>
+          <input
+            id="submissioneditor-ogdesc"
+            value={entry.description}
+            onChange={onValueChange('description')}
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <label className="control-label">Slika</label>
+          <ImageEdit onDone={onValueChange('imageURL')} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="submissioneditor-imgcap" className="control-label">Vir slike (Opis)</label>
+          <input
+            id="submissioneditor-imgcap"
+            value={entry.imageCaption}
+            onChange={onValueChange('imageCaption')}
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="submissioneditor-imgcapurl" className="control-label">Vir slike (URL)</label>
+          <input
+            id="submissioneditor-imgcapurl"
+            value={entry.imageCaptionURL}
+            onChange={onValueChange('imageCaptionURL')}
+            className="form-control"
+          />
+        </div>
+        {/* <section>
           <div>
             <Checkbox
               label="Uporabi posebni embed"
@@ -115,38 +140,7 @@ class SubmissionEditor extends React.Component {
               className="form-control"
             />
           )}
-        </section>
-        <hr />
-        <section className="row clearfix">
-          <div className="col-sm-3 og-description-container">
-            <strong>og description: </strong>
-          </div>
-          <div className="col-sm-9 og-description-container">
-            <input
-              value={entry.description}
-              onChange={onValueChange('description')}
-              className="form-control"
-            />
-          </div>
-          <div>
-            <div className="col-sm-3 og-image-container">
-              <strong>og image: </strong>
-            </div>
-            <div className="col-sm-9 og-image-container">
-              <ImageEdit onDone={onValueChange('imageURL')} />
-            </div>
-          </div>
-          <div className="col-sm-3 og-caption-container">
-            <strong>caption: </strong>
-          </div>
-          <div className="col-sm-9 og-caption-container">
-            <input
-              value={entry.imageCaption}
-              onChange={onValueChange('imageCaption')}
-              className="form-control"
-            />
-          </div>
-        </section>
+        </section> */}
       </article >
     );
   }
@@ -162,10 +156,10 @@ SubmissionEditor.propTypes = {
     description: PropTypes.string.isRequired,
     imageURL: PropTypes.string.isRequired,
     imageCaption: PropTypes.string.isRequired,
-    hasEmbed: PropTypes.number.isRequired,
-    embedCode: PropTypes.string,
-    embedHeight: PropTypes.string,
-    deadline: PropTypes.number.isRequired,
+    imageCaptionURL: PropTypes.string.isRequired, // TODO:
+    // hasEmbed: PropTypes.number.isRequired,
+    // embedCode: PropTypes.string, // TODO:
+    // embedHeight: PropTypes.string, // TODO:
     rights: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     author_name: PropTypes.string,

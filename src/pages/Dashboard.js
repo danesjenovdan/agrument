@@ -13,13 +13,6 @@ class Dashboard extends React.Component {
     store.emit('user:fetch', this.props.history);
   }
 
-  routerWillLeave = () => {
-    if (this.props.state.currentEditor || this.props.state.currentEditorRTE) {
-      return 'Changes you made may not be saved. Are you sure you want to leave?';
-    }
-    return true;
-  }
-
   render() {
     const { state } = this.props;
     return (
