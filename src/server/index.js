@@ -5,6 +5,7 @@
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
+import delay from 'express-delay';
 import sessionKnex from 'connect-session-knex';
 import bodyParser from 'body-parser';
 import passport from 'passport';
@@ -15,17 +16,30 @@ import db from './database';
 import appMiddleware from './middleware/app';
 import getAgrument from './routes/agrument';
 import dashRouter from './routes/dashboard';
+import { sendErrorToSlack, sendErrorToSlackMiddleware } from './slack';
 
 process.on('uncaughtException', (err) => {
   // eslint-disable-next-line no-console
   console.error(err);
-  process.exit(1);
+  sendErrorToSlack('uncaughtException', err, (error) => {
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+    process.exit(1);
+  });
 });
 
 process.on('unhandledRejection', (reason, p) => {
   // eslint-disable-next-line no-console
   console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
-  process.exit(1);
+  sendErrorToSlack('unhandledRejection', reason, (error) => {
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+    process.exit(1);
+  });
 });
 
 const KnexSessionStore = sessionKnex(session);
@@ -35,6 +49,9 @@ app.disable('x-powered-by');
 
 // serve static files first so you dont create new sessions for static files
 app.use(express.static(path.resolve(__dirname, '../../dist')));
+
+// Delay will be between 200 and 500 milliseconds
+app.use(delay(200, 500));
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' })); // parse x-www-form-urlencoded
 app.use(bodyParser.json({ extended: true, limit: '5mb' })); // parse json
@@ -177,6 +194,8 @@ app.get(['/api', '/api/*'], (req, res) => {
 });
 
 app.get('*', appMiddleware);
+
+app.use(sendErrorToSlackMiddleware);
 
 const port = parseInt(process.env.PORT, 10) || 80;
 

@@ -12,7 +12,7 @@ class Edit extends React.Component {
   componentDidMount() {
     const date = parseDate(this.props.match.params.date, false);
     if (date) {
-      store.emit('editable:fetch', date);
+      store.emit('editable:fetch', date.getTime());
     }
   }
 

@@ -274,13 +274,18 @@ router.post('/submissions/edit/:id', (req, res) => {
   const data = _.assign({}, req.body, disallowed);
 
   db('posts')
-    .whereIn('type', ['votable', 'pending'])
     .andWhere('id', req.params.id)
     .update(data)
-    .then(() => {
-      res.json({
-        success: 'Edited submission',
-      });
+    .then((numRows) => {
+      if (numRows) {
+        res.json({
+          success: 'Edited submission',
+        });
+      } else {
+        res.status(404).json({
+          error: 'Not Found',
+        });
+      }
     })
     .catch((err) => {
       res.status(500).json({

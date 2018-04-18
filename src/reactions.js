@@ -308,14 +308,14 @@ function initReactions(store) {
       });
   });
 
-  store.on('editable:fetch', (date) => {
+  store.on('editable:fetch', (time) => {
     if (store.get().editable.isLoading) {
       return;
     }
 
     store.get().editable.set({ isLoading: true });
 
-    dash.getEditable(date.getTime())
+    dash.getEditable(time)
       .end((err, res) => {
         if (err || !res.ok) {
           store.get().editable.set({
@@ -331,62 +331,40 @@ function initReactions(store) {
       });
   });
 
-  store.on('editor:showeditor', (id) => {
-    let sub = store.get().pending.data.find(e => e.id === id);
-    if (!sub) {
-      sub = store.get().votable.data.find(e => e.id === id);
-    }
-    if (sub) {
-      store.get().set({ currentEditor: sub.toJS() });
-    }
-  });
-
-  store.on('editor:discardeditor', () => {
-    store.get().set({
-      currentEditor: null,
-      currentEditorRTE: null,
-    });
-  });
-
-  store.on('editor:updateeditor', (key, value) => {
-    store.get().currentEditor.set({
+  store.on('editable:update', (key, value) => {
+    store.get().editable.data.set({
       [key]: value,
     }).now();
+  });
+
+  store.on('editable:save', () => {
+    const { data } = store.get().editable;
+    if (data) {
+      store.get().editable.data.set({ disabled: true });
+
+      const newData = data.toJS();
+      console.log(newData);
+      // const editorRTE = store.get().currentEditorRTE;
+      // if (editorRTE) {
+      //   newData.content = editorRTE;
+      // }
+
+      dash.editSubmission(data.id, newData)
+        .end((err, res) => {
+          if (err || !res.ok) {
+            // noop
+          } else {
+            store.get().editable.data.set({ disabled: false });
+            store.on('editable:fetch', data.date);
+          }
+        });
+    }
   });
 
   store.on('editor:updateeditor-rte', (value) => {
     store.get().set({
       currentEditorRTE: value,
     }).now();
-  });
-
-  // THIS IS SAVING ON EDIT
-  store.on('pending:edit', (id) => {
-    const sub = store.get().pending.data.find(e => e.id === id);
-    const editor = store.get().currentEditor;
-
-    if (sub && editor && editor.id === id) {
-      sub.set({ disabled: true });
-
-      const newData = editor.toJS();
-      const editorRTE = store.get().currentEditorRTE;
-      if (editorRTE) {
-        newData.content = editorRTE;
-      }
-
-      dash.editSubmission(id, newData)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            // noop
-          } else {
-            store.emit('editor:discardeditor');
-            store.emit('pending:fetch');
-            if (store.get().submissions.data) {
-              store.emit('submissions:fetch');
-            }
-          }
-        });
-    }
   });
 
   // THIS IS FIRST SUBMISSION (author finished editing)
@@ -402,34 +380,6 @@ function initReactions(store) {
             // noop
           } else {
             store.emit('pending:fetch');
-            store.emit('votable:fetch');
-            if (store.get().submissions.data) {
-              store.emit('submissions:fetch');
-            }
-          }
-        });
-    }
-  });
-
-  store.on('votable:edit', (id) => {
-    const sub = store.get().votable.data.find(e => e.id === id);
-    const editor = store.get().currentEditor;
-
-    if (sub && editor && editor.id === id) {
-      sub.set({ disabled: true });
-
-      const newData = editor.toJS();
-      const editorRTE = store.get().currentEditorRTE;
-      if (editorRTE) {
-        newData.content = editorRTE;
-      }
-
-      dash.editSubmission(id, newData)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            // noop
-          } else {
-            store.emit('editor:discardeditor');
             store.emit('votable:fetch');
             if (store.get().submissions.data) {
               store.emit('submissions:fetch');
