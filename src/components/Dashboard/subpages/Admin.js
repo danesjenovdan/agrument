@@ -30,54 +30,63 @@ class Admin extends React.Component {
     return (
       <div className="row">
         <div className="col-md-12">
-          <RenderSpinner isLoading={state.submissions.isLoading} hasData={state.submissions.data}>
-            <TriangleHeading title="Agrumenti, ki čakajo na oddajo" />
-            <div className="card__content clearfix">
-              <table className="table table-hover table-agrument-list">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Datum</th>
-                    <th>Avtor</th>
-                    <th>Naslov</th>
-                    <th>Uredi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {state.submissions.data && state.submissions.data.map(e => (
-                    <tr key={e.id}>
-                      <td>{e.id}</td>
-                      <td>{toSloDateString(e.date)}</td>
-                      <td>{e.author_name}</td>
-                      <td>{e.title}</td>
-                      <td>
-                        <Link to={`/dash/edit/${toSloDateString(e.date)}`} className="btn btn-primary btn-xs">
-                          <i className="glyphicon glyphicon-edit" />
-                        </Link>
-                        <button className="btn btn-danger btn-xs" onClick={removeSubmission(e.id)} disabled={e.disabled}>
-                          <i className="glyphicon glyphicon-remove" />
-                        </button>
-                      </td>
+          <TriangleHeading title="Agrumenti, ki čakajo na oddajo" />
+          <div className="card__content clearfix">
+            <RenderSpinner isLoading={state.submissions.isLoading} data={state.submissions.data}>
+              {data => (
+                <table className="table table-hover table-agrument-list">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Datum</th>
+                      <th>Avtor</th>
+                      <th>Naslov</th>
+                      <th>Uredi</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </RenderSpinner>
+                  </thead>
+                  <tbody>
+                    {data.map(e => (
+                      <tr key={e.id}>
+                        <td>{e.id}</td>
+                        <td>{toSloDateString(e.date)}</td>
+                        <td>{e.author_name}</td>
+                        <td>{e.title}</td>
+                        <td>
+                          <Link to={`/dash/edit/${toSloDateString(e.date)}`} className="btn btn-primary btn-xs">
+                            <i className="glyphicon glyphicon-edit" />
+                          </Link>
+                          <button className="btn btn-danger btn-xs" onClick={removeSubmission(e.id)} disabled={e.disabled}>
+                            <i className="glyphicon glyphicon-remove" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </RenderSpinner>
+          </div>
         </div>
-        <div className="col-md-12">
-          <RenderSpinner isLoading={state.users.isLoading} hasData={state.users.data}>
-            <TriangleHeading title="Dodaj nov agrument v čakalnico" />
-            <div className="card__content clearfix">
-              <AssignNewSubmission users={state.users.data} newArticle={state.newArticle} />
-            </div>
-          </RenderSpinner>
+        <div className="col-md-6">
+          <TriangleHeading title="Dodaj nov agrument v čakalnico" />
+          <div className="card__content clearfix">
+            <RenderSpinner isLoading={state.users.isLoading} data={state.users.data}>
+              {data => (
+                <AssignNewSubmission users={data} newArticle={state.newArticle} />
+              )}
+            </RenderSpinner>
+          </div>
         </div>
         <hr />
-        <div className="col-md-12">
-          <RenderSpinner isLoading={state.users.isLoading} hasData={state.users.data}>
-            <AddUser newUser={state.newUser} />
-          </RenderSpinner>
+        <div className="col-md-6">
+          <TriangleHeading title="Dodaj novega uporabnika" />
+          <div className="card__content clearfix">
+            <RenderSpinner isLoading={state.users.isLoading} data={state.users.data}>
+              {() => (
+                <AddUser state={state} />
+              )}
+            </RenderSpinner>
+          </div>
         </div>
       </div>
     );

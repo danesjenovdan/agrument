@@ -33,8 +33,10 @@ class Dashboard extends React.Component {
             subTitle="Dashboard"
             small
           />
-          <RenderSpinner isLoading={state.user.isLoading} hasData={state.user.data}>
-            <DashContainer state={state} />;
+          <RenderSpinner isLoading={state.user.isLoading} data={state.user.data}>
+            {() => (
+              <DashContainer state={state} />
+            )}
           </RenderSpinner>
         </div>
       </div>

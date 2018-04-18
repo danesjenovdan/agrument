@@ -8,7 +8,7 @@ import { parseDate } from '../../../utils/date';
 import store from '../../../store';
 
 
-class EditAgrument extends React.Component {
+class Edit extends React.Component {
   componentDidMount() {
     const date = parseDate(this.props.match.params.date, false);
     if (date) {
@@ -23,10 +23,12 @@ class EditAgrument extends React.Component {
         <div className="col-md-8 col-md-offset-2">
           <RenderSpinner
             isLoading={state.editable.isLoading}
-            hasData={state.editable.data}
+            data={state.editable.data}
             error={state.editable.error}
           >
-            <SubmissionEditor entry={state.editable.data} />
+            {data => (
+              <SubmissionEditor entry={data} />
+            )}
           </RenderSpinner>
         </div>
       </div>
@@ -34,9 +36,9 @@ class EditAgrument extends React.Component {
   }
 }
 
-EditAgrument.propTypes = {
+Edit.propTypes = {
   state: PropTypes.shape().isRequired,
   match: PropTypes.shape().isRequired,
 };
 
-export default withRouter(EditAgrument);
+export default withRouter(Edit);

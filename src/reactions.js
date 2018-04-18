@@ -132,6 +132,28 @@ function initReactions(store) {
       });
   });
 
+  store.on('users:fetchtokens', () => {
+    if (store.get().tokenUsers.isLoading) {
+      return;
+    }
+
+    store.get().tokenUsers.set({ isLoading: true });
+
+    dash.getTokenUsers()
+      .end((err, res) => {
+        if (err || !res.ok) {
+          store.get().tokenUsers.set({
+            isLoading: false,
+          });
+        } else {
+          store.get().tokenUsers.set({
+            isLoading: false,
+            data: res.body.users,
+          });
+        }
+      });
+  });
+
   store.on('newsubmission:changeuser', (id) => {
     store.get().newArticle.set({ selectedUser: id });
   });
@@ -450,6 +472,7 @@ function initReactions(store) {
             id: res.body.user.id,
             token: res.body.user.token,
           });
+          store.emit('users:fetchtokens');
         }
       });
   });

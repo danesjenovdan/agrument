@@ -173,6 +173,7 @@
   background-color: #dd786b;
   position: relative;
   transition: background-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  white-space: normal;
 
   &:hover {
     color: #fff;

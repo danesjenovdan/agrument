@@ -18,7 +18,23 @@ router.get('/user', (req, res) => {
 router.get('/users', requireAdmin, (req, res) => {
   db('users')
     .where('token', null)
-    .select('id', 'name', 'group')
+    .select('id', 'name', 'username', 'group')
+    .then((data) => {
+      res.json({
+        users: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.get('/users/tokens', requireAdmin, (req, res) => {
+  db('users')
+    .whereNot('token', null)
+    .select('id', 'token')
     .then((data) => {
       res.json({
         users: data,

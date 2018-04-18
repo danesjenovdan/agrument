@@ -10,13 +10,13 @@ const Navbar = ({ user }) => (
       </div>
       <ul className="nav navbar-nav">
         <li><NavLink to="/dash" exact activeClassName="active">Čakalnica</NavLink></li>
-        <li><NavLink to="/dash/list" activeClassName="active">Seznam agrumentov</NavLink></li>
+        <li><NavLink to="/dash/list" activeClassName="active">Objavljeni</NavLink></li>
         {user.group === 'admin' && <li><NavLink to="/dash/admin" activeClassName="active">Admin</NavLink></li>}
       </ul>
       <ul className="nav navbar-nav navbar-right">
         <li><Link to="/">Agrument</Link></li>
         <li><a href="https://djnd.si/short/" target="_blank" rel="noopener noreferrer">Shortener</a></li>
-        <li><Link to="/login?logout=true">Logout</Link></li>
+        <li><Link to="/login?logout=true">Odjavi se</Link></li>
       </ul>
     </div>
   </nav>

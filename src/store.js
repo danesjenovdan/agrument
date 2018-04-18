@@ -21,6 +21,10 @@ const store = new Freezer({
     isLoading: false,
     data: null,
   },
+  tokenUsers: {
+    isLoading: false,
+    data: null,
+  },
   newUser: {
     isLoading: false,
     id: 0,

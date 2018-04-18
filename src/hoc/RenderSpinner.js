@@ -6,8 +6,8 @@ const RenderSpinner = (props) => {
   if (props.isLoading) {
     return <Spinner />;
   }
-  if ('hasData' in props ? props.hasData : true) {
-    return props.children;
+  if ('data' in props ? props.data : true) {
+    return props.children(props.data);
   }
   if (props.error) {
     return 'Napaka pri nalaganju.';
@@ -18,10 +18,10 @@ const RenderSpinner = (props) => {
 RenderSpinner.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types, react/require-default-props
-  hasData: PropTypes.any,
+  data: PropTypes.any,
   // eslint-disable-next-line react/forbid-prop-types, react/require-default-props
   error: PropTypes.any,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.func.isRequired,
 };
 
 export default RenderSpinner;

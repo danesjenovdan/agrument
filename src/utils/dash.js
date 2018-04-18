@@ -4,6 +4,7 @@ const API_DASH = '/api/dash';
 
 const GET_USER = `${API_DASH}/user`;
 const GET_USERS = `${API_DASH}/users`;
+const GET_USERS_TOKENS = `${API_DASH}/users/tokens`;
 const POST_CREATE_USER = `${API_DASH}/users/create`;
 const GET_PUBLISHED = `${API_DASH}/published`;
 const GET_SUBMISSIONS = `${API_DASH}/submissions`;
@@ -30,6 +31,10 @@ function getUser() {
 
 function getUsers() {
   return request.get(GET_USERS);
+}
+
+function getTokenUsers() {
+  return request.get(GET_USERS_TOKENS);
 }
 
 function createUser() {
@@ -131,6 +136,7 @@ function voteVeto(data) {
 export {
   getUser,
   getUsers,
+  getTokenUsers,
   createUser,
   getPublished,
   getSubmissions,
