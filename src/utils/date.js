@@ -2,7 +2,9 @@ import _ from 'lodash';
 
 function parseDate(input, defaultToNow = true) {
   let dateObj = null;
-  if (_.isInteger(input)) {
+  if (input && input instanceof Date) {
+    dateObj = new Date(Date.UTC(input.getFullYear(), input.getMonth(), input.getDate()));
+  } else if (_.isInteger(input)) {
     dateObj = new Date(input);
     dateObj.setUTCHours(0, 0, 0, 0);
   } else {

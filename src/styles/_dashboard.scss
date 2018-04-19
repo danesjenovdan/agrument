@@ -152,6 +152,43 @@
     }
   }
 
+  .react-date-picker {
+    display: block;
+
+    .react-date-picker__button {
+      border-radius: 0px;
+      outline: none;
+      box-shadow: none;
+      -webkit-appearance: none;
+      border: 2px solid #c2d8d8;
+      font-size: 18px;
+      color: #7ebfbf;
+      padding: 3px 10px;
+      height: 40px;
+    }
+
+    .react-date-picker__clear-button {
+      display: none;
+    }
+
+    .react-date-picker__calendar-button {
+      right: -6px;
+      position: relative;
+
+      svg g {
+        stroke: #c2d8d8 !important;
+      }
+    }
+
+    .react-date-picker__calendar {
+      z-index: 9999;
+
+      .react-calendar {
+        font-family: 'Titillium Web', 'Helvetica', 'Arial', sans-serif;
+      }
+    }
+  }
+
   // TODO:
   .Select-menu-outer {
     background: #ffffff;
