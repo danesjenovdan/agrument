@@ -309,11 +309,16 @@ function initReactions(store) {
       });
   });
 
+  const debouncedEditableSave = _.debounce(() => {
+    store.emit('editable:save');
+  }, 2500);
+
   store.on('editable:fetch', (time) => {
     if (store.get().editable.isLoading) {
       return;
     }
 
+    debouncedEditableSave.cancel();
     store.get().editable.set({ isLoading: true, autosave: false });
 
     dash.getEditable(time)
@@ -353,10 +358,6 @@ function initReactions(store) {
     }).now();
     store.emit('editable:updategeneratedtext');
   });
-
-  const debouncedEditableSave = _.debounce(() => {
-    store.emit('editable:save');
-  }, 3500);
 
   store.on('editable:updategeneratedtext', () => {
     const text = store.get().currentEditorText;

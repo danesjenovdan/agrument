@@ -257,15 +257,13 @@ router.post('/submissions/edit/:id', (req, res) => {
   if (req.user.group === 'admin') {
     disallowed = {
       id: undefined,
-      author: undefined,
       author_name: undefined,
-      type: undefined,
     };
   } else {
     disallowed = {
       id: undefined,
-      author: undefined,
       author_name: undefined,
+      author: undefined,
       type: undefined,
       deadline: undefined,
       date: undefined,

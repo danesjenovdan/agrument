@@ -160,6 +160,9 @@ class SubmissionEditor extends React.Component {
             <section>
               <div className="form-group">
                 <label htmlFor="submissioneditor-title" className="control-label">Naslov</label>
+                {state.editable.autosave && (
+                  <strong className="pull-right">Vključeno je samodejno shranjevanje!</strong>
+                )}
                 <input
                   id="submissioneditor-title"
                   placeholder="Dodaj naslov"
