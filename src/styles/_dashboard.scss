@@ -193,12 +193,9 @@
     z-index: 9999;
   }
 
-  .DraftEditor-editorContainer {
-    height: 300px;
-
-    .public-DraftEditor-content {
-      font-family: 'Titillium Web', 'Helvetica', 'Arial', sans-serif;
-    }
+  .DraftEditor-editorContainer .public-DraftEditor-content {
+    min-height: 300px;
+    font-family: 'Titillium Web', 'Helvetica', 'Arial', sans-serif;
   }
 
   // TODO:

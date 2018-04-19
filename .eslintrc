@@ -9,6 +9,7 @@
     "no-multi-assign": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/label-has-for": "off",
-    "prefer-destructuring": ["error", { "array": false, "object": true }]
+    "prefer-destructuring": ["error", { "array": false, "object": true }],
+    "import/prefer-default-export": "off"
   }
 }

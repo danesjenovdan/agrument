@@ -22,22 +22,30 @@ export default class SimpleRichTextEditor extends React.Component {
   }
 
   _updateStateFromProps = (newProps) => {
-    const { value, format } = newProps;
+    const { value, format, onChange } = newProps;
     if (this._currentValue != null) {
       const [currentValue, currentFormat] = this._currentValue;
       if (format === currentFormat && value === currentValue) {
         return;
       }
     }
+    let newEditorValue = null;
     if (typeof value === 'string') {
       const { editorValue } = this.state;
-      this.setState({
-        editorValue: editorValue.setContentFromString(value, format),
-      });
+      newEditorValue = editorValue.setContentFromString(value, format);
     } else if (value != null) {
+      newEditorValue = value;
+    }
+    if (newEditorValue != null) {
       this.setState({
-        editorValue: value,
+        editorValue: newEditorValue,
       });
+      if (this._currentValue == null) {
+        const stringValue = newEditorValue.toString(format);
+        if (onChange) {
+          onChange(stringValue, newEditorValue);
+        }
+      }
     }
     this._currentValue = [format, value];
   }
@@ -81,7 +89,6 @@ export default class SimpleRichTextEditor extends React.Component {
           { label: 'Italic', style: 'ITALIC' },
         ],
       };
-      console.log('render');
       return (
         <RichTextEditor
           {...otherProps}

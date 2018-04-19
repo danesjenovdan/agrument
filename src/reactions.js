@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as dash from './utils/dash';
 import * as login from './utils/login';
+import { toSloDateString } from './utils/date';
 
 function initReactions(store) {
   store.on('user:fetch', (history) => {
@@ -335,13 +336,29 @@ function initReactions(store) {
     store.get().editable.data.set({
       [key]: value,
     }).now();
+    store.emit('editable:updategeneratedtext');
   });
 
-  store.on('editable:updateeditor', (value) => {
+  store.on('editable:updateeditor', (html, text) => {
     store.get().set({
-      currentEditor: value,
+      currentEditor: html,
+      currentEditorText: text,
     }).now();
-    console.log('store.get().currentEditor', store.get().currentEditor);
+    store.emit('editable:updategeneratedtext');
+  });
+
+  store.on('editable:updategeneratedtext', () => {
+    const text = store.get().currentEditorText;
+    const naslov = store.get().editable.data.title;
+    const caption = store.get().editable.data.imageCaption;
+    const imgUrl = store.get().editable.data.imageCaptionURL;
+    const timestamp = store.get().editable.data.date;
+    const url = `${window.location.origin}/${toSloDateString(timestamp)}`;
+
+    const fbtext = `${naslov}\n${text}Slika: ${caption} [${imgUrl}]\n${url}`;
+    const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
+
+    store.get().editable.data.set({ fbtext, description }).now();
   });
 
   store.on('editable:save', () => {
@@ -351,11 +368,9 @@ function initReactions(store) {
 
       const newData = data.toJS();
       const editorValue = store.get().currentEditor;
-      console.log('store.get().currentEditor', store.get().currentEditor);
       if (editorValue) {
         newData.content = editorValue;
       }
-      console.log(newData);
 
       dash.editSubmission(data.id, newData)
         .end((err, res) => {
@@ -363,8 +378,8 @@ function initReactions(store) {
             // noop
           } else {
             store.get().editable.data.set({ disabled: false });
-            store.on('editable:updateeditor', null);
-            store.on('editable:fetch', data.date);
+            store.emit('editable:updateeditor', null, '');
+            store.emit('editable:fetch', data.date);
           }
         });
     }

@@ -54,6 +54,7 @@ const store = new Freezer({
     data: null,
   },
   currentEditor: null,
+  currentEditorText: '',
   forms: {
     login: {
       isLoading: false,

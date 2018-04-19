@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DatePicker from 'react-date-picker';
+import DatePicker from '../DatePicker';
 import { parseDate } from '../../utils/date';
 import Button from '../FormControl/Button';
 

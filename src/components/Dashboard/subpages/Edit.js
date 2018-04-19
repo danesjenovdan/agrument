@@ -20,14 +20,14 @@ class Edit extends React.Component {
     const { state } = this.props;
     return (
       <div className="row">
-        <div className="col-md-8 col-md-offset-2">
+        <div className="col-md-12">
           <RenderSpinner
             isLoading={state.editable.isLoading}
             data={state.editable.data}
             error={state.editable.error}
           >
             {data => (
-              <SubmissionEditor key={data.id} entry={data} />
+              <SubmissionEditor key={data.id} entry={data} user={state.user.data} />
             )}
           </RenderSpinner>
         </div>

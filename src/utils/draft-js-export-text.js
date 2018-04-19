@@ -2,14 +2,7 @@ import {
   getEntityRanges,
   BLOCK_TYPE,
   ENTITY_TYPE,
-  INLINE_STYLE,
 } from 'draft-js-utils';
-
-import { Entity } from 'draft-js';
-
-const {
-  CODE,
-} = INLINE_STYLE;
 
 const CODE_INDENT = '    ';
 
@@ -31,11 +24,6 @@ function encodeContent(text) {
 // our markdown syntax: `[foo](http://foo/)`
 function encodeURL(url) {
   return url.replace(/\)/g, '%29');
-}
-
-// Escape quotes using backslash.
-function escapeTitle(text) {
-  return text.replace(/"/g, '\\"');
 }
 
 class MarkupGenerator {
@@ -63,17 +51,15 @@ class MarkupGenerator {
         const blockDepth = block.getDepth();
         const lastBlock = this.getLastBlock();
         const lastBlockType = lastBlock ? lastBlock.getType() : null;
-        const lastBlockDepth = lastBlock && canHaveDepth(lastBlockType) ?
-          lastBlock.getDepth() :
-          null;
-        if (
-          lastBlockType !== blockType &&
-          lastBlockDepth !== blockDepth - 1
-        ) {
-          this.insertLineBreaks(1);
+        const lastBlockDepth =
+          lastBlock && canHaveDepth(lastBlockType)
+            ? lastBlock.getDepth()
+            : null;
+        if (lastBlockType !== blockType && lastBlockDepth !== blockDepth - 1) {
+          this.insertLineBreak();
           // Insert an additional line break if following opposite list type.
           if (lastBlockType === BLOCK_TYPE.ORDERED_LIST_ITEM) {
-            this.insertLineBreaks(1);
+            this.insertLineBreak();
           }
         }
         const indent = ' '.repeat(block.depth * 4);
@@ -84,14 +70,15 @@ class MarkupGenerator {
         const blockDepth = block.getDepth();
         const lastBlock = this.getLastBlock();
         const lastBlockType = lastBlock ? lastBlock.getType() : null;
-        const lastBlockDepth = lastBlock && canHaveDepth(lastBlockType) ?
-          lastBlock.getDepth() :
-          null;
+        const lastBlockDepth =
+          lastBlock && canHaveDepth(lastBlockType)
+            ? lastBlock.getDepth()
+            : null;
         if (lastBlockType !== blockType && lastBlockDepth !== blockDepth - 1) {
-          this.insertLineBreaks(1);
+          this.insertLineBreak();
           // Insert an additional line break if following opposite list type.
           if (lastBlockType === BLOCK_TYPE.UNORDERED_LIST_ITEM) {
-            this.insertLineBreaks(1);
+            this.insertLineBreak();
           }
         }
         const indent = ' '.repeat(blockDepth * 4);
@@ -101,17 +88,17 @@ class MarkupGenerator {
         break;
       }
       case BLOCK_TYPE.BLOCKQUOTE: {
-        this.insertLineBreaks(1);
+        this.insertLineBreak();
         this.output.push(` > ${this.renderBlockContent(block)}\n`);
         break;
       }
       case BLOCK_TYPE.CODE: {
-        this.insertLineBreaks(1);
-        this.output.push(`${CODE_INDENT + this.renderBlockContent(block)}\n`);
+        this.insertLineBreak();
+        this.output.push(`${CODE_INDENT}${this.renderBlockContent(block)}\n`);
         break;
       }
       default: {
-        this.insertLineBreaks(1);
+        this.insertLineBreak();
         this.output.push(`${this.renderBlockContent(block)}\n`);
         break;
       }
@@ -149,19 +136,19 @@ class MarkupGenerator {
     ) {
       this.listItemCounts[blockDepth] = 0;
     }
-    return (
-      this.listItemCounts[blockDepth] = this.listItemCounts[blockDepth] + 1
-    );
+    this.listItemCounts[blockDepth] = this.listItemCounts[blockDepth] + 1;
+    return this.listItemCounts[blockDepth];
   }
 
-  insertLineBreaks() {
+  insertLineBreak() {
     if (this.currentBlock > 0) {
-      this.output.push('\n');
+      // this.output.push('\n');
     }
   }
 
   renderBlockContent(block) {
-    const blockType = block.getType();
+    const { contentState } = this;
+    const blockType = block.getType(); // eslint-disable-line no-unused-vars
     const text = block.getText();
     if (text === '') {
       // Prevent element collapse if completely empty.
@@ -170,30 +157,33 @@ class MarkupGenerator {
     }
     const charMetaList = block.getCharacterList();
     const entityPieces = getEntityRanges(text, charMetaList);
-    return entityPieces.map(([entityKey, stylePieces]) => {
-      const content = stylePieces.map(([text2, style]) => {
-        // Don't allow empty inline elements.
-        if (!text2) {
+    return entityPieces
+      .map(([entityKey, stylePieces]) => {
+        const content = stylePieces
+          .map(([text2, style]) => { // eslint-disable-line no-unused-vars
+            // Don't allow empty inline elements.
+            if (!text2) {
+              return '';
+            }
+            return encodeContent(text2);
+          })
+          .join('');
+        const entity = entityKey ? contentState.getEntity(entityKey) : null;
+        if (entity != null && entity.getType() === ENTITY_TYPE.LINK) {
+          const data = entity.getData();
+          const url = encodeURL(data.url) || '';
+          return `${content.trim()} [${url}] `;
+        } else if (entity != null && entity.getType() === ENTITY_TYPE.IMAGE) {
           return '';
         }
-        let content2 = encodeContent(text2);
-        if (style.has(CODE)) {
-          content2 = (blockType === BLOCK_TYPE.CODE) ? content2 : `\`${content2}\``;
-        }
-        return content2;
-      }).join('');
-      const entity = entityKey ? this.contentState.get(entityKey) : null;
-      if (entity != null && entity.getType() === ENTITY_TYPE.LINK) {
-        const data = entity.getData();
-        const url = data.url || '';
-        const title = data.title ? ` "${escapeTitle(data.title)}"` : '';
-        return `[${content}](${encodeURL(url)}${title})`;
-      }
-      return content;
-    }).join('');
+        return content;
+      })
+      .join('');
   }
 }
 
-export default function stateToText(content) {
+function stateToText(content) {
   return new MarkupGenerator(content).generate();
 }
+
+export { stateToText };

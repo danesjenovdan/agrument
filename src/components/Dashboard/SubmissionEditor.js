@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
+import Textarea from 'react-textarea-autosize';
 import SimpleRichTextEditor from '../SimpleRichTextEditor';
 import { toSloDateString } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
 import Button from '../FormControl/Button';
 import ImageEdit from './ImageEdit';
 import { rights } from '../../utils/rights';
-import stateToText from '../../utils/draft-js-export-text';
+import { stateToText } from '../../utils/draft-js-export-text';
 
 import store from '../../store';
 
@@ -38,14 +39,17 @@ function onSave() {
 class SubmissionEditor extends React.Component {
   onEditorChange = (value, editorValue) => {
     this.editorValue = editorValue;
-    store.emit('editable:updateeditor', value);
+
+    const text = stateToText(editorValue.getEditorState().getCurrentContent());
+    store.emit('editable:updateeditor', value, text);
   }
 
   render() {
-    const { entry } = this.props;
+    const { entry, user } = this.props;
+    console.log(user.id, entry.author);
     return (
-      <div>
-        <article className="component__submission-editor">
+      <div className="row">
+        <div className="col-md-12">
           <div className="form-horizontal">
             <div className="form-group">
               <strong className="col-sm-2 text-right">ID</strong>
@@ -69,88 +73,119 @@ class SubmissionEditor extends React.Component {
             </div>
           </div>
           <hr />
-          <section>
-            <h3 className="form-group form-group-lg">
-              <input
-                placeholder="Dodaj naslov"
-                value={entry.title}
-                onChange={onValueChange('title')}
-                className="form-control"
-              />
-            </h3>
-            <div className="form-group theeditor">
-              <SimpleRichTextEditor
-                format="html"
-                value={this.editorValue || entry.content}
-                onChange={this.onEditorChange}
-              />
-            </div>
-          </section>
-          <hr />
-          <div className="form-group">
-            <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>
-            <Select
-              multi
-              id="submissioneditor-rights"
-              name="rights"
-              value={entry.rights}
-              options={rights}
-              onChange={onValueChange('rights')}
-              placeholder="Izberi eno ali dve pravici"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="submissioneditor-ogdesc" className="control-label">Opis za og</label>
-            <input
-              id="submissioneditor-ogdesc"
-              value={entry.description}
-              onChange={onValueChange('description')}
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <label className="control-label">Slika</label>
-            <ImageEdit onDone={onValueChange('imageURL')} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="submissioneditor-imgcap" className="control-label">Vir slike (Opis)</label>
-            <input
-              id="submissioneditor-imgcap"
-              value={entry.imageCaption}
-              onChange={onValueChange('imageCaption')}
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="submissioneditor-imgcapurl" className="control-label">Vir slike (URL)</label>
-            <input
-              id="submissioneditor-imgcapurl"
-              value={entry.imageCaptionURL}
-              onChange={onValueChange('imageCaptionURL')}
-              className="form-control"
-            />
-          </div>
-          {/* <section>
+        </div>
+        <div className="col-md-4">
+          <div className="component__submission-editor">
             <div>
-              <Checkbox
-                label="Uporabi posebni embed"
-                checked={!!entry.hasEmbed}
-                onChange={onValueChange('hasEmbed')}
+              <div className="form-group">
+                <label htmlFor="submissioneditor-tweet" className="control-label">Tweet</label>
+                <Textarea
+                  id="submissioneditor-tweet"
+                  value={entry.tweet}
+                  onChange={onValueChange('tweet')}
+                  className="form-control overflow-hidden"
+                  maxLength="240"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="submissioneditor-fbtext" className="control-label">Facebook text</label>
+                <Textarea
+                  readOnly
+                  id="submissioneditor-fbtext"
+                  value={entry.fbtext}
+                  onChange={onValueChange('fbtext')}
+                  className="form-control overflow-hidden"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="submissioneditor-ogdesc" className="control-label">Opis za og</label>
+                <Textarea
+                  readOnly
+                  id="submissioneditor-ogdesc"
+                  value={entry.description}
+                  onChange={onValueChange('description')}
+                  className="form-control overflow-hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-8">
+          <article className="component__submission-editor">
+            <section>
+              <div className="form-group form-group-lg">
+                <input
+                  placeholder="Dodaj naslov"
+                  value={entry.title}
+                  onChange={onValueChange('title')}
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group theeditor">
+                <SimpleRichTextEditor
+                  format="html"
+                  value={this.editorValue || entry.content}
+                  onChange={this.onEditorChange}
+                />
+              </div>
+            </section>
+            <hr />
+            <div className="form-group">
+              <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>
+              <Select
+                multi
+                id="submissioneditor-rights"
+                name="rights"
+                value={entry.rights}
+                options={rights}
+                onChange={onValueChange('rights')}
+                placeholder="Izberi eno ali dve pravici"
               />
             </div>
-            {!!entry.hasEmbed && (
-              <textarea
-                placeholder="Prilepi embed kodo"
-                value={entry.embedCode || ''}
-                onChange={onValueChange('embedCode')}
+            <div className="form-group">
+              <label className="control-label">Slika</label>
+              <ImageEdit onDone={onValueChange('imageURL')} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="submissioneditor-imgcap" className="control-label">Vir slike (Opis)</label>
+              <input
+                id="submissioneditor-imgcap"
+                value={entry.imageCaption}
+                onChange={onValueChange('imageCaption')}
                 className="form-control"
               />
-            )}
-          </section> */}
-        </article>
-        <div className="row">
-          <div className="col-sm-4 col-sm-offset-4">
-            <Button block value="Shrani" className="pull-right" disabled={entry.disabled} onClick={onSave} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="submissioneditor-imgcapurl" className="control-label">Vir slike (URL)</label>
+              <input
+                id="submissioneditor-imgcapurl"
+                value={entry.imageCaptionURL}
+                onChange={onValueChange('imageCaptionURL')}
+                className="form-control"
+              />
+            </div>
+            {/* <section>
+              <div>
+                <Checkbox
+                  label="Uporabi posebni embed"
+                  checked={!!entry.hasEmbed}
+                  onChange={onValueChange('hasEmbed')}
+                />
+              </div>
+              {!!entry.hasEmbed && (
+                <textarea
+                  placeholder="Prilepi embed kodo"
+                  value={entry.embedCode || ''}
+                  onChange={onValueChange('embedCode')}
+                  className="form-control"
+                />
+              )}
+            </section> */}
+          </article>
+          <div className="row">
+            <div className="col-sm-4 col-sm-offset-4">
+              <Button block value="Shrani" className="pull-right" disabled={entry.disabled} onClick={onSave} />
+            </div>
           </div>
         </div>
       </div>
@@ -176,6 +211,7 @@ SubmissionEditor.propTypes = {
     type: PropTypes.string.isRequired,
     author_name: PropTypes.string,
   }).isRequired,
+  user: PropTypes.shape().isRequired,
 };
 
 export default withRouter(SubmissionEditor);
