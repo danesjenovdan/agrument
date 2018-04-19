@@ -1,8 +1,6 @@
 import React from 'react';
 import RichTextEditor from './RichTextEditor';
 
-const MAX_LENGTH = 1000;
-
 /* eslint-disable no-underscore-dangle, react/prop-types */
 export default class SimpleRichTextEditor extends React.Component {
   constructor(...args) {
@@ -21,6 +19,22 @@ export default class SimpleRichTextEditor extends React.Component {
     this._updateStateFromProps(newProps);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.editorValue !== nextState.editorValue) {
+      return true;
+    }
+    if (this.props.onChange !== nextProps.onChange) {
+      return true;
+    }
+    if (this.props.value !== nextProps.value) {
+      return true;
+    }
+    if (this.props.format !== nextProps.format) {
+      return true;
+    }
+    return false;
+  }
+
   _updateStateFromProps = (newProps) => {
     const { value, format, onChange } = newProps;
     if (this._currentValue != null) {
@@ -29,21 +43,25 @@ export default class SimpleRichTextEditor extends React.Component {
         return;
       }
     }
-    let newEditorValue = null;
-    if (typeof value === 'string') {
+    if (value !== true) {
       const { editorValue } = this.state;
-      newEditorValue = editorValue.setContentFromString(value, format);
-    } else if (value != null) {
-      newEditorValue = value;
-    }
-    if (newEditorValue != null) {
-      this.setState({
-        editorValue: newEditorValue,
-      });
-      if (this._currentValue == null) {
-        const stringValue = newEditorValue.toString(format);
-        if (onChange) {
-          onChange(stringValue, newEditorValue);
+      let newEditorValue = null;
+      if (typeof value === 'string') {
+        newEditorValue = editorValue.setContentFromString(value, format);
+      } else if (value != null) {
+        newEditorValue = value;
+      }
+      if (newEditorValue != null) {
+        if (editorValue !== newEditorValue) {
+          this.setState({
+            editorValue: newEditorValue,
+          });
+        }
+        if (this._currentValue == null) {
+          const stringValue = newEditorValue.toString(format);
+          if (onChange) {
+            onChange(stringValue, newEditorValue);
+          }
         }
       }
     }
@@ -69,17 +87,6 @@ export default class SimpleRichTextEditor extends React.Component {
     }
   }
 
-  _handleBeforeInput = () => {
-    const currentContent = this.state.editorValue._editorState.getCurrentContent();
-    const currentContentLength = currentContent.getPlainText('').length;
-
-    if (currentContentLength > MAX_LENGTH - 1) {
-      return 'handled';
-    }
-
-    return undefined;
-  }
-
   render() {
     if (RichTextEditor) {
       const { value, ...otherProps } = this.props;
@@ -94,7 +101,6 @@ export default class SimpleRichTextEditor extends React.Component {
           {...otherProps}
           value={this.state.editorValue}
           onChange={this._onChange}
-          handleBeforeInput={this._handleBeforeInput}
           toolbarConfig={toolbarConfig}
         />
       );

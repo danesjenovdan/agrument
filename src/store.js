@@ -34,7 +34,7 @@ const store = new Freezer({
     isLoading: false,
     error: false,
     selectedUser: null,
-    deadline: parseDate(Date.now()).getTime(),
+    date: parseDate(Date.now()).getTime(),
   },
   published: {
     isLoading: false,

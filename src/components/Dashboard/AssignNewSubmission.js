@@ -10,10 +10,10 @@ function changeSelectedUser(event) {
   store.emit('newsubmission:changeuser', +event.target.value);
 }
 
-function changeDeadline(value) {
+function changeDate(value) {
   const date = parseDate(value, false);
   if (date) {
-    store.emit('newsubmission:changedeadline', date.getTime());
+    store.emit('newsubmission:changedate', date.getTime());
   }
 }
 
@@ -39,7 +39,7 @@ const AssignNewSubmission = ({ users, newArticle }) => (
     <div className="form-group">
       <label htmlFor="newarticle-date" className="col-sm-2 control-label">Datum</label>
       <div className="col-sm-10">
-        <DatePicker locale="sl-SI" value={new Date(newArticle.deadline)} onChange={changeDeadline} />
+        <DatePicker locale="sl-SI" value={new Date(newArticle.date)} onChange={changeDate} />
       </div>
     </div>
     <div className="form-group">
@@ -56,7 +56,7 @@ AssignNewSubmission.propTypes = {
     isLoading: false,
     error: false,
     selectedUser: null,
-    deadline: 0,
+    date: 0,
   }).isRequired,
 };
 

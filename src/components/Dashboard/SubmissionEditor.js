@@ -5,7 +5,8 @@ import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Textarea from 'react-textarea-autosize';
 import SimpleRichTextEditor from '../SimpleRichTextEditor';
-import { toSloDateString } from '../../utils/date';
+import DatePicker from '../DatePicker';
+import { toSloDateString, parseDate } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
 import Button from '../FormControl/Button';
 import ImageEdit from './ImageEdit';
@@ -27,6 +28,9 @@ function onValueChange(key) {
       value = event.target.type === 'checkbox' ? Number(event.target.checked) : event.target.value;
     } else if (_.isArray(value)) {
       value = value.map(e => e.value).join(',');
+    } else if (_.isDate(value)) {
+      const date = parseDate(value, false);
+      value = date.getTime();
     }
     store.emit('editable:update', key, value);
   };
@@ -38,47 +42,88 @@ function onSave() {
 
 class SubmissionEditor extends React.Component {
   onEditorChange = (value, editorValue) => {
-    this.editorValue = editorValue;
-
+    this.editorValue = true;
     const text = stateToText(editorValue.getEditorState().getCurrentContent());
     store.emit('editable:updateeditor', value, text);
   }
 
+  renderAuthor() {
+    const { entry, user, users } = this.props;
+    let content = entry.author_name || `Neznan avtor #${entry.author}`;
+    if (user.group === 'admin') {
+      content = (
+        <div className="component__input component__input--select">
+          <select id="submissioneditor-author" value={entry.author} className="form-control" onChange={onValueChange('author')}>
+            {users.map(u => (
+              <option key={u.id} value={u.id}>{u.name}</option>
+            ))}
+          </select>
+          <span><i className="glyphicon glyphicon-chevron-down" /></span>
+        </div>
+      );
+    }
+    return (
+      <div className="form-group">
+        <label htmlFor="submissioneditor-author" className="control-label">Avtor</label>
+        {content}
+      </div>
+    );
+  }
+
+  renderStatus() {
+    const { entry, user } = this.props;
+    let content = TYPE_TEXT[entry.type];
+    if (user.group === 'admin') {
+      content = (
+        <div className="component__input component__input--select">
+          <select id="submissioneditor-type" value={entry.type} className="form-control" onChange={onValueChange('type')}>
+            {Object.keys(TYPE_TEXT).map(type => (
+              <option key={type} value={type}>{TYPE_TEXT[type]}</option>
+            ))}
+          </select>
+          <span><i className="glyphicon glyphicon-chevron-down" /></span>
+        </div>
+      );
+    }
+    return (
+      <div className="form-group">
+        <label htmlFor="submissioneditor-type" className="control-label">Stanje</label>
+        {content}
+      </div>
+    );
+  }
+
+  renderDate() {
+    const { entry, user } = this.props;
+    let content = (
+      <span>{toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)</span>
+    );
+    if (user.group === 'admin') {
+      content = (
+        <DatePicker locale="sl-SI" value={new Date(entry.date)} onChange={onValueChange('date')} />
+      );
+    }
+    return (
+      <div className="form-group">
+        <label htmlFor="submissioneditor-date" className="control-label">Datum</label>
+        {content}
+      </div>
+    );
+  }
+
   render() {
     const { entry, user } = this.props;
-    console.log(user.id, entry.author);
+    // console.log(user.id, entry.author);
     return (
       <div className="row">
-        <div className="col-md-12">
-          <div className="form-horizontal">
-            <div className="form-group">
-              <strong className="col-sm-2 text-right">ID</strong>
-              <div className="col-sm-4">
-                {entry.id}
-              </div>
-              <strong className="col-sm-2 text-right">Avtor</strong>
-              <div className="col-sm-4">
-                {entry.author_name || `Neznan avtor #${entry.author}`}
-              </div>
-            </div>
-            <div className="form-group">
-              <strong className="col-sm-2 text-right">Datum</strong>
-              <div className="col-sm-4">
-                {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
-              </div>
-              <strong className="col-sm-2 text-right">Stanje</strong>
-              <div className="col-sm-4">
-                {TYPE_TEXT[entry.type]}
-              </div>
-            </div>
-          </div>
-          <hr />
-        </div>
         <div className="col-md-4">
           <div className="component__submission-editor">
             <div>
+              {this.renderAuthor()}
+              {this.renderDate()}
+              {this.renderStatus()}
               <div className="form-group">
-                <label htmlFor="submissioneditor-tweet" className="control-label">Tweet</label>
+                <label htmlFor="submissioneditor-tweet" className="control-label">Twitter</label>
                 <Textarea
                   id="submissioneditor-tweet"
                   value={entry.tweet}
@@ -88,7 +133,7 @@ class SubmissionEditor extends React.Component {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="submissioneditor-fbtext" className="control-label">Facebook text</label>
+                <label htmlFor="submissioneditor-fbtext" className="control-label">Facebook</label>
                 <Textarea
                   readOnly
                   id="submissioneditor-fbtext"
@@ -98,7 +143,7 @@ class SubmissionEditor extends React.Component {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="submissioneditor-ogdesc" className="control-label">Opis za og</label>
+                <label htmlFor="submissioneditor-ogdesc" className="control-label">og opis</label>
                 <Textarea
                   readOnly
                   id="submissioneditor-ogdesc"
@@ -113,8 +158,10 @@ class SubmissionEditor extends React.Component {
         <div className="col-md-8">
           <article className="component__submission-editor">
             <section>
-              <div className="form-group form-group-lg">
+              <div className="form-group">
+                <label htmlFor="submissioneditor-title" className="control-label">Naslov</label>
                 <input
+                  id="submissioneditor-title"
                   placeholder="Dodaj naslov"
                   value={entry.title}
                   onChange={onValueChange('title')}
@@ -122,6 +169,7 @@ class SubmissionEditor extends React.Component {
                 />
               </div>
               <div className="form-group theeditor">
+                <label htmlFor="submissioneditor-content" className="control-label">Vsebina</label>
                 <SimpleRichTextEditor
                   format="html"
                   value={this.editorValue || entry.content}
@@ -212,6 +260,7 @@ SubmissionEditor.propTypes = {
     author_name: PropTypes.string,
   }).isRequired,
   user: PropTypes.shape().isRequired,
+  users: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default withRouter(SubmissionEditor);
