@@ -1,4 +1,5 @@
 import React from 'react';
+import { filterEditorState } from 'draftjs-filters';
 import RichTextEditor from './RichTextEditor';
 
 /* eslint-disable no-underscore-dangle, react/prop-types */
@@ -68,21 +69,50 @@ export default class SimpleRichTextEditor extends React.Component {
     this._currentValue = [format, value];
   }
 
-  _onChange = (editorValue) => {
+  _onChange = (nextEditorValue) => {
     const { format, onChange } = this.props;
-    const oldEditorValue = this.state.editorValue;
-    this.setState({ editorValue });
-    const oldContentState = oldEditorValue
-      ? oldEditorValue.getEditorState().getCurrentContent()
+    const { editorValue } = this.state;
+
+    let filteredState = nextEditorValue.getEditorState();
+
+    const shouldFilterPaste =
+      filteredState.getCurrentContent() !== editorValue.getEditorState().getCurrentContent() &&
+      filteredState.getLastChangeType() === 'insert-fragment';
+
+    if (shouldFilterPaste) {
+      filteredState = filterEditorState(
+        {
+          blocks: [],
+          styles: ['ITALIC'],
+          entities: [{
+            type: 'LINK',
+            attributes: ['href'],
+            whitelist: {
+              href: '^https?://',
+            },
+          }],
+          maxNesting: 1,
+          whitespacedCharacters: ['\n', '\t'],
+        },
+        filteredState,
+      );
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    nextEditorValue = nextEditorValue.setEditorState(filteredState);
+
+    this.setState({ editorValue: nextEditorValue });
+    const oldContentState = editorValue
+      ? editorValue.getEditorState().getCurrentContent()
       : null;
-    const newContentState = editorValue.getEditorState().getCurrentContent();
+    const newContentState = nextEditorValue.getEditorState().getCurrentContent();
     if (oldContentState !== newContentState) {
-      const stringValue = editorValue.toString(format);
+      const stringValue = nextEditorValue.toString(format);
       // Optimization so if we receive new props we don't need
       // to parse anything unnecessarily.
       this._currentValue = [format, stringValue];
       if (onChange && stringValue !== this.props.value) {
-        onChange(stringValue, editorValue);
+        onChange(stringValue, nextEditorValue);
       }
     }
   }

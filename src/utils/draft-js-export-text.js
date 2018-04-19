@@ -171,7 +171,7 @@ class MarkupGenerator {
         const entity = entityKey ? contentState.getEntity(entityKey) : null;
         if (entity != null && entity.getType() === ENTITY_TYPE.LINK) {
           const data = entity.getData();
-          const url = encodeURL(data.url) || '';
+          const url = (data.url && encodeURL(data.url)) || '';
           return `${content.trim()} [${url}] `;
         } else if (entity != null && entity.getType() === ENTITY_TYPE.IMAGE) {
           return '';

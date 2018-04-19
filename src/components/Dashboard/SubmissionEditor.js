@@ -177,7 +177,6 @@ class SubmissionEditor extends React.Component {
                 />
               </div>
             </section>
-            <hr />
             <div className="form-group">
               <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>
               <Select

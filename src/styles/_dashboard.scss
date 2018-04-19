@@ -221,9 +221,31 @@
     }
   }
 
-  .theeditor > div {
+  .theeditor > div,
+  .Select > .Select-control,
+  .Select.is-focused:not(.is-open) > .Select-control {
     border-radius: 0px;
     border: 2px solid #c2d8d8;
+    box-shadow: none;
+  }
+
+  .Select--multi {
+    .Select-value,
+    .Select-value-icon {
+      border-color: #c2d8d8;
+      color: #7ebfbf;
+      background-color: rgba(194, 216, 216, 0.15);
+    }
+
+    .Select-value-icon:hover {
+      background-color: rgba(194, 216, 216, 0.35);
+      color: #7ebfbf;
+    }
+
+    .Select-option.is-focused,
+    .Select-option:hover {
+      background-color: rgba(194, 216, 216, 0.35);
+    }
   }
 
   // TODO:
