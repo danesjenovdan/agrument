@@ -188,15 +188,6 @@
     }
   }
 
-  .Select-menu-outer {
-    z-index: 9999;
-  }
-
-  .DraftEditor-editorContainer .public-DraftEditor-content {
-    min-height: 300px;
-    font-family: 'Titillium Web', 'Helvetica', 'Arial', sans-serif;
-  }
-
   .form-control {
     border-radius: 0px;
     outline: none;
@@ -221,6 +212,12 @@
     }
   }
 
+  .DraftEditor-editorContainer .public-DraftEditor-content {
+    min-height: 300px;
+    font-family: 'Titillium Web', 'Helvetica', 'Arial', sans-serif;
+  }
+
+  img.thumbnail,
   .theeditor > div,
   .Select > .Select-control,
   .Select.is-focused:not(.is-open) > .Select-control {
@@ -229,7 +226,12 @@
     box-shadow: none;
   }
 
+  .Select
   .Select--multi {
+    .Select-menu-outer {
+      z-index: 9999;
+    }
+
     .Select-value,
     .Select-value-icon {
       border-color: #c2d8d8;

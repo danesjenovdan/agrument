@@ -74,6 +74,8 @@ const store = new Freezer({
     data: null,
   },
   editable: {
+    saving: false,
+    savingError: false,
     isLoading: false,
     data: null,
   },

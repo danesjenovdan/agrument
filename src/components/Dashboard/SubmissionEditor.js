@@ -8,8 +8,8 @@ import SimpleRichTextEditor from '../SimpleRichTextEditor';
 import DatePicker from '../DatePicker';
 import { toSloDateString, parseDate } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
-import Button from '../FormControl/Button';
-import ImageEdit from './ImageEdit';
+import LoadingButton from '../FormControl/LoadingButton';
+import ImageSelect from './ImageSelect';
 import { rights } from '../../utils/rights';
 import { stateToText } from '../../utils/draft-js-export-text';
 
@@ -48,13 +48,13 @@ class SubmissionEditor extends React.Component {
   }
 
   renderAuthor() {
-    const { entry, user, users } = this.props;
+    const { entry, state } = this.props;
     let content = entry.author_name || `Neznan avtor #${entry.author}`;
-    if (user.group === 'admin') {
+    if (state.user.data.group === 'admin') {
       content = (
         <div className="component__input component__input--select">
           <select id="submissioneditor-author" value={entry.author} className="form-control" onChange={onValueChange('author')}>
-            {users.map(u => (
+            {state.users.data.map(u => (
               <option key={u.id} value={u.id}>{u.name}</option>
             ))}
           </select>
@@ -71,9 +71,9 @@ class SubmissionEditor extends React.Component {
   }
 
   renderStatus() {
-    const { entry, user } = this.props;
+    const { entry, state } = this.props;
     let content = TYPE_TEXT[entry.type];
-    if (user.group === 'admin') {
+    if (state.user.data.group === 'admin') {
       content = (
         <div className="component__input component__input--select">
           <select id="submissioneditor-type" value={entry.type} className="form-control" onChange={onValueChange('type')}>
@@ -94,11 +94,11 @@ class SubmissionEditor extends React.Component {
   }
 
   renderDate() {
-    const { entry, user } = this.props;
+    const { entry, state } = this.props;
     let content = (
       <span>{toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)</span>
     );
-    if (user.group === 'admin') {
+    if (state.user.data.group === 'admin') {
       content = (
         <DatePicker locale="sl-SI" value={new Date(entry.date)} onChange={onValueChange('date')} />
       );
@@ -112,7 +112,7 @@ class SubmissionEditor extends React.Component {
   }
 
   render() {
-    const { entry, user } = this.props;
+    const { entry, state } = this.props;
     // console.log(user.id, entry.author);
     return (
       <div className="row">
@@ -176,41 +176,49 @@ class SubmissionEditor extends React.Component {
                   onChange={this.onEditorChange}
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>
+                <Select
+                  multi
+                  id="submissioneditor-rights"
+                  name="rights"
+                  value={entry.rights}
+                  options={rights}
+                  onChange={onValueChange('rights')}
+                  placeholder="Izberi eno ali dve pravici"
+                />
+              </div>
             </section>
-            <div className="form-group">
-              <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>
-              <Select
-                multi
-                id="submissioneditor-rights"
-                name="rights"
-                value={entry.rights}
-                options={rights}
-                onChange={onValueChange('rights')}
-                placeholder="Izberi eno ali dve pravici"
-              />
-            </div>
-            <div className="form-group">
-              <label className="control-label">Slika</label>
-              <ImageEdit onDone={onValueChange('imageURL')} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="submissioneditor-imgcap" className="control-label">Vir slike (Opis)</label>
-              <input
-                id="submissioneditor-imgcap"
-                value={entry.imageCaption}
-                onChange={onValueChange('imageCaption')}
-                className="form-control"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="submissioneditor-imgcapurl" className="control-label">Vir slike (URL)</label>
-              <input
-                id="submissioneditor-imgcapurl"
-                value={entry.imageCaptionURL}
-                onChange={onValueChange('imageCaptionURL')}
-                className="form-control"
-              />
-            </div>
+            <section className="row">
+              <div className="col-sm-6">
+                <div className="form-group">
+                  <label className="control-label">Slika</label>
+                  <ImageSelect onChange={onValueChange('imageURL')} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="submissioneditor-imgcap" className="control-label">Vir slike (Opis)</label>
+                  <input
+                    id="submissioneditor-imgcap"
+                    value={entry.imageCaption}
+                    onChange={onValueChange('imageCaption')}
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="submissioneditor-imgcapurl" className="control-label">Vir slike (URL)</label>
+                  <input
+                    id="submissioneditor-imgcapurl"
+                    value={entry.imageCaptionURL}
+                    onChange={onValueChange('imageCaptionURL')}
+                    className="form-control"
+                  />
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <label className="control-label">Predogled</label>
+                {entry.imageURL && <img className="img-responsive thumbnail" style={{ width: '100%' }} src={entry.imageURL} alt="preview" />}
+              </div>
+            </section>
             {/* <section>
               <div>
                 <Checkbox
@@ -231,7 +239,14 @@ class SubmissionEditor extends React.Component {
           </article>
           <div className="row">
             <div className="col-sm-4 col-sm-offset-4">
-              <Button block value="Shrani" className="pull-right" disabled={entry.disabled} onClick={onSave} />
+              <LoadingButton
+                block
+                values={['Shrani', 'Shranjujem...', 'Shranjeno :)', 'Napaka :(']}
+                className="pull-right"
+                loading={state.editable.saving}
+                error={state.editable.savingError}
+                onClick={onSave}
+              />
             </div>
           </div>
         </div>
@@ -258,8 +273,7 @@ SubmissionEditor.propTypes = {
     type: PropTypes.string.isRequired,
     author_name: PropTypes.string,
   }).isRequired,
-  user: PropTypes.shape().isRequired,
-  users: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  state: PropTypes.shape().isRequired,
 };
 
 export default withRouter(SubmissionEditor);

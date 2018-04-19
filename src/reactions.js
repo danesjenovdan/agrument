@@ -314,7 +314,7 @@ function initReactions(store) {
       return;
     }
 
-    store.get().editable.set({ isLoading: true });
+    store.get().editable.set({ isLoading: true, autosave: false });
 
     dash.getEditable(time)
       .end((err, res) => {
@@ -328,6 +328,13 @@ function initReactions(store) {
             isLoading: false,
             data: res.body.data,
           });
+          const { author, type } = res.body.data;
+          const userId = store.get().user.data.id;
+          if (author === userId && type === 'pending') {
+            store.get().editable.set({
+              autosave: true,
+            });
+          }
         }
       });
   });
@@ -347,6 +354,10 @@ function initReactions(store) {
     store.emit('editable:updategeneratedtext');
   });
 
+  const debouncedEditableSave = _.debounce(() => {
+    store.emit('editable:save');
+  }, 3500);
+
   store.on('editable:updategeneratedtext', () => {
     const text = store.get().currentEditorText;
     const naslov = store.get().editable.data.title;
@@ -359,12 +370,19 @@ function initReactions(store) {
     const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
 
     store.get().editable.data.set({ fbtext, description }).now();
+
+    if (store.get().editable.autosave) {
+      debouncedEditableSave();
+    }
   });
 
   store.on('editable:save', () => {
     const { data } = store.get().editable;
     if (data) {
-      store.get().editable.data.set({ disabled: true });
+      store.get().editable.set({
+        saving: true,
+        savingError: false,
+      });
 
       const newData = data.toJS();
       const editorValue = store.get().currentEditor;
@@ -375,11 +393,15 @@ function initReactions(store) {
       dash.editSubmission(data.id, newData)
         .end((err, res) => {
           if (err || !res.ok) {
-            // noop
+            store.get().editable.set({
+              saving: false,
+              savingError: true,
+            });
           } else {
-            store.get().editable.data.set({ disabled: false });
-            store.emit('editable:updateeditor', null, '');
-            store.emit('editable:fetch', data.date);
+            store.get().editable.set({
+              saving: false,
+              savingError: false,
+            });
           }
         });
     }

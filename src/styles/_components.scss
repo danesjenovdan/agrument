@@ -75,6 +75,31 @@
   }
 }
 
+.component__fileinput {
+  position: relative;
+  background-color: #6ba8a0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  height: 34px;
+  text-align: center;
+
+  label {
+    padding: 7px 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
 .component__social-pulse-btn {
   background-color: #272727;
   color: #fff;

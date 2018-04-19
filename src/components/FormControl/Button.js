@@ -2,7 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const Button = ({ value, block, external, children, type, href, disabled, onClick, className }) => {
+const Button = ({
+  value,
+  block,
+  external,
+  children,
+  type,
+  href,
+  disabled,
+  onClick,
+  className,
+  ...otherProps
+}) => {
   const inside = !children ? value : children;
   const classes = classnames(
     'component__button',
@@ -14,12 +25,15 @@ const Button = ({ value, block, external, children, type, href, disabled, onClic
   if (!href) {
     return (
       <button
+        {...otherProps}
         className={classes}
         value={value}
         type={type}
         onClick={onClick}
         disabled={disabled}
-      >{inside}</button>
+      >
+        {inside}
+      </button>
     );
   }
   const target = {};
@@ -27,7 +41,9 @@ const Button = ({ value, block, external, children, type, href, disabled, onClic
     target.target = '_blank';
     target.rel = 'noopener noreferrer';
   }
-  return (<a className={classes} href={href} {...target} onClick={onClick}>{inside}</a>);
+  return (
+    <a {...otherProps} className={classes} href={href} {...target} onClick={onClick}>{inside}</a>
+  );
 };
 
 Button.propTypes = {

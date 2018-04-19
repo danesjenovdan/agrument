@@ -39,8 +39,7 @@ class Edit extends React.Component {
                 <SubmissionEditor
                   key={state.editable.data.id}
                   entry={state.editable.data}
-                  user={state.user.data}
-                  users={state.users.data}
+                  state={state}
                 />
               )}
             </RenderSpinner>
