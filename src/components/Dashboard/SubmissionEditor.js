@@ -36,10 +36,9 @@ function onSave() {
 }
 
 class SubmissionEditor extends React.Component {
-  onRTEChange = (value, editorValue) => {
-    // console.log(stateToText(editorValue.getEditorState().getCurrentContent()));
-    store.emit('editor:updateeditor-rte', value);
-    this.content = value;
+  onEditorChange = (value, editorValue) => {
+    this.editorValue = editorValue;
+    store.emit('editable:updateeditor', value);
   }
 
   render() {
@@ -82,8 +81,8 @@ class SubmissionEditor extends React.Component {
             <div className="form-group theeditor">
               <SimpleRichTextEditor
                 format="html"
-                value={this.content || entry.content}
-                onChange={this.onRTEChange}
+                value={this.editorValue || entry.content}
+                onChange={this.onEditorChange}
               />
             </div>
           </section>

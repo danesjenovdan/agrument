@@ -1,17 +1,13 @@
-/**
- * This component wraps react-rte and does nothing when required on server-side to prevent crashing
- * by accesing the 'window' property.
- */
-
 import React from 'react';
 import RichTextEditor from './RichTextEditor';
 
 const MAX_LENGTH = 1000;
 
 /* eslint-disable no-underscore-dangle, react/prop-types */
-class SimpleRichTextEditor extends React.Component {
-  constructor() {
-    super();
+export default class SimpleRichTextEditor extends React.Component {
+  constructor(...args) {
+    super(...args);
+
     this.state = {
       editorValue: RichTextEditor && RichTextEditor.createEmptyValue(),
     };
@@ -33,10 +29,16 @@ class SimpleRichTextEditor extends React.Component {
         return;
       }
     }
-    const { editorValue } = this.state;
-    this.setState({
-      editorValue: editorValue.setContentFromString(value, format),
-    });
+    if (typeof value === 'string') {
+      const { editorValue } = this.state;
+      this.setState({
+        editorValue: editorValue.setContentFromString(value, format),
+      });
+    } else if (value != null) {
+      this.setState({
+        editorValue: value,
+      });
+    }
     this._currentValue = [format, value];
   }
 
@@ -44,7 +46,9 @@ class SimpleRichTextEditor extends React.Component {
     const { format, onChange } = this.props;
     const oldEditorValue = this.state.editorValue;
     this.setState({ editorValue });
-    const oldContentState = oldEditorValue ? oldEditorValue.getEditorState().getCurrentContent() : null;
+    const oldContentState = oldEditorValue
+      ? oldEditorValue.getEditorState().getCurrentContent()
+      : null;
     const newContentState = editorValue.getEditorState().getCurrentContent();
     if (oldContentState !== newContentState) {
       const stringValue = editorValue.toString(format);
@@ -57,35 +61,37 @@ class SimpleRichTextEditor extends React.Component {
     }
   }
 
-  render() {
-    const toolbarConfig = {
-      display: ['LINK_BUTTONS', 'HISTORY_BUTTONS'],
-      // INLINE_STYLE_BUTTONS: [
-      //   {label: 'Bold', style: 'BOLD'},
-      //   {label: 'Italic', style: 'ITALIC'},
-      //   {label: 'Underline', style: 'UNDERLINE'}
-      // ],
-    };
-    const { value, format, onChange } = this.props; // eslint-disable-line no-unused-vars
-    return (
-      <div>
-        {
-          RichTextEditor
-            ? <RichTextEditor value={this.state.editorValue} onChange={this._onChange} toolbarConfig={toolbarConfig} handleBeforeInput={this._handleBeforeInput} />
-            : <div />
-        }
-      </div>
-    );
-  }
-
   _handleBeforeInput = () => {
     const currentContent = this.state.editorValue._editorState.getCurrentContent();
     const currentContentLength = currentContent.getPlainText('').length;
 
     if (currentContentLength > MAX_LENGTH - 1) {
-        return 'handled';
+      return 'handled';
     }
+
+    return undefined;
+  }
+
+  render() {
+    if (RichTextEditor) {
+      const { value, ...otherProps } = this.props;
+      const toolbarConfig = {
+        display: ['INLINE_STYLE_BUTTONS', 'LINK_BUTTONS', 'HISTORY_BUTTONS'],
+        INLINE_STYLE_BUTTONS: [
+          { label: 'Italic', style: 'ITALIC' },
+        ],
+      };
+      console.log('render');
+      return (
+        <RichTextEditor
+          {...otherProps}
+          value={this.state.editorValue}
+          onChange={this._onChange}
+          handleBeforeInput={this._handleBeforeInput}
+          toolbarConfig={toolbarConfig}
+        />
+      );
+    }
+    return <div />;
   }
 }
-
-export default SimpleRichTextEditor;

@@ -189,20 +189,19 @@
     }
   }
 
-  // TODO:
   .Select-menu-outer {
-    background: #ffffff;
     z-index: 9999;
   }
 
-  .theeditor > div > div > div:last-child { // FUCK react
+  .DraftEditor-editorContainer {
     height: 300px;
 
     .public-DraftEditor-content {
-      font-family: 'Titillium Web', sans-serif;
+      font-family: 'Titillium Web', 'Helvetica', 'Arial', sans-serif;
     }
   }
 
+  // TODO:
   .voting {
     margin-top: 20px;
   }

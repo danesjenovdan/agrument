@@ -337,17 +337,25 @@ function initReactions(store) {
     }).now();
   });
 
+  store.on('editable:updateeditor', (value) => {
+    store.get().set({
+      currentEditor: value,
+    }).now();
+    console.log('store.get().currentEditor', store.get().currentEditor);
+  });
+
   store.on('editable:save', () => {
     const { data } = store.get().editable;
     if (data) {
       store.get().editable.data.set({ disabled: true });
 
       const newData = data.toJS();
+      const editorValue = store.get().currentEditor;
+      console.log('store.get().currentEditor', store.get().currentEditor);
+      if (editorValue) {
+        newData.content = editorValue;
+      }
       console.log(newData);
-      // const editorRTE = store.get().currentEditorRTE;
-      // if (editorRTE) {
-      //   newData.content = editorRTE;
-      // }
 
       dash.editSubmission(data.id, newData)
         .end((err, res) => {
@@ -355,16 +363,11 @@ function initReactions(store) {
             // noop
           } else {
             store.get().editable.data.set({ disabled: false });
+            store.on('editable:updateeditor', null);
             store.on('editable:fetch', data.date);
           }
         });
     }
-  });
-
-  store.on('editor:updateeditor-rte', (value) => {
-    store.get().set({
-      currentEditorRTE: value,
-    }).now();
   });
 
   // THIS IS FIRST SUBMISSION (author finished editing)
