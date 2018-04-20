@@ -81,8 +81,8 @@ function initReactions(store) {
     store.get().newArticle.set({ selectedUser: id });
   });
 
-  store.on('newsubmission:changedeadline', (time) => {
-    store.get().newArticle.set({ deadline: time });
+  store.on('newsubmission:changedate', (time) => {
+    store.get().newArticle.set({ date: time });
   });
 
   store.on('newsubmission:create', () => {
@@ -90,19 +90,14 @@ function initReactions(store) {
       return;
     }
 
-    store.get().newArticle.set({ isLoading: true });
+    store.get().newArticle.set({ isLoading: true, error: false });
 
-    dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.deadline)
+    dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.date)
       .end((err, res) => {
         if (err || !res.ok) {
-          if (res.body.error.indexOf('date or deadline') !== -1) {
-            alert('Nekaj je narobe z datumom. Verjetno že obstaja deadline na ta datum.');
-          } else {
-            alert(`Nekaj je šlo narobe. Ne vemo čisto kaj, morda ti to pomaga: ${res.body.error}`);
-          }
           store.get().newArticle.set({
             isLoading: false,
-            error: true,
+            error: res.body.error || err || res.status,
           });
         } else {
           store.get().newArticle.set({
@@ -110,7 +105,6 @@ function initReactions(store) {
             error: false,
           });
           store.emit('submissions:fetch');
-          store.emit('pending:fetch');
         }
       });
   });

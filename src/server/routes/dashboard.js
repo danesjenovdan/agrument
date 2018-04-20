@@ -79,7 +79,7 @@ router.post('/users/create', requireAdmin, (req, res) => {
     });
 });
 
-router.get('/published', requireAdmin, (req, res) => {
+router.get('/published', (req, res) => {
   let afterDate = null;
   let afterOffset = null;
   if (req.query.after && req.query.after.indexOf('+') !== -1) {
@@ -104,7 +104,7 @@ router.get('/published', requireAdmin, (req, res) => {
   query = query
     .orderBy('date', 'desc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.deadline', 'posts.type', 'users.name as author_name')
+    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'users.name as author_name')
     .limit(21); // one more than is needed to see if there are any more pages after this
 
   if (afterOffset != null) {
@@ -128,9 +128,9 @@ router.get('/published', requireAdmin, (req, res) => {
 router.get('/submissions', requireAdmin, (req, res) => {
   db('posts')
     .whereIn('type', ['votable', 'pending'])
-    .orderBy('deadline', 'asc')
+    .orderBy('date', 'asc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.deadline', 'posts.type', 'users.name as author_name')
+    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.type', 'users.name as author_name')
     .then((data) => {
       res.json({
         submissions: data,
@@ -151,7 +151,6 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
         description: entry.description,
         content: entry.content,
         date: entry.date,
-        deadline: entry.date,
         rights: entry.rights,
         type: entry.type,
         hasEmbed: entry.hasEmbed,
@@ -161,15 +160,14 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
         imageCaptionURL: entry.imageCaptionURL,
       };
 
-      const { date, deadline } = obj;
+      const { date } = obj;
       return trx
         .select('id')
         .from('posts')
         .where('date', date)
-        .orWhere('deadline', deadline)
         .then((rows) => {
           if (rows && rows.length !== 0) {
-            throw new Error('Invalid date or deadline');
+            throw new Error('Submission with this date already exists');
           }
           return trx
             .insert(obj)
@@ -193,15 +191,14 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
 
 router.post('/submissions/add', requireAdmin, (req, res) => {
   db.transaction((trx) => {
-    const { date, deadline } = req.body;
+    const { date } = req.body;
     return trx
       .select('id')
       .from('posts')
       .where('date', date)
-      .orWhere('deadline', deadline)
       .then((rows) => {
         if (rows && rows.length !== 0) {
-          throw new Error('Invalid date or deadline');
+          throw new Error('Submission with this date already exists');
         }
         return trx
           .insert({
@@ -214,7 +211,6 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
             imageCaption: '',
             imageCaptionURL: '',
             hasEmbed: 0,
-            deadline: req.body.deadline,
             rights: '',
             type: 'pending',
           })
@@ -265,7 +261,6 @@ router.post('/submissions/edit/:id', (req, res) => {
       author_name: undefined,
       author: undefined,
       type: undefined,
-      deadline: undefined,
       date: undefined,
     };
   }
@@ -296,7 +291,7 @@ router.get('/pending', (req, res) => {
   db('posts')
     .where('type', 'pending')
     .andWhere('author', req.user.id)
-    .orderBy('deadline', 'asc')
+    .orderBy('date', 'asc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
     .select('posts.*', 'users.name as author_name')
     .then((data) => {
@@ -334,7 +329,7 @@ router.post('/pending/submit/:id', (req, res) => {
 router.get('/votable', (req, res) => {
   db('posts')
     .where('type', 'votable')
-    .orderBy('deadline', 'asc')
+    .orderBy('date', 'asc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
     .select('posts.*', 'users.name as author_name')
     .then((data) => {

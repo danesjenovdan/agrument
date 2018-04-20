@@ -9,9 +9,9 @@ const SubmissionPreview = ({ entry }) => (
     <section className="row clearfix">
       <div className="col-sm-6">
         <div>
-          <strong>Deadline: </strong>
+          <strong>Datum: </strong>
           <span>
-            {toSloDateString(entry.deadline)} (<TimeAgo date={entry.deadline} />)
+            {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
           </span>
         </div>
       </div>
@@ -91,7 +91,6 @@ SubmissionPreview.propTypes = {
     hasEmbed: PropTypes.number.isRequired,
     embedCode: PropTypes.string,
     embedHeight: PropTypes.string,
-    deadline: PropTypes.number.isRequired,
     rights: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     author_name: PropTypes.string,

@@ -49,7 +49,9 @@ class SubmissionEditor extends React.Component {
 
   renderAuthor() {
     const { entry, state } = this.props;
-    let content = entry.author_name || `Neznan avtor #${entry.author}`;
+    let content = (
+      <div>{entry.author_name || `Neznan avtor #${entry.author}`}</div>
+    );
     if (state.user.data.group === 'admin') {
       content = (
         <div className="component__input component__input--select">
@@ -70,9 +72,29 @@ class SubmissionEditor extends React.Component {
     );
   }
 
+  renderDate() {
+    const { entry, state } = this.props;
+    let content = (
+      <div>{toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)</div>
+    );
+    if (state.user.data.group === 'admin') {
+      content = (
+        <DatePicker locale="sl-SI" value={new Date(entry.date)} onChange={onValueChange('date')} />
+      );
+    }
+    return (
+      <div className="form-group">
+        <label htmlFor="submissioneditor-date" className="control-label">Datum</label>
+        {content}
+      </div>
+    );
+  }
+
   renderStatus() {
     const { entry, state } = this.props;
-    let content = TYPE_TEXT[entry.type];
+    let content = (
+      <div>{TYPE_TEXT[entry.type]}</div>
+    );
     if (state.user.data.group === 'admin') {
       content = (
         <div className="component__input component__input--select">
@@ -88,24 +110,6 @@ class SubmissionEditor extends React.Component {
     return (
       <div className="form-group">
         <label htmlFor="submissioneditor-type" className="control-label">Stanje</label>
-        {content}
-      </div>
-    );
-  }
-
-  renderDate() {
-    const { entry, state } = this.props;
-    let content = (
-      <span>{toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)</span>
-    );
-    if (state.user.data.group === 'admin') {
-      content = (
-        <DatePicker locale="sl-SI" value={new Date(entry.date)} onChange={onValueChange('date')} />
-      );
-    }
-    return (
-      <div className="form-group">
-        <label htmlFor="submissioneditor-date" className="control-label">Datum</label>
         {content}
       </div>
     );

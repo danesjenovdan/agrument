@@ -44,6 +44,9 @@ const AssignNewSubmission = ({ users, newArticle }) => (
     </div>
     <div className="form-group">
       <div className="col-sm-offset-2 col-sm-10">
+        {newArticle.error && (
+          <div>{newArticle.error}</div>
+        )}
         <Button disabled={newArticle.isLoading} onClick={createSubmission}>Ustvari</Button>
       </div>
     </div>

@@ -55,12 +55,11 @@ function getSubmissions() {
   return request.get(GET_SUBMISSIONS);
 }
 
-function addSubmission(userId, deadline) {
+function addSubmission(userId, date) {
   return request.post(POST_ADD_SUBMISSION)
     .send({
       author: userId,
-      deadline,
-      date: deadline,
+      date,
     });
 }
 
