@@ -7,16 +7,6 @@ const store = new Freezer({
     isLoading: false,
     data: null,
   },
-  pinned: {
-    isLoading: false,
-    data: null,
-    newMessage: {
-      isLoading: false,
-      error: false,
-      showInput: false,
-      message: '',
-    },
-  },
   users: {
     isLoading: false,
     data: null,

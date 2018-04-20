@@ -36,57 +36,6 @@
     }
   }
 
-  .component__horizontal-scroll-container {
-    overflow: scroll;
-    overflow-x: scroll;
-    overflow-y: auto;
-    white-space: nowrap;
-    display: flex;
-    padding-right: 5px;
-
-    // fix margin after last element
-    &:last-child:after {
-      content: '';
-      width: 1px;
-      display: flex;
-      flex: none;
-      margin-left: -1px;
-    }
-
-    > * {
-      white-space: normal;
-    }
-
-    .pinned__wrapper {
-      position: relative;
-      display: flex;
-      flex: none;
-      margin: 5px 10px 5px 5px;
-      width: 300px;
-      max-width: 90%;
-      background: #fff;
-      padding: 15px;
-
-      .pinned__remove {
-        position: absolute;
-        top: 0;
-        right: 0;
-        border: 0;
-        border-radius: 0;
-      }
-
-      .pinned__content {
-        width: 100%;
-
-        textarea {
-          width: 100%;
-          resize: vertical;
-          min-height: 100px;
-        }
-      }
-    }
-  }
-
   .component__entry {
     margin-bottom: 35px;
   }

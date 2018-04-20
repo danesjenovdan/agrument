@@ -16,9 +16,6 @@ const GET_PENDING = `${API_DASH}/pending/`;
 const POST_SUBMIT_PENDING = `${API_DASH}/pending/submit/:id`;
 const GET_VOTABLE = `${API_DASH}/votable`;
 const POST_PUBLISH_VOTABLE = `${API_DASH}/votable/publish/:id`;
-const GET_PINNED = `${API_DASH}/pinned`;
-const POST_ADD_PINNED = `${API_DASH}/pinned/add`;
-const DELETE_REMOVE_PINNED = `${API_DASH}/pinned/remove/:id`;
 const GET_EDITABLE = `${API_DASH}/edit/:date`;
 const GET_VOTES = `${API_DASH}/votes`;
 const VOTE_FOR = `${API_DASH}/vote/for`;
@@ -97,19 +94,6 @@ function publishVotable(id) {
   return request.post(POST_PUBLISH_VOTABLE.replace(':id', id));
 }
 
-function getPinned() {
-  return request.get(GET_PINNED);
-}
-
-function addPinned(message) {
-  return request.post(POST_ADD_PINNED)
-    .send({ message });
-}
-
-function removePinned(id) {
-  return request.del(DELETE_REMOVE_PINNED.replace(':id', id));
-}
-
 function getEditable(date) {
   return request.get(GET_EDITABLE.replace(':date', date));
 }
@@ -148,9 +132,6 @@ export {
   submitPending,
   getVotable,
   publishVotable,
-  getPinned,
-  addPinned,
-  removePinned,
   getVotes,
   voteFor,
   voteAgainst,
