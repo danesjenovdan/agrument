@@ -69,11 +69,6 @@ const PendingEntry = ({ entry, currentEditor }) => {
 
 PendingEntry.propTypes = {
   entry: PropTypes.shape().isRequired,
-  currentEditor: PropTypes.shape(),
-};
-
-PendingEntry.defaultProps = {
-  currentEditor: null,
 };
 
 export default PendingEntry;

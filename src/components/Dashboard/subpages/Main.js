@@ -9,15 +9,15 @@ const Main = ({ state }) => (
     <Blurb />
     <div className="row">
       <div className="col-lg-6">
-        <PendingSubmissions pending={state.pending} currentEditor={state.currentEditor} />
+        <PendingSubmissions state={state} />
       </div>
       <div className="col-lg-6">
-        <VotableSubmissions
+        {/* <VotableSubmissions
           user={state.user.data}
           votable={state.votable}
           currentEditor={state.currentEditor}
           votes={state.votes}
-        />
+        /> */}
       </div>
     </div>
   </Fragment>

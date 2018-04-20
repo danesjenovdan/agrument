@@ -6,7 +6,6 @@ import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import 'react-select/dist/react-select.css';
-import 'cropperjs/dist/cropper.css';
 import './styles/general.scss';
 
 import App from './containers/App';

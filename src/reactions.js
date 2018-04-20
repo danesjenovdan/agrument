@@ -235,7 +235,16 @@ function initReactions(store) {
     }
 
     debouncedEditableSave.cancel();
-    store.get().editable.set({ isLoading: true, autosave: false });
+    store.get().set({
+      currentEditor: null,
+      currentEditorText: '',
+    });
+    store.get().editable.set({
+      isLoading: true,
+      autosave: false,
+      error: false,
+      data: null,
+    });
 
     dash.getEditable(time)
       .end((err, res) => {
@@ -264,15 +273,27 @@ function initReactions(store) {
     store.get().editable.data.set({
       [key]: value,
     }).now();
+
     store.emit('editable:updategeneratedtext');
+
+    if (store.get().editable.autosave) {
+      debouncedEditableSave();
+    }
   });
 
   store.on('editable:updateeditor', (html, text) => {
+    const shouldSave = store.get().currentEditor != null;
+
     store.get().set({
       currentEditor: html,
       currentEditorText: text,
     }).now();
+
     store.emit('editable:updategeneratedtext');
+
+    if (store.get().editable.autosave && shouldSave) {
+      debouncedEditableSave();
+    }
   });
 
   store.on('editable:updategeneratedtext', () => {
@@ -287,10 +308,6 @@ function initReactions(store) {
     const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
 
     store.get().editable.data.set({ fbtext, description }).now();
-
-    if (store.get().editable.autosave) {
-      debouncedEditableSave();
-    }
   });
 
   store.on('editable:save', () => {

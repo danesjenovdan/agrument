@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TriangleHeading from '../Card/TriangleHeading';
 import PendingEntry from './PendingEntry';
+import RenderSpinner from '../../hoc/RenderSpinner';
 
 import store from '../../store';
 
@@ -11,35 +12,22 @@ class PendingSubmissions extends React.PureComponent {
   }
 
   render() {
-    const { pending, currentEditor } = this.props;
-
-    let content = null;
-    if (pending.isLoading && !pending.data) {
-      content = <div>Nalaganje ...</div>;
-    } else if (pending.data) {
-      content = pending.data.map(entry => (
-        <PendingEntry key={entry.id} entry={entry} currentEditor={currentEditor} />
-      ));
-    }
+    const { state } = this.props;
     return (
-      <div>
-        <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
-        {content}
-      </div>
+      <RenderSpinner isLoading={state.pending.isLoading} data={state.pending.data}>
+        {data => (
+          <div>
+            <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
+            {data.map(entry => <PendingEntry key={entry.id} entry={entry} />)}
+          </div>
+        )}
+      </RenderSpinner>
     );
   }
 }
 
 PendingSubmissions.propTypes = {
-  pending: PropTypes.shape({
-    isLoading: PropTypes.bool.isRequired,
-    data: PropTypes.arrayOf(PropTypes.shape()),
-  }).isRequired,
-  currentEditor: PropTypes.shape(),
-};
-
-PendingSubmissions.defaultProps = {
-  currentEditor: null,
+  state: PropTypes.shape().isRequired,
 };
 
 export default PendingSubmissions;
