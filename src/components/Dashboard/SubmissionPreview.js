@@ -7,30 +7,12 @@ import { getRightFromLetter } from '../../utils/rights';
 const SubmissionPreview = ({ entry }) => (
   <article className="component__submission-preview">
     <section className="row clearfix">
-      <div className="col-sm-6">
-        <div>
+      <div className="col-sm-12">
+        <p className="lead">
           <strong>Datum: </strong>
-          <span>
-            {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
-          </span>
-        </div>
+          <span>{toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)</span>
+        </p>
       </div>
-      <div className="col-sm-6">
-        <div>
-          <strong>Avtor: </strong>
-          <span>
-            {entry.author_name || `Neznan avtor #${entry.author}`}
-          </span>
-        </div>
-      </div>
-      {/* <div className="col-sm-6">
-        <div>
-          <strong>Objava: </strong>
-          <span>
-            {toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)
-          </span>
-        </div>
-      </div> */}
       <div className="col-sm-12">
         <div>
           <strong>Pravice: </strong>
@@ -39,39 +21,31 @@ const SubmissionPreview = ({ entry }) => (
           </span>
         </div>
       </div>
+      <div className="col-sm-6">
+        <div>
+          <strong>Avtor: </strong>
+          <span>{entry.author_name || `Neznan avtor #${entry.author}`}</span>
+        </div>
+      </div>
     </section>
-    <hr />
-    <section>
-      {entry.hasEmbed ? (
+    <section className="row">
+      <div className="col-sm-12">
+        <h2>{entry.title}</h2>
+      </div>
+      <div className="col-sm-12">
+        {entry.imageURL && <img className="img-responsive thumbnail" style={{ marginLeft: 'auto', marginRight: 'auto', maxHeight: 300 }} src={entry.imageURL} alt="preview" />}
+        <div className="text-right">
+          <strong><a href={entry.imageCaptionURL} target="_blank">{entry.imageCaption}</a></strong>
+        </div>
+      </div>
+    </section>
+    <section className="row">
+      <div className="col-sm-12">
         <div
-          className="embed-responsive"
-          style={{ paddingBottom: entry.embedHeight || '56.25%' }}
+          className="agrument__text"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: entry.embedCode }}
+          dangerouslySetInnerHTML={{ __html: entry.content }}
         />
-      ) : (
-        <img src={entry.imageURL} className="img-responsive img-fullwidth" alt="og cover" />
-      )}
-      <h3>{entry.title}</h3>
-      <div
-        className="agrument__text"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: entry.content }}
-      />
-    </section>
-    <hr />
-    <section>
-      <div className="og-description-container">
-        <strong>og description: </strong>
-        {entry.description}
-      </div>
-      <div className="og-image-container">
-        <strong>og image: </strong>
-        <img src={entry.imageURL} className="img-responsive img-thumbnail img-fullwidth" style={{ width: '50%' }} alt="og cover" />
-      </div>
-      <div className="og-caption-container">
-        <strong>caption: </strong>
-        {entry.imageCaption}
       </div>
     </section>
   </article>
@@ -88,9 +62,9 @@ SubmissionPreview.propTypes = {
     imageURL: PropTypes.string.isRequired,
     imageCaption: PropTypes.string.isRequired,
     imageCaptionURL: PropTypes.string.isRequired,
-    hasEmbed: PropTypes.number.isRequired,
-    embedCode: PropTypes.string,
-    embedHeight: PropTypes.string,
+    // hasEmbed: PropTypes.number.isRequired,
+    // embedCode: PropTypes.string,
+    // embedHeight: PropTypes.string, // TODO:
     rights: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     author_name: PropTypes.string,

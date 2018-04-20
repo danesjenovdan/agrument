@@ -223,7 +223,7 @@ class SubmissionEditor extends React.Component {
               </div>
               <div className="col-sm-6">
                 <label className="control-label">Predogled</label>
-                {entry.imageURL && <img className="img-responsive thumbnail" style={{ width: '100%' }} src={entry.imageURL} alt="preview" />}
+                {entry.imageURL && <img className="img-responsive img-fullwidth thumbnail" src={entry.imageURL} alt="preview" />}
               </div>
             </section>
             {/* <section>

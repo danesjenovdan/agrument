@@ -12,12 +12,7 @@ const Main = ({ state }) => (
         <PendingSubmissions state={state} />
       </div>
       <div className="col-lg-6">
-        {/* <VotableSubmissions
-          user={state.user.data}
-          votable={state.votable}
-          currentEditor={state.currentEditor}
-          votes={state.votes}
-        /> */}
+        <VotableSubmissions state={state} />
       </div>
     </div>
   </Fragment>

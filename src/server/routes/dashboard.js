@@ -411,56 +411,43 @@ router.get('/votes', (req, res) => {
     });
 });
 
-router.post('/vote/:option', (req, res) => {
-  if (req.body) {
-    db('votes')
-      .select('id', 'author', 'post', 'vote')
-      .where('post', req.body.data.post)
+router.post('/vote', (req, res) => {
+  db.transaction((trx) => {
+    const { id, vote } = req.body;
+    return trx
+      .from('votes')
+      .where('post', id)
       .andWhere('author', req.user.id)
-      .then((data) => {
-        if (data.length === 0) {
-          // NO VOTE, pls insert
-          db('votes')
+      .select('author', 'post', 'vote')
+      .then((rows) => {
+        if (rows.length === 0) {
+          return trx
             .insert({
               author: req.user.id,
-              post: req.body.data.post,
-              vote: req.params.option,
+              post: id,
+              vote,
             })
-            .then(() => {
-              res.json({
-                success: `Successfully voted ${req.params.option}`,
-              });
-            })
-            .catch((err) => {
-              res.status(500).json({
-                error: err.message,
-              });
-            });
-        } else {
-          // user already voted, pls update
-          db('votes')
-            .where('post', req.body.data.post)
-            .andWhere('author', req.user.id)
-            .update({
-              vote: req.params.option,
-            })
-            .then(() => {
-              res.json({
-                success: `Successfully updated vote with ${req.params.option}`,
-              });
-            })
-            .catch((err) => {
-              res.status(500).json({
-                error: err.message,
-              });
-            });
+            .into('votes');
         }
+        return trx
+          .from('votes')
+          .where('post', id)
+          .andWhere('author', req.user.id)
+          .update({
+            vote,
+          });
       });
-  } else {
-    res.status(400).json({
-      error: 'Bad Request',
+  })
+    .then(() => {
+      res.json({
+        success: 'Vote updated',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
     });
-  }
 });
 
 export default router;

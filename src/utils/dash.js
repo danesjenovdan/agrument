@@ -18,9 +18,7 @@ const GET_VOTABLE = `${API_DASH}/votable`;
 const POST_PUBLISH_VOTABLE = `${API_DASH}/votable/publish/:id`;
 const GET_EDITABLE = `${API_DASH}/edit/:date`;
 const GET_VOTES = `${API_DASH}/votes`;
-const VOTE_FOR = `${API_DASH}/vote/for`;
-const VOTE_AGAINST = `${API_DASH}/vote/against`;
-const VOTE_VETO = `${API_DASH}/vote/veto`;
+const POST_VOTE = `${API_DASH}/vote`;
 
 function getUser() {
   return request.get(GET_USER);
@@ -101,19 +99,12 @@ function getVotes() {
   return request.get(GET_VOTES);
 }
 
-function voteFor(data) {
-  return request.post(VOTE_FOR)
-    .send({ data });
-}
-
-function voteAgainst(data) {
-  return request.post(VOTE_AGAINST)
-    .send({ data });
-}
-
-function voteVeto(data) {
-  return request.post(VOTE_VETO)
-    .send({ data });
+function postVote(id, vote) {
+  return request.post(POST_VOTE)
+    .send({
+      id,
+      vote,
+    });
 }
 
 export {
@@ -131,9 +122,7 @@ export {
   submitPending,
   getVotable,
   publishVotable,
-  getVotes,
-  voteFor,
-  voteAgainst,
-  voteVeto,
   getEditable,
+  getVotes,
+  postVote,
 };

@@ -221,6 +221,12 @@ function initReactions(store) {
             isLoading: false,
             data: res.body.votable,
           });
+          if (res.body.votes) {
+            store.get().votes.set({
+              isLoading: false,
+              data: res.body.votes,
+            });
+          }
         }
       });
   });
@@ -355,9 +361,6 @@ function initReactions(store) {
           } else {
             store.emit('pending:fetch');
             store.emit('votable:fetch');
-            if (store.get().submissions.data) {
-              store.emit('submissions:fetch');
-            }
           }
         });
     }
@@ -456,52 +459,13 @@ function initReactions(store) {
       });
   });
 
-  store.on('vote:for', (data) => {
-    dash.voteFor(data)
+  store.on('votes:vote', (id, vote) => {
+    dash.postVote(id, vote)
       .end((err, res) => {
-        if (err || !res.ok) {
-          store.get().votes.set({
-            isLoading: false,
-          });
-        } else {
-          store.get().votes.set({
-            isLoading: false,
-            // data: res.body.data,
-          });
-          store.emit('votes:fetch');
-        }
-      });
-  });
-
-  store.on('vote:against', (data) => {
-    dash.voteAgainst(data)
-      .end((err, res) => {
-        if (err || !res.ok) {
-          store.get().votes.set({
-            isLoading: false,
-          });
-        } else {
-          store.get().votes.set({
-            isLoading: false,
-            // data: res.body.data,
-          });
-          store.emit('votes:fetch');
-        }
-      });
-  });
-
-  store.on('vote:veto', (data) => {
-    dash.voteVeto(data)
-      .end((err, res) => {
-        if (err || !res.ok) {
-          store.get().votes.set({
-            isLoading: false,
-          });
-        } else {
-          store.get().votes.set({
-            isLoading: false,
-            // data: res.body.data,
-          });
+        store.get().votes.set({
+          isLoading: false,
+        });
+        if (!err && res.ok) {
           store.emit('votes:fetch');
         }
       });
