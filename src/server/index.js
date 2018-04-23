@@ -67,19 +67,19 @@ passport.use(new LocalStrategy((username, pass, done) => {
             throw new Error(error);
           }
           if (!verified) {
-            done('password was not verified');
+            done(new Error('password was not verified'));
           } else {
             done(null, { id: user.id, name: user.name, group: user.group });
           }
         });
       } else {
-        done('password was not verified');
+        done(new Error('password was not verified'));
       }
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
       console.log('failed to verify password hash', error);
-      done('password was not verified');
+      done(new Error('password was not verified'));
     });
 }));
 
@@ -193,7 +193,10 @@ app.get(['/api', '/api/*'], (req, res) => {
   });
 });
 
-app.get('*', appMiddleware);
+// app.get('*', appMiddleware);
+app.get('*', (req, res) => {
+  res.sendfile(path.join(__dirname, '../../dist/index.html'));
+});
 
 app.use(sendErrorToSlackMiddleware);
 
