@@ -366,23 +366,62 @@ function initReactions(store) {
     }
   });
 
+  function validatePublish(sub) {
+    const errors = [];
+
+    if (!sub.title || !sub.title.trim()) {
+      errors.push('naslov');
+    }
+    if (!sub.content || sub.content.trim().length < 10) {
+      errors.push('vsebina');
+    }
+    if (!sub.rights || !sub.rights.trim()) {
+      errors.push('pravice');
+    }
+    if (!sub.imageURL || !sub.imageURL.trim()) {
+      errors.push('slika');
+    }
+    if (!sub.imageCaption || !sub.imageCaption.trim()) {
+      errors.push('opis slike');
+    }
+    if (!sub.imageCaptionURL || !sub.imageCaptionURL.trim()) {
+      errors.push('vir slike');
+    }
+    if (!sub.tweet || !sub.tweet.trim()) {
+      errors.push('tweet');
+    }
+
+    return errors;
+  }
+
   store.on('votable:publish', (id) => {
-    const sub = store.get().votable.data.find(e => e.id === id);
+    let sub = store.get().votable.data.find(e => e.id === id);
 
     if (sub) {
-      sub.set({ disabled: true });
+      sub = sub.set({ disabled: true });
 
-      dash.publishVotable(id)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            // noop
-          } else {
-            store.emit('votable:fetch');
-            if (store.get().submissions.data) {
-              store.emit('submissions:fetch');
+      const publishErrors = validatePublish(sub);
+      if (!publishErrors || publishErrors.length === 0) {
+        dash.publishVotable(id)
+          .end((err, res) => {
+            if (err || !res.ok) {
+              // noop
+            } else {
+              store.emit('votable:fetch');
+              if (store.get().submissions.data) {
+                store.emit('submissions:fetch');
+              }
             }
-          }
-        });
+          });
+      } else {
+        sub = store.get().votable.data.find(e => e.id === id);
+        if (sub) {
+          sub.set({
+            disabled: false,
+            publishErrors,
+          });
+        }
+      }
     }
   });
 

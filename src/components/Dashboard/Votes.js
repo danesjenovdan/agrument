@@ -16,7 +16,7 @@ class Votes extends React.PureComponent {
     return (
       <RenderSpinner isLoading={isLoading} data={entry.votes && entry.votes.data}>
         {() => (
-          <div className="row voting">
+          <div className="row">
             <div className="col-md-4">
               <VoteButton entry={entry} voteType="for" />
             </div>
@@ -33,66 +33,8 @@ class Votes extends React.PureComponent {
   }
 }
 
-// const Votes2 = ({ entry }) => {
-//   console.log(entry)
-//   return (
-//     <div />
-//   );
-//   // if (votes.data) {
-//   //   const content = votes.data.map(vote => (
-//   //     <div className="col-md-2" key={vote.id}>
-//   //       <div className="author">
-//   //         {store.get().users.data.filter(user => user.id === vote.author)[0].name}
-//   //       </div>
-//   //       <div className="option">
-//   //         {voteMap[vote.vote]}
-//   //       </div>
-//   //     </div>
-//   //   ));
-//   //   return (
-//   //     <div className="row votes">
-//   //       {content}
-//   //     </div>
-//   //   );
-//   // }
-//   // return (
-//   //   <div className="row votes">
-//   //     <div className="col-md-12">
-//   //       <h1>GLASOV ZAENKRAT ŠE NI</h1>
-//   //     </div>
-//   //   </div>
-//   // );
-// };
-
 Votes.propTypes = {
   entry: PropTypes.shape().isRequired,
 };
 
 export default Votes;
-
-/**
-{/*
-    <hr />
-    <h3>Rezultati glasovanja</h3>
-
-
-// function getVotes() {
-//   store.emit('votes:fetch');
-// }
-
-function voteFor(user, post) {
-  return () => {
-    store.emit('vote:for', { user, post });
-  };
-}
-function voteAgainst(user, post) {
-  return () => {
-    store.emit('vote:against', { user, post });
-  };
-}
-function voteVeto(user, post) {
-  return () => {
-    store.emit('vote:veto', { user, post });
-  };
-}
- */
