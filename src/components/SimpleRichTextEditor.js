@@ -83,7 +83,7 @@ export default class SimpleRichTextEditor extends React.Component {
       filteredState = filterEditorState(
         {
           blocks: [],
-          styles: ['ITALIC'],
+          styles: ['ITALIC', 'BOLD', 'UNDERLINE'],
           entities: [{
             type: 'LINK',
             attributes: ['href'],
@@ -123,7 +123,9 @@ export default class SimpleRichTextEditor extends React.Component {
       const toolbarConfig = {
         display: ['INLINE_STYLE_BUTTONS', 'LINK_BUTTONS', 'HISTORY_BUTTONS'],
         INLINE_STYLE_BUTTONS: [
+          { label: 'Bold', style: 'BOLD' },
           { label: 'Italic', style: 'ITALIC' },
+          { label: 'Underline', style: 'UNDERLINE' },
         ],
       };
       return (
