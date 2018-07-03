@@ -33,7 +33,7 @@ const VotableEntry = ({ entry, state }) => (
     </div>
     <div className="row entry__votes">
       <div className="col-xs-12">
-        <Votes votes={state.votes.data[entry.id]} />
+        <Votes entry={entry} />
       </div>
     </div>
   </div>

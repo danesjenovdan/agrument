@@ -396,9 +396,11 @@ router.get('/edit/:date', (req, res) => {
     });
 });
 
-router.get('/votes', (req, res) => {
+router.get('/votes/:id', (req, res) => {
   db('votes')
-    .select('id', 'author', 'post', 'vote')
+    .where('post', req.params.id)
+    .leftOuterJoin('users', 'votes.author', 'users.id')
+    .select('votes.*', 'users.name as author_name')
     .then((data) => {
       res.json({
         votes: data,
@@ -411,9 +413,10 @@ router.get('/votes', (req, res) => {
     });
 });
 
-router.post('/vote', (req, res) => {
+router.post('/vote/:id', (req, res) => {
   db.transaction((trx) => {
-    const { id, vote } = req.body;
+    const { vote } = req.body;
+    const { id } = req.params;
     return trx
       .from('votes')
       .where('post', id)

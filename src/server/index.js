@@ -195,7 +195,7 @@ app.get(['/api', '/api/*'], (req, res) => {
 
 // app.get('*', appMiddleware);
 app.get('*', (req, res) => {
-  res.sendfile(path.join(__dirname, '../../dist/index.html'));
+  res.sendFile(path.join(__dirname, '../../dist/index.html'));
 });
 
 app.use(sendErrorToSlackMiddleware);

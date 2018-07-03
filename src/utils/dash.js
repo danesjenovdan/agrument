@@ -17,8 +17,8 @@ const POST_SUBMIT_PENDING = `${API_DASH}/pending/submit/:id`;
 const GET_VOTABLE = `${API_DASH}/votable`;
 const POST_PUBLISH_VOTABLE = `${API_DASH}/votable/publish/:id`;
 const GET_EDITABLE = `${API_DASH}/edit/:date`;
-const GET_VOTES = `${API_DASH}/votes`;
-const POST_VOTE = `${API_DASH}/vote`;
+const GET_VOTES = `${API_DASH}/votes/:id`;
+const POST_VOTE = `${API_DASH}/vote/:id`;
 
 function getUser() {
   return request.get(GET_USER);
@@ -95,12 +95,12 @@ function getEditable(date) {
   return request.get(GET_EDITABLE.replace(':date', date));
 }
 
-function getVotes() {
-  return request.get(GET_VOTES);
+function getVotes(id) {
+  return request.get(GET_VOTES.replace(':id', id));
 }
 
-function postVote(id, vote) {
-  return request.post(POST_VOTE)
+function submitVote(id, vote) {
+  return request.post(POST_VOTE.replace(':id', id))
     .send({
       id,
       vote,
@@ -124,5 +124,5 @@ export {
   publishVotable,
   getEditable,
   getVotes,
-  postVote,
+  submitVote,
 };

@@ -437,36 +437,48 @@ function initReactions(store) {
       });
   });
 
-  store.on('votes:fetch', () => {
-    if (store.get().votes.isLoading) {
+  store.on('votes:fetch', (id) => {
+    let sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+
+    if (!sub || (sub && sub.votes && sub.votes.isLoading)) {
       return;
     }
 
-    store.get().votes.set({ isLoading: true });
+    if (!sub.votes) {
+      sub = sub.set({ votes: {} });
+    }
 
-    dash.getVotes()
+    sub.votes.set({ isLoading: true });
+
+    dash.getVotes(id)
       .end((err, res) => {
-        if (err || !res.ok) {
-          store.get().votes.set({
-            isLoading: false,
-          });
-        } else {
-          store.get().votes.set({
-            isLoading: false,
-            data: res.body.votes,
-          });
+        sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+        if (sub) {
+          if (err || !res.ok) {
+            sub.votes.set({
+              isLoading: false,
+            });
+          } else {
+            sub.votes.set({
+              isLoading: false,
+              data: res.body.votes,
+            });
+          }
         }
       });
   });
 
   store.on('votes:vote', (id, vote) => {
-    dash.postVote(id, vote)
+    const sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+
+    if (!sub || (sub && sub.votes && sub.votes.isLoading)) {
+      return;
+    }
+
+    dash.submitVote(id, vote)
       .end((err, res) => {
-        store.get().votes.set({
-          isLoading: false,
-        });
         if (!err && res.ok) {
-          store.emit('votes:fetch');
+          store.emit('votes:fetch', id);
         }
       });
   });

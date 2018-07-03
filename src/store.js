@@ -59,10 +59,6 @@ const store = new Freezer({
       password: '',
     },
   },
-  votes: {
-    isLoading: false,
-    data: [],
-  },
   editable: {
     saving: false,
     savingError: false,

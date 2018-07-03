@@ -199,9 +199,19 @@
     }
   }
 
-  // TODO:
   .voting {
-    margin-top: 20px;
+    margin-top: 10px;
+
+    .component__social-pulse-btn {
+      background-color: $agrument-teal;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 5px;
+
+      .pulse {
+        border-color: $agrument-teal;
+      }
+    }
   }
 
   .author {

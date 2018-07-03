@@ -1,73 +1,77 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import RenderSpinner from '../../hoc/RenderSpinner';
+import VoteButton from './VoteButton';
 
 import store from '../../store';
 
-const voteMap = {
-  for: 'ZA',
-  against: 'PROTI',
-  veto: 'VETO',
-};
+class Votes extends React.PureComponent {
+  componentDidMount() {
+    store.emit('votes:fetch', this.props.entry.id);
+  }
 
-const Votes = ({ votes }) => {
-  console.log(votes);
-  return (
-    <div />
-  );
-  // if (votes.data) {
-  //   const content = votes.data.map(vote => (
-  //     <div className="col-md-2" key={vote.id}>
-  //       <div className="author">
-  //         {store.get().users.data.filter(user => user.id === vote.author)[0].name}
-  //       </div>
-  //       <div className="option">
-  //         {voteMap[vote.vote]}
-  //       </div>
-  //     </div>
-  //   ));
-  //   return (
-  //     <div className="row votes">
-  //       {content}
-  //     </div>
-  //   );
-  // }
-  // return (
-  //   <div className="row votes">
-  //     <div className="col-md-12">
-  //       <h1>GLASOV ZAENKRAT ŠE NI</h1>
-  //     </div>
-  //   </div>
-  // );
-};
+  render() {
+    const { entry } = this.props;
+    const isLoading = (entry.votes && entry.votes.isLoading) || false;
+    return (
+      <RenderSpinner isLoading={isLoading} data={entry.votes && entry.votes.data}>
+        {() => (
+          <div className="row voting">
+            <div className="col-md-4">
+              <VoteButton entry={entry} voteType="for" />
+            </div>
+            <div className="col-md-4">
+              <VoteButton entry={entry} voteType="against" />
+            </div>
+            <div className="col-md-4">
+              <VoteButton entry={entry} voteType="veto" />
+            </div>
+          </div>
+        )}
+      </RenderSpinner>
+    );
+  }
+}
+
+// const Votes2 = ({ entry }) => {
+//   console.log(entry)
+//   return (
+//     <div />
+//   );
+//   // if (votes.data) {
+//   //   const content = votes.data.map(vote => (
+//   //     <div className="col-md-2" key={vote.id}>
+//   //       <div className="author">
+//   //         {store.get().users.data.filter(user => user.id === vote.author)[0].name}
+//   //       </div>
+//   //       <div className="option">
+//   //         {voteMap[vote.vote]}
+//   //       </div>
+//   //     </div>
+//   //   ));
+//   //   return (
+//   //     <div className="row votes">
+//   //       {content}
+//   //     </div>
+//   //   );
+//   // }
+//   // return (
+//   //   <div className="row votes">
+//   //     <div className="col-md-12">
+//   //       <h1>GLASOV ZAENKRAT ŠE NI</h1>
+//   //     </div>
+//   //   </div>
+//   // );
+// };
 
 Votes.propTypes = {
-  votes: PropTypes.shape(),
-};
-
-Votes.defaultProps = {
-  votes: {},
+  entry: PropTypes.shape().isRequired,
 };
 
 export default Votes;
 
-// votes[0] = {
-//   'for': [],
-//   'against': [],
-//   'veto': [],
-// };
-
 /**
-{/* <div className="row voting">
-      <div className="col-md-4">
-        <Button block value="Glasuj ZA" onClick={voteFor(user.id, entry.id)} />
-      </div>
-      <div className="col-md-4">
-        <Button block value="Glasuj PROTI" onClick={voteAgainst(user.id, entry.id)} />
-      </div>
-      <div className="col-md-4">
-        <Button block value="Vloži VETO" onClick={voteVeto(user.id, entry.id)} />
-      </div>
-    </div>
+{/*
     <hr />
     <h3>Rezultati glasovanja</h3>
 
