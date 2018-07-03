@@ -63,6 +63,10 @@
     cursor: pointer;
   }
 
+  &.component__input--select select {
+    -moz-appearance: none;
+  }
+
   &.component__input--select select + span {
     display: block;
     position: absolute;
