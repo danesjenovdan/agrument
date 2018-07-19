@@ -11,7 +11,14 @@ const iconMap = {
 
 function submitVote(post, vote) {
   return () => {
-    store.emit('votes:vote', post, vote);
+    let answer = true;
+    if (vote === 'veto') {
+      // eslint-disable-next-line no-alert
+      answer = window.confirm('Si prepričan/-a, da želiš uveljaviti veto? Veto pomeni, da se ti zdi agrument nesprejemljiv do te mere, da ga ni mogoče nikakor popraviti oz. urediti. Tvoja odločitev je dokončna, agrument ne bo objavljen. Pravico do veta imaš enkrat mesečno.');
+    }
+    if (answer) {
+      store.emit('votes:vote', post, vote);
+    }
   };
 }
 
