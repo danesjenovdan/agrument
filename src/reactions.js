@@ -2,7 +2,7 @@ import _ from 'lodash';
 import * as dash from './utils/dash';
 import * as login from './utils/login';
 import { toSloDateString } from './utils/date';
-import { shortenUrl, shortenUrls } from './utils/shortener';
+import { shortenUrls } from './utils/shortener';
 
 function initReactions(store) {
   store.on('user:fetch', (history) => {
