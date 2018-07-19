@@ -36,6 +36,12 @@ function onValueChange(key) {
   };
 }
 
+function onRightsChange(value) {
+  if (value.length <= 2) {
+    onValueChange('rights')(value);
+  }
+}
+
 function onSave() {
   store.emit('editable:save');
 }
@@ -197,7 +203,7 @@ class SubmissionEditor extends React.Component {
                   name="rights"
                   value={entry.rights}
                   options={rights}
-                  onChange={onValueChange('rights')}
+                  onChange={onRightsChange}
                   placeholder="Izberi eno ali dve pravici"
                 />
               </div>
