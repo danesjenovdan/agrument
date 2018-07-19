@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as dash from './utils/dash';
 import * as login from './utils/login';
 import { toSloDateString } from './utils/date';
+import { shortenUrl, shortenUrls } from './utils/shortener';
 
 function initReactions(store) {
   store.on('user:fetch', (history) => {
@@ -310,10 +311,12 @@ function initReactions(store) {
     const timestamp = store.get().editable.data.date;
     const url = `${window.location.origin}/${toSloDateString(timestamp)}`;
 
-    const fbtext = `${naslov}\n${text}Slika: ${caption} [${imgUrl}]\n${url}`;
-    const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
+    shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n${url}`).then((footerText) => {
+      const fbtext = `${naslov}\n${text}${footerText}`;
+      const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
 
-    store.get().editable.data.set({ fbtext, description }).now();
+      store.get().editable.data.set({ fbtext, description }).now();
+    });
   });
 
   store.on('editable:save', () => {

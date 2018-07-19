@@ -3,6 +3,7 @@ import {
   BLOCK_TYPE,
   ENTITY_TYPE,
 } from 'draft-js-utils';
+import { shortenUrls } from './shortener';
 
 const CODE_INDENT = '    ';
 
@@ -31,7 +32,8 @@ class MarkupGenerator {
     this.contentState = contentState;
   }
 
-  generate() {
+  async generate() {
+    this.urls = [];
     this.output = [];
     this.blocks = this.contentState.getBlockMap().toArray();
     this.totalBlocks = this.blocks.length;
@@ -40,7 +42,7 @@ class MarkupGenerator {
     while (this.currentBlock < this.totalBlocks) {
       this.processBlock();
     }
-    return this.output.join('');
+    return shortenUrls(this.urls, this.output.join(''));
   }
 
   processBlock() {
@@ -172,6 +174,7 @@ class MarkupGenerator {
         if (entity != null && entity.getType() === ENTITY_TYPE.LINK) {
           const data = entity.getData();
           const url = (data.url && encodeURL(data.url)) || '';
+          this.urls.push(url);
           return `${content.trim()} [${url}] `;
         } else if (entity != null && entity.getType() === ENTITY_TYPE.IMAGE) {
           return '';
@@ -182,8 +185,9 @@ class MarkupGenerator {
   }
 }
 
-function stateToText(content) {
-  return new MarkupGenerator(content).generate();
+async function stateToText(content) {
+  const mg = new MarkupGenerator(content);
+  return mg.generate();
 }
 
 export { stateToText };

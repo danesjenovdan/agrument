@@ -5,7 +5,6 @@
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
-import delay from 'express-delay';
 import sessionKnex from 'connect-session-knex';
 import bodyParser from 'body-parser';
 import passport from 'passport';

@@ -43,8 +43,14 @@ function onSave() {
 class SubmissionEditor extends React.Component {
   onEditorChange = (value, editorValue) => {
     this.editorValue = true;
-    const text = stateToText(editorValue.getEditorState().getCurrentContent());
-    store.emit('editable:updateeditor', value, text);
+    stateToText(editorValue.getEditorState().getCurrentContent())
+      .then((text) => {
+        store.emit('editable:updateeditor', value, text);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('onEditorChange', error);
+      });
   }
 
   renderAuthor() {
