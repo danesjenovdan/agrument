@@ -53,8 +53,8 @@ app.use(express.static(path.resolve(__dirname, '../../dist')));
 // Delay will be between 200 and 500 milliseconds
 // app.use(delay(1200, 1500));
 
-app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' })); // parse x-www-form-urlencoded
-app.use(bodyParser.json({ extended: true, limit: '5mb' })); // parse json
+app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' })); // parse x-www-form-urlencoded
+app.use(bodyParser.json({ extended: true, limit: '50mb' })); // parse json
 
 passport.use(new LocalStrategy((username, pass, done) => {
   db('users')
