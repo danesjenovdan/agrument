@@ -15,6 +15,24 @@ import { stateToText } from '../../utils/draft-js-export-text';
 
 import store from '../../store';
 
+const TWITTER_LIMIT = 280;
+const TWITTER_LINK_LENGTH = 23;
+const DUMB_LINK_REGEX = /(?:^|\s)(https?:\/\/[^ ]+\.[^ ]+)/g;
+
+function getTweetCharactersLeft(text) {
+  if (!text) {
+    return TWITTER_LIMIT;
+  }
+  let remaining = TWITTER_LIMIT - text.length;
+  const match = text.match(DUMB_LINK_REGEX);
+  if (match) {
+    match.forEach((m) => {
+      remaining = (remaining + m.trim().length) - TWITTER_LINK_LENGTH;
+    });
+  }
+  return remaining;
+}
+
 const TYPE_TEXT = {
   published: 'Objavljen',
   votable: 'Na glasovanju',
@@ -139,13 +157,12 @@ class SubmissionEditor extends React.Component {
               {this.renderDate()}
               {this.renderStatus()}
               <div className="form-group">
-                <label htmlFor="submissioneditor-tweet" className="control-label">Twitter</label>
+                <label htmlFor="submissioneditor-tweet" className="control-label">Twitter ({getTweetCharactersLeft(entry.tweet)})</label>
                 <Textarea
                   id="submissioneditor-tweet"
                   value={entry.tweet}
                   onChange={onValueChange('tweet')}
                   className="form-control overflow-hidden"
-                  maxLength="240"
                 />
               </div>
               <div className="form-group">
