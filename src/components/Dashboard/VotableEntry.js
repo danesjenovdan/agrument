@@ -34,7 +34,7 @@ const VotableEntry = ({ entry, state }) => (
     {state.user.data.group === 'admin' && entry.publishErrors && (
       <div className="row entry__publish-errors">
         <div className="col-sm-12">
-          <div>Ni mogoče objaviti, ker manjka: {entry.publishErrors.join(', ')}</div>
+          <div>Ni mogoče objaviti. {entry.publishErrors.join(', ')}</div>
         </div>
       </div>
     )}

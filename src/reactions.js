@@ -372,26 +372,35 @@ function initReactions(store) {
   function validatePublish(sub) {
     const errors = [];
 
+    if (!sub.votes || !sub.votes.data) {
+      errors.push('Manjkajo glasovi');
+    } else {
+      const veto = sub.votes.data.find(v => v.vote === 'veto');
+      if (veto) {
+        errors.push('Obstaja veto');
+      }
+    }
+
     if (!sub.title || !sub.title.trim()) {
-      errors.push('naslov');
+      errors.push('Manjka naslov');
     }
     if (!sub.content || sub.content.trim().length < 10) {
-      errors.push('vsebina');
+      errors.push('Manjka vsebina');
     }
     if (!sub.rights || !sub.rights.trim()) {
-      errors.push('pravice');
+      errors.push('Manjkajo pravice');
     }
     if (!sub.imageURL || !sub.imageURL.trim()) {
-      errors.push('slika');
+      errors.push('Manjka slika');
     }
     if (!sub.imageCaption || !sub.imageCaption.trim()) {
-      errors.push('opis slike');
+      errors.push('Manjka opis slike');
     }
     if (!sub.imageCaptionURL || !sub.imageCaptionURL.trim()) {
-      errors.push('vir slike');
+      errors.push('Manjka vir slike');
     }
     if (!sub.tweet || !sub.tweet.trim()) {
-      errors.push('tweet');
+      errors.push('Manjka tweet');
     }
 
     return errors;
