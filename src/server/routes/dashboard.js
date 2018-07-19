@@ -432,13 +432,23 @@ router.post('/vote/:id', (req, res) => {
             })
             .into('votes');
         }
-        return trx
-          .from('votes')
-          .where('post', id)
-          .andWhere('author', req.user.id)
-          .update({
-            vote,
-          });
+        if (rows[0].vote !== 'veto') {
+          if (rows[0].vote === vote) {
+            return trx
+              .from('votes')
+              .where('post', id)
+              .andWhere('author', req.user.id)
+              .delete();
+          }
+          return trx
+            .from('votes')
+            .where('post', id)
+            .andWhere('author', req.user.id)
+            .update({
+              vote,
+            });
+        }
+        return null;
       });
   })
     .then(() => {
