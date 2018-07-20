@@ -45,22 +45,35 @@ router.post('/register', (req, res) => {
   const name = (req.body.name || '').replace(/\s\s+/g, ' ').trim();
 
   // TODO: validate input on client so they know what went wrong
-  const validPassAndToken = validatePassword(password) && validateToken(token);
+  const validPass = validatePassword(password);
+  const validToken = validateToken(token);
   const validName = validateName(name);
-  const validNameAndUsername = validName && validateUsername(username);
+  const validUsername = validateUsername(username);
 
-  db.transaction(trx => (
-    trx
-      .from('users')
-      .where('id', id)
-      .andWhere('token', token)
+  const validLoggedInUser = id == null && !validToken && req.user && req.user.id;
+
+  db.transaction((trx) => {
+    let query;
+    if (id != null && validToken) {
+      query = trx
+        .from('users')
+        .where('id', id)
+        .andWhere('token', token);
+    } else if (validLoggedInUser) {
+      query = trx
+        .from('users')
+        .where('id', req.user.id);
+    } else {
+      throw new Error('no auth');
+    }
+    return query
       .select('password')
       .then((data) => {
         if (data.length !== 1) {
           throw new Error('update should return 1 modified row only');
         }
         const hasPassword = !!data[0].password;
-        if (!hasPassword && validNameAndUsername && validPassAndToken) {
+        if (!hasPassword && validName && validUsername && validPass && validToken) {
           return new Promise((resolve, reject) => {
             passwordHashAndSalt(password).hash((error, hash) => {
               if (error) {
@@ -80,7 +93,7 @@ router.post('/register', (req, res) => {
             });
           });
         }
-        if (hasPassword && validPassAndToken) {
+        if (hasPassword && validPass) {
           return new Promise((resolve, reject) => {
             passwordHashAndSalt(password).hash((error, hash) => {
               if (error) {
@@ -88,8 +101,8 @@ router.post('/register', (req, res) => {
               }
               const updatePromise = trx
                 .from('users')
-                .where('id', id)
-                .andWhere('token', token)
+                .where('id', validLoggedInUser ? req.user.id : id)
+                .andWhere('token', validLoggedInUser ? null : token)
                 .update({
                   token: null,
                   name: validName ? name : undefined,
@@ -100,8 +113,8 @@ router.post('/register', (req, res) => {
           });
         }
         throw new Error('Invalid arguments');
-      })
-  ))
+      });
+  })
     .then(() => {
       res.json({
         success: 'Registered',
