@@ -266,19 +266,25 @@ router.post('/submissions/edit/:id', (req, res) => {
   }
   const data = _.assign({}, req.body, disallowed);
 
-  db('posts')
-    .andWhere('id', req.params.id)
-    .update(data)
-    .then((numRows) => {
-      if (numRows) {
-        res.json({
-          success: 'Edited submission',
-        });
-      } else {
-        res.status(404).json({
-          error: 'Not Found',
-        });
-      }
+  db.transaction(trx => (
+    trx
+      .from('posts')
+      .andWhere('id', req.params.id)
+      .update(data)
+      .then((numRows) => {
+        if (numRows && data.type === 'pending') {
+          return trx
+            .from('votes')
+            .where('post', req.params.id)
+            .delete();
+        }
+        return null;
+      })
+  ))
+    .then(() => {
+      res.json({
+        success: 'Edited submission',
+      });
     })
     .catch((err) => {
       res.status(500).json({

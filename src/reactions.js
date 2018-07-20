@@ -506,6 +506,11 @@ function initReactions(store) {
     dash.getVotes(id)
       .end((err, res) => {
         sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+
+        if (!sub.votes) {
+          sub = sub.set({ votes: {} });
+        }
+
         if (sub) {
           if (err || !res.ok) {
             sub.votes.set({
