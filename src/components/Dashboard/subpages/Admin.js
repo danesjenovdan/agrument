@@ -11,7 +11,10 @@ import store from '../../../store';
 
 function removeSubmission(id) {
   return () => {
-    store.emit('submissions:remove', id);
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Si prepričan/-a, da želiš izbrisati ta agrument? Tega se ne da razveljaviti!')) {
+      store.emit('submissions:remove', id);
+    }
   };
 }
 
