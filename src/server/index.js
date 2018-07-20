@@ -70,7 +70,11 @@ passport.use(new LocalStrategy((username, pass, done) => {
           if (!verified) {
             done(null, null);
           } else {
-            done(null, { id: user.id, name: user.name, group: user.group });
+            done(null, {
+              id: user.id,
+              username: user.username,
+              password: user.password,
+            });
           }
         });
       } else {
@@ -86,14 +90,35 @@ passport.use(new LocalStrategy((username, pass, done) => {
 
 passport.serializeUser((user, done) => {
   // this is the data stored to the session
-  const sessionUser = _.pick(user, ['id', 'name', 'group']);
+  const sessionUser = _.pick(user, ['id', 'username', 'password']);
   done(null, sessionUser);
 });
 
 passport.deserializeUser((sessionUser, done) => {
   // hit the db here if session doesn't have all the data you need on the user
-  // this sets req.user
-  done(null, sessionUser);
+  db('users')
+    .where('id', sessionUser.id)
+    .first()
+    .then((user) => {
+      if (user.username !== sessionUser.username || user.password !== sessionUser.password) {
+        // if username or password hash don't match don't set req.user
+        done(null, null);
+      } else {
+        // this sets req.user
+        done(null, {
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          group: user.group,
+          password: user.password,
+        });
+      }
+    })
+    .catch((error) => {
+      // eslint-disable-next-line no-console
+      console.log('failed to deserialize user', error);
+      done(error, null);
+    });
 });
 
 app.use(session({
