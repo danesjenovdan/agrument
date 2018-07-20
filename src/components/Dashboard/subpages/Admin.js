@@ -44,7 +44,7 @@ class Admin extends React.Component {
                       <th>Datum</th>
                       <th>Avtor</th>
                       <th>Naslov</th>
-                      <th>Uredi</th>
+                      <th className="text-right">Uredi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -54,7 +54,7 @@ class Admin extends React.Component {
                         <td>{toSloDateString(e.date)}</td>
                         <td>{e.author_name}</td>
                         <td>{e.title}</td>
-                        <td>
+                        <td className="text-right">
                           <Link to={`/dash/edit/${toSloDateString(e.date)}`} className="btn btn-primary btn-xs">
                             <i className="glyphicon glyphicon-edit" />
                           </Link>

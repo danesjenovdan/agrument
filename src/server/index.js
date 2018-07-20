@@ -144,10 +144,10 @@ app.post('/api/register', (req, res) => {
   } = req.body;
   const cleanName = name.replace(/\s\s+/g, ' ').trim();
   // TODO: validate input on client so they know what went wrong
-  if (validateUsername(username) &&
-    validateName(cleanName) &&
-    validatePassword(password) &&
-    validateToken(token)) {
+  if (validateUsername(username)
+    && validateName(cleanName)
+    && validatePassword(password)
+    && validateToken(token)) {
     passwordHashAndSalt(password).hash((error, hash) => {
       if (error) {
         throw new Error(error);
