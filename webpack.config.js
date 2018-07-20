@@ -2,7 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackMd5Hash = require('webpack-md5-hash');
+
+process.traceDeprecation = true;
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
@@ -11,10 +12,6 @@ const sourcePath = path.resolve(__dirname, './src');
 const distPath = path.resolve(__dirname, './dist');
 
 const activePlugins = [
-  new webpack.optimize.CommonsChunkPlugin({
-    name: ['vendor', 'manifest'],
-    minChunks: Infinity,
-  }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(nodeEnv),
@@ -24,42 +21,29 @@ const activePlugins = [
 ];
 
 if (isProd) {
-  activePlugins.push(
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true,
-      },
-      output: {
-        comments: false,
-      },
-      sourceMap: true,
-    }),
-    new ExtractTextPlugin({ filename: isProd ? 'bundle.[contenthash].css' : 'bundle.css', disable: false, allChunks: true }));
+  activePlugins.push(new webpack.LoaderOptionsPlugin({
+    minimize: true,
+    debug: false,
+  }));
+  activePlugins.push(new ExtractTextPlugin({
+    filename: isProd ? 'bundle.[md5:contenthash:hex:20].css' : 'bundle.css',
+    disable: false,
+    allChunks: true,
+  }));
 }
 
-activePlugins.push(
-  new HtmlWebpackPlugin({
-    template: './index.html',
-    hash: false,
-    inject: 'body',
-    cache: true,
-  }),
-  new WebpackMd5Hash());
+activePlugins.push(new HtmlWebpackPlugin({
+  template: './index.html',
+  hash: false,
+  inject: 'body',
+  cache: true,
+}));
 
 module.exports = {
+  mode: isProd ? 'production' : 'development',
+  optimization: {
+    minimize: isProd,
+  },
   context: sourcePath,
   entry: {
     vendor: [
@@ -81,37 +65,55 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: isProd ? ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'sass-loader'] }) : [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
+        use: isProd
+          ? (
+            ExtractTextPlugin.extract({
+              fallback: 'style-loader',
+              use: ['css-loader', 'sass-loader'],
+            })
+          )
+          : (
+            [
+              {
+                loader: 'style-loader',
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  sourceMap: true,
+                },
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  sourceMap: true,
+                },
+              },
+            ]
+          ),
       },
       {
         test: /\.css$/,
-        use: isProd ? ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }) : [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
+        use: isProd
+          ? (
+            ExtractTextPlugin.extract({
+              fallback: 'style-loader',
+              use: 'css-loader',
+            })
+          )
+          : (
+            [
+              {
+                loader: 'style-loader',
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  sourceMap: true,
+                },
+              },
+            ]
+          ),
       },
       {
         test: /\.(js|jsx)$/,
@@ -123,7 +125,7 @@ module.exports = {
               cacheDirectory: true,
               babelrc: false,
               presets: [
-                ['es2015', { modules: false }],
+                ['env', { modules: false }],
                 'react',
               ],
               plugins: [
@@ -149,6 +151,13 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
+  stats: {
+    colors: true,
+    hash: false,
+    modules: false,
+    version: false,
+    children: false,
+  },
   devServer: {
     contentBase: './src',
     historyApiFallback: {
@@ -157,7 +166,7 @@ module.exports = {
     },
     port: 3000,
     compress: isProd,
-    stats: { colors: true },
+    stats: 'minimal',
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
