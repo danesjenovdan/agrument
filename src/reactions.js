@@ -304,19 +304,21 @@ function initReactions(store) {
   });
 
   store.on('editable:updategeneratedtext', () => {
-    const text = store.get().currentEditorText;
-    const naslov = store.get().editable.data.title;
-    const caption = store.get().editable.data.imageCaption;
-    const imgUrl = store.get().editable.data.imageCaptionURL;
-    const timestamp = store.get().editable.data.date;
-    const url = `${window.location.origin}/${toSloDateString(timestamp)}`;
+    if (store.get().editable && store.get().editable.data) {
+      const text = store.get().currentEditorText;
+      const naslov = store.get().editable.data.title;
+      const caption = store.get().editable.data.imageCaption;
+      const imgUrl = store.get().editable.data.imageCaptionURL;
+      const timestamp = store.get().editable.data.date;
+      const url = `${window.location.origin}/${toSloDateString(timestamp)}`;
 
-    shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n${url}`).then((footerText) => {
-      const fbtext = `${naslov}\n${text}${footerText}`;
-      const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
+      shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n${url}`).then((footerText) => {
+        const fbtext = `${naslov}\n${text}${footerText}`;
+        const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
 
-      store.get().editable.data.set({ fbtext, description }).now();
-    });
+        store.get().editable.data.set({ fbtext, description }).now();
+      });
+    }
   });
 
   store.on('editable:save', () => {
