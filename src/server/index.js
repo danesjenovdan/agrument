@@ -2,6 +2,7 @@
  * This is the entry point for the production server, don't include this file in anything that would
  * pass trough webpack!
  */
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
@@ -138,14 +139,13 @@ app.post('/api/register', (req, res) => {
   const {
     id,
     token,
-    name,
     username,
     password,
   } = req.body;
-  const cleanName = name.replace(/\s\s+/g, ' ').trim();
+  const name = (req.body.name || '').replace(/\s\s+/g, ' ').trim();
   // TODO: validate input on client so they know what went wrong
   if (validateUsername(username)
-    && validateName(cleanName)
+    && validateName(name)
     && validatePassword(password)
     && validateToken(token)) {
     passwordHashAndSalt(password).hash((error, hash) => {
@@ -194,7 +194,12 @@ app.get(['/api', '/api/*'], (req, res) => {
 
 // app.get('*', appMiddleware);
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/index.html'));
+  const filePath = path.resolve(__dirname, '../../dist/index.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('index.html not found; client is probably not built');
+  }
 });
 
 app.use(sendErrorToSlackMiddleware);
