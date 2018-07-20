@@ -104,7 +104,7 @@ router.get('/published', (req, res) => {
   query = query
     .orderBy('date', 'desc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'users.name as author_name')
+    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'users.username as author_name')
     .limit(21); // one more than is needed to see if there are any more pages after this
 
   if (afterOffset != null) {
@@ -130,7 +130,7 @@ router.get('/submissions', requireAdmin, (req, res) => {
     .whereIn('type', ['votable', 'pending'])
     .orderBy('date', 'asc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.type', 'users.name as author_name')
+    .select('posts.id', 'posts.date', 'posts.author', 'posts.title', 'posts.type', 'users.username as author_name')
     .then((data) => {
       res.json({
         submissions: data,
@@ -293,7 +293,7 @@ router.get('/pending', (req, res) => {
     .andWhere('author', req.user.id)
     .orderBy('date', 'asc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.*', 'users.name as author_name')
+    .select('posts.*', 'users.username as author_name')
     .then((data) => {
       res.json({
         pending: data,
@@ -331,7 +331,7 @@ router.get('/votable', (req, res) => {
     .where('type', 'votable')
     .orderBy('date', 'asc')
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.*', 'users.name as author_name')
+    .select('posts.*', 'users.username as author_name')
     .then((data) => {
       res.json({
         votable: data,
@@ -371,12 +371,16 @@ router.get('/edit/:date', (req, res) => {
   } else {
     query = db('posts')
       .where('date', req.params.date)
-      .andWhere('author', req.user.id);
+      .andWhere(builder => (
+        builder
+          .where('author', req.user.id)
+          .orWhere('type', 'votable')
+      ));
   }
 
   query
     .leftOuterJoin('users', 'posts.author', 'users.id')
-    .select('posts.*', 'users.name as author_name')
+    .select('posts.*', 'users.username as author_name')
     .first()
     .then((data) => {
       if (data) {
@@ -400,7 +404,7 @@ router.get('/votes/:id', (req, res) => {
   db('votes')
     .where('post', req.params.id)
     .leftOuterJoin('users', 'votes.author', 'users.id')
-    .select('votes.*', 'users.name as author_name')
+    .select('votes.*', 'users.username as author_name')
     .then((data) => {
       res.json({
         votes: data,

@@ -55,7 +55,7 @@ class Admin extends React.Component {
                           <Link to={`/dash/edit/${toSloDateString(e.date)}`} className="btn btn-primary btn-xs">
                             <i className="glyphicon glyphicon-edit" />
                           </Link>
-                          <button className="btn btn-danger btn-xs" onClick={removeSubmission(e.id)} disabled={e.disabled}>
+                          <button type="button" className="btn btn-danger btn-xs" onClick={removeSubmission(e.id)} disabled={e.disabled}>
                             <i className="glyphicon glyphicon-remove" />
                           </button>
                         </td>

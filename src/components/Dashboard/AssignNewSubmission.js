@@ -24,20 +24,28 @@ function createSubmission() {
 const AssignNewSubmission = ({ users, newArticle }) => (
   <div className="form-horizontal">
     <div className="form-group">
-      <label htmlFor="newarticle-user" className="col-sm-2 control-label">Avtor</label>
+      <label htmlFor="newarticle-user" className="col-sm-2 control-label">
+        Avtor
+      </label>
       <div className="col-sm-10">
         <div className="component__input component__input--select">
           <select id="newarticle-user" value={newArticle.selectedUser} className="form-control" onChange={changeSelectedUser}>
             {users.map(user => (
-              <option key={user.id} value={user.id}>{user.name}</option>
+              <option key={user.id} value={user.id}>
+                {`${user.name} (${user.username})`}
+              </option>
             ))}
           </select>
-          <span><i className="glyphicon glyphicon-chevron-down" /></span>
+          <span>
+            <i className="glyphicon glyphicon-chevron-down" />
+          </span>
         </div>
       </div>
     </div>
     <div className="form-group">
-      <label htmlFor="newarticle-date" className="col-sm-2 control-label">Datum</label>
+      <label htmlFor="newarticle-date" className="col-sm-2 control-label">
+        Datum
+      </label>
       <div className="col-sm-10">
         <DatePicker locale="sl-SI" value={new Date(newArticle.date)} onChange={changeDate} />
       </div>
@@ -47,7 +55,9 @@ const AssignNewSubmission = ({ users, newArticle }) => (
         {newArticle.error && (
           <div>{newArticle.error}</div>
         )}
-        <Button disabled={newArticle.isLoading} onClick={createSubmission}>Ustvari</Button>
+        <Button disabled={newArticle.isLoading} onClick={createSubmission}>
+          Ustvari
+        </Button>
       </div>
     </div>
   </div>

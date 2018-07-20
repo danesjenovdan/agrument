@@ -87,7 +87,7 @@ class SubmissionEditor extends React.Component {
         <div className="component__input component__input--select">
           <select id="submissioneditor-author" value={entry.author} className="form-control" onChange={onValueChange('author')}>
             {state.users.data.map(u => (
-              <option key={u.id} value={u.id}>{u.name}</option>
+              <option key={u.id} value={u.id}>{`${u.name} (${u.username})`}</option>
             ))}
           </select>
           <span><i className="glyphicon glyphicon-chevron-down" /></span>
