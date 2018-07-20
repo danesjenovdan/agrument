@@ -66,19 +66,19 @@ passport.use(new LocalStrategy((username, pass, done) => {
             throw new Error(error);
           }
           if (!verified) {
-            done(new Error('password was not verified'));
+            done(null, null);
           } else {
             done(null, { id: user.id, name: user.name, group: user.group });
           }
         });
       } else {
-        done(new Error('password was not verified'));
+        done(null, null);
       }
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
       console.log('failed to verify password hash', error);
-      done(new Error('password was not verified'));
+      done(error, null);
     });
 }));
 
