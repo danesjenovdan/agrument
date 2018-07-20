@@ -230,10 +230,19 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
 });
 
 router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
-  db('posts')
-    .whereIn('type', ['votable', 'pending'])
-    .andWhere('id', req.params.id)
-    .del()
+  db.transaction(trx => (
+    trx
+      .from('posts')
+      .whereIn('type', ['votable', 'pending'])
+      .andWhere('id', req.params.id)
+      .delete()
+      .then(() => (
+        trx
+          .from('votes')
+          .where('post', req.params.id)
+          .delete()
+      ))
+  ))
     .then(() => {
       res.json({
         success: 'Removed submission',
