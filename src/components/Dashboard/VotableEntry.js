@@ -26,8 +26,10 @@ const VotableEntry = ({ entry, state }) => (
         <Link to={`/dash/edit/${toSloDateString(entry.date)}`} className="component__button btn btn-block">Uredi</Link>
       </div>
       <div className="col-sm-6">
-        {state.user.data.group === 'admin' && (
+        {state.user.data.group === 'admin' ? (
           <Button block disabled={entry.disabled} value="Objavi" onClick={publishArticle(entry.id)} />
+        ) : (
+          <Button block disabled value="Objavi" />
         )}
       </div>
     </div>
