@@ -4,24 +4,24 @@ import Helmet from 'react-helmet';
 import Header from '../components/Header';
 import RegisterForm from '../components/Dashboard/RegisterForm';
 
-const Register = ({ state }) => (
+const Reset = ({ state }) => (
   <div>
     <Helmet>
-      <title>Registracija</title>
+      <title>Spremeni podatke</title>
     </Helmet>
     <div className="container-fluid">
       <Header
         title="Agrument"
-        subTitle="Registracija"
+        subTitle="Spremeni podatke"
         small
       />
-      <RegisterForm data={state.forms.register} title="Registracija" />
+      <RegisterForm data={state.forms.register} title="Spremeni podatke" canChangeUsername={false} />
     </div>
   </div>
 );
 
-Register.propTypes = {
+Reset.propTypes = {
   state: PropTypes.shape().isRequired,
 };
 
-export default Register;
+export default Reset;

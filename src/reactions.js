@@ -56,6 +56,15 @@ function initReactions(store) {
       });
   });
 
+  store.on('users:createtoken', (id) => {
+    dash.createUserToken(id)
+      .end((err, res) => {
+        if (!err && res.ok) {
+          store.emit('users:fetch');
+        }
+      });
+  });
+
   store.on('users:fetchtokens', () => {
     if (store.get().tokenUsers.isLoading) {
       return;

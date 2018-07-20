@@ -17,8 +17,9 @@ router.get('/user', (req, res) => {
 
 router.get('/users', requireAdmin, (req, res) => {
   db('users')
-    .where('token', null)
-    .select('id', 'name', 'username', 'group')
+    .whereNot('name', '')
+    .andWhereNot('password', '')
+    .select('id', 'name', 'username', 'group', 'token')
     .then((data) => {
       res.json({
         users: data,
@@ -31,9 +32,30 @@ router.get('/users', requireAdmin, (req, res) => {
     });
 });
 
+router.post('/users/createtoken/:id', requireAdmin, (req, res) => {
+  db('users')
+    .where('token', null)
+    .andWhere('id', req.params.id)
+    .update({
+      token: randomstring.generate(8),
+    })
+    .then(() => {
+      res.json({
+        success: 'Created token',
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
 router.get('/users/tokens', requireAdmin, (req, res) => {
   db('users')
-    .whereNot('token', null)
+    .where('name', '')
+    .andWhere('password', '')
+    .andWhereNot('token', null)
     .select('id', 'token')
     .then((data) => {
       res.json({

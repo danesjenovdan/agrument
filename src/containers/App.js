@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import SideMenu from '../components/SideMenu';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import Reset from '../pages/Reset';
 import Dashboard from '../pages/Dashboard';
 import Agrument from '../pages/Agrument';
 
@@ -29,6 +30,7 @@ class App extends React.Component {
         <Switch>
           <Route path="/login" render={() => <Login state={state} />} />
           <Route path="/register" render={() => <Register state={state} />} />
+          <Route path="/reset" render={() => <Reset state={state} />} />
           <Route path="/dash" render={() => <Dashboard state={state} />} />
           <Route path="/" render={() => <Agrument state={state} />} />
         </Switch>

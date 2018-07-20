@@ -57,6 +57,7 @@ const store = new Freezer({
       name: '',
       username: '',
       password: '',
+      passwordRepeat: '',
     },
   },
   editable: {

@@ -4,6 +4,7 @@ const API_DASH = '/api/dash';
 
 const GET_USER = `${API_DASH}/user`;
 const GET_USERS = `${API_DASH}/users`;
+const POST_CREATE_USER_TOKEN = `${API_DASH}/users/createtoken/:id`;
 const GET_USERS_TOKENS = `${API_DASH}/users/tokens`;
 const POST_CREATE_USER = `${API_DASH}/users/create`;
 const GET_PUBLISHED = `${API_DASH}/published`;
@@ -26,6 +27,10 @@ function getUser() {
 
 function getUsers() {
   return request.get(GET_USERS);
+}
+
+function createUserToken(id) {
+  return request.post(POST_CREATE_USER_TOKEN.replace(':id', id));
 }
 
 function getTokenUsers() {
@@ -110,6 +115,7 @@ function submitVote(id, vote) {
 export {
   getUser,
   getUsers,
+  createUserToken,
   getTokenUsers,
   createUser,
   getPublished,

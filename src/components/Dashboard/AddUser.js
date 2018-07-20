@@ -10,12 +10,27 @@ function createUser() {
   store.emit('newuser:create');
 }
 
-function getURL(id, token) {
+function createToken(id) {
+  return () => {
+    store.emit('users:createtoken', id);
+  };
+}
+
+function getRegisterURL(id, token) {
   let url = '';
   if (typeof window !== 'undefined') {
     url += `${window.location.protocol}//${window.location.host}`;
   }
   url += `/register?id=${id}&token=${token}`;
+  return url;
+}
+
+function getResetURL(id, token) {
+  let url = '';
+  if (typeof window !== 'undefined') {
+    url += `${window.location.protocol}//${window.location.host}`;
+  }
+  url += `/reset?id=${id}&token=${token}`;
   return url;
 }
 
@@ -26,7 +41,7 @@ class AddUser extends React.Component {
 
   render() {
     const { state } = this.props;
-    const text = (state.newUser.id && state.newUser.token) ? getURL(state.newUser.id, state.newUser.token) : '';
+    const text = (state.newUser.id && state.newUser.token) ? getRegisterURL(state.newUser.id, state.newUser.token) : '';
     return (
       <div className="form-horizontal">
         <div className="form-group">
@@ -56,7 +71,7 @@ class AddUser extends React.Component {
                     {data.map(e => (
                       <tr key={e.id}>
                         <td>{e.id}</td>
-                        <td>{getURL(e.id, e.token)}</td>
+                        <td>{getRegisterURL(e.id, e.token)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -68,13 +83,24 @@ class AddUser extends React.Component {
                 <tr>
                   <th>ID</th>
                   <th>Ime</th>
+                  <th className="text-right">Uredi</th>
                 </tr>
               </thead>
               <tbody>
                 {state.users.data.map(e => (
                   <tr key={e.id}>
                     <td>{e.id}</td>
-                    <td>{`${e.name} (${e.username})`}</td>
+                    <td>
+                      <div>{`${e.name} (${e.username})`}</div>
+                      {e.token && (
+                        <div><small>{getResetURL(e.id, e.token)}</small></div>
+                      )}
+                    </td>
+                    <td className="text-right">
+                      <button type="button" className="btn btn-primary btn-xs" onClick={createToken(e.id)}>
+                        <i className="glyphicon glyphicon-link" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
