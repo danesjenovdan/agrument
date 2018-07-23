@@ -1,43 +1,62 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-// import Waypoint from 'react-waypoint';
-import { concat } from 'lodash';
+import Waypoint from 'react-waypoint';
+import { withRouter } from 'react-router-dom';
+import { concat, last } from 'lodash';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
 import Button from '../FormControl/Button';
+import RenderSpinner from '../../hoc/RenderSpinner';
+import ScrollBodyOnFirstRender from '../../hoc/ScrollBodyOnFirstRender';
 import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';
 import { toSloDateString } from '../../utils/date';
 
 class Feed extends React.Component {
   constructor(props) {
     super(props);
+
+    const { location } = props;
+    this.initialDate = last(location.pathname.split('/'));
+
     this.state = {
       loading: true,
       error: false,
       data: [],
-      shouldLoadAbove: !!this.props.params.date,
+      shouldLoadAbove: !!this.initialDate,
       shouldLoadBelow: true,
       activePost: null,
+      firstLoad: true,
     };
   }
 
   componentDidMount() {
-    this.dataRequest = getInitialPost(this.props.params.date).end(this.setInitialArticleState);
+    const { history } = this.props;
 
-    // this.cancelListen = this.context.history.listen((event) => {
-    //   if (event.state && event.state.postId && event.action === 'POP') {
-    //     const elem = document.querySelector(`#post-${event.state.postId}`);
-    //     if (elem) {
-    //       this.dontChangeURLOnScroll = true;
-    //       setTimeout(() => {
-    //         elem.scrollIntoView(true);
-    //         this.dontChangeURLOnScroll = false;
-    //       }, 0);
-    //     }
-    //   }
-    // });
+    this.dataRequest = getInitialPost(this.initialDate).end(this.setInitialArticleState);
+
+    this.cancelListen = history.listen((event) => {
+      if (event.state && event.state.postId && event.action === 'POP') {
+        const elem = document.querySelector(`#post-${event.state.postId}`);
+        if (elem) {
+          this.dontChangeURLOnScroll = true;
+          setTimeout(() => {
+            elem.scrollIntoView(true);
+            this.dontChangeURLOnScroll = false;
+          }, 0);
+        }
+      }
+    });
+
+    this.lastScrollTop = document.documentElement.scrollTop;
+    this.lastScrollWasUp = false;
+    this.scrollListener = () => {
+      this.lastScrollWasUp = document.documentElement.scrollTop < this.lastScrollTop;
+      this.lastScrollTop = document.documentElement.scrollTop;
+    };
+
+    window.addEventListener('scroll', this.scrollListener);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -52,7 +71,7 @@ class Feed extends React.Component {
     if (this.oldHeight) {
       const newHeight = document.body.scrollHeight;
       const diff = newHeight - this.oldHeight;
-      document.body.scrollTop += diff; // TODO: should be document.documentElement
+      document.documentElement.scrollTop += diff;
       this.oldHeight = null;
     }
   }
@@ -64,6 +83,9 @@ class Feed extends React.Component {
     if (this.cancelListen) {
       this.cancelListen();
     }
+    if (this.scrollListener) {
+      window.removeEventListener('scroll', this.scrollListener);
+    }
   }
 
   setInitialArticleState = (err, res) => {
@@ -71,9 +93,11 @@ class Feed extends React.Component {
     this.dataRequest = null;
 
     if (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
       this.setState({ error: true });
     } else if (!res.body.post) {
+      // eslint-disable-next-line no-console
       console.error('Initial post not found!');
       this.setState({ error: true });
     } else {
@@ -92,6 +116,7 @@ class Feed extends React.Component {
         this.setState({ shouldLoadBelow: false });
       }
     } else if (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
       this.setState({ error: true });
     } else {
@@ -107,7 +132,7 @@ class Feed extends React.Component {
 
   lazyLoadBelow() {
     if (!this.state.loading && this.state.shouldLoadBelow) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, firstLoad: false });
       const lastDate = this.state.data[this.state.data.length - 1].date;
       this.dataRequest = getOlderPost(lastDate)
         .end((err, res) => this.updateArticleState(err, res, false));
@@ -115,8 +140,11 @@ class Feed extends React.Component {
   }
 
   lazyLoadAbove() {
-    if (!this.state.loading && this.state.shouldLoadAbove && !this.oldHeight) {
-      this.setState({ loading: true });
+    if (this.lastScrollWasUp
+      && !this.state.loading
+      && this.state.shouldLoadAbove
+      && !this.oldHeight) {
+      this.setState({ loading: true, firstLoad: false });
       const firstDate = this.state.data[0].date;
       this.dataRequest = getNewerPost(firstDate)
         .end((err, res) => this.updateArticleState(err, res, true));
@@ -129,63 +157,77 @@ class Feed extends React.Component {
     }
     const newPath = `/${toSloDateString(post.date)}`;
     if (window.location.pathname !== newPath) {
-      this.context.history.push({ pathname: newPath, state: { postId: +post.id } });
+      this.props.history.push(newPath, { postId: +post.id });
       this.setState({ activePost: post });
     }
   }
 
   render() {
+    if (this.state.error) {
+      return <div>Napaka :(</div>;
+    }
+
     const content = [];
     if (this.state.data.length) {
-      if (this.state.shouldLoadAbove) {
-        content.push(<div key="load-above" className="agrument__spinner-container">
-          {this.state.loading ? <Spinner /> : <Button key="load-above-btn" onClick={() => this.lazyLoadAbove()} value="^ Naloži ^" />}
-        </div>);
-        // TODO: use RenderSpinner HOC
-      }
+      // if (this.state.shouldLoadAbove) {
+      //   content.push((
+      //     <div key="load-above" className="agrument__spinner-container" style={{ height: 50 }}>
+      //       <RenderSpinner isLoading={this.state.loading}>
+      //         {() => (
+      //           <Waypoint onEnter={() => this.lazyLoadAbove()} />
+      //         )}
+      //       </RenderSpinner>
+      //     </div>
+      //   ));
+      // }
 
-      const articles = this.state.data.map(post => (
-        <WaypointBlock key={post.id} onEnterFunc={() => this.changeActiveArticle(post)}>
-          <Article data={post} />
-        </WaypointBlock>
+      const articles = this.state.data.map((post, i) => (
+        <ScrollBodyOnFirstRender key={post.id} selector={`#post-${post.id}`} enabled={this.state.firstLoad && i === 0}>
+          <WaypointBlock onEnterFunc={() => this.changeActiveArticle(post)}>
+            <Article data={post} />
+          </WaypointBlock>
+        </ScrollBodyOnFirstRender>
       ));
       content.push(...articles);
 
       if (this.state.shouldLoadBelow) {
-        content.push(<div key="load-below" className="agrument__spinner-container">
-          {this.state.loading ?
-            <Spinner /> :
-            // <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />}
-            null}
-        </div>);
-        // TODO: use RenderSpinner HOC
+        content.push((
+          <div key="load-below" className="agrument__spinner-container">
+            <RenderSpinner isLoading={this.state.loading}>
+              {() => (
+                <Waypoint onEnter={() => this.lazyLoadBelow()} bottomOffset={-100} />
+              )}
+            </RenderSpinner>
+          </div>
+        ));
       }
     } else if (this.state.loading) {
-      content.push(<div key="load-main" className="agrument__spinner-container">
-        <Spinner />
-      </div>);
+      content.push((
+        <div key="load-main" className="agrument__spinner-container">
+          <Spinner />
+        </div>
+      ));
       // TODO: use RenderSpinner HOC
     } else {
-      content.push(<div key="load-main" className="agrument__spinner-container">
-        <h1>NAPAKA :(</h1>
-      </div>);
+      content.push((
+        <div key="load-main" className="agrument__spinner-container">
+          <h1>NAPAKA :(</h1>
+        </div>
+      ));
     }
-    // const meta = this.state.activePost ? (
-    //   <Helmet
-    //     title={this.state.activePost.title}
-    //     meta={[
-    //       { name: 'description', content: this.state.activePost.description },
-    //       { property: 'og:title', content: this.state.activePost.title },
-    //       { property: 'og:type', content: 'article' },
-    //       { property: 'og:description', content: this.state.activePost.description },
-    //       { property: 'og:image', content: this.state.activePost.imageURL },
-    //     ]}
-    //   />
-    // ) : null;
-    // TODO: convert helmet to tags
+    const meta = this.state.activePost ? (
+      <Helmet>
+        <title>{this.state.activePost.title}</title>
+        <meta name="description" content={this.state.activePost.description} />
+        <meta property="og:title" content={this.state.activePost.title} />
+        <meta property="og:type" content="article" />
+        <meta property="og:description" content={this.state.activePost.description} />
+        <meta property="og:image" content={this.state.activePost.imageURL} />
+      </Helmet>
+    ) : null;
     return (
       <div className="agrument__feed">
-        {/* {meta} */}
+        {meta}
         {content}
       </div>
     );
@@ -193,11 +235,8 @@ class Feed extends React.Component {
 }
 
 Feed.propTypes = {
-  params: PropTypes.shape({ date: PropTypes.string }),
+  location: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
 };
 
-Feed.defaultProps = {
-  params: { date: '' },
-};
-
-export default Feed;
+export default withRouter(Feed);
