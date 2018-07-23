@@ -19,10 +19,29 @@ router.get('/users', requireAdmin, (req, res) => {
   db('users')
     .whereNot('name', '')
     .andWhereNot('password', '')
-    .select('id', 'name', 'username', 'group', 'token')
+    .select('id', 'name', 'username', 'group', 'token', 'disabled')
     .then((data) => {
       res.json({
         users: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+router.post('/users/disable/:id', requireAdmin, (req, res) => {
+  db('users')
+    .andWhere('id', req.params.id)
+    .update({
+      disabled: req.body.disabled,
+      token: null,
+    })
+    .then(() => {
+      res.json({
+        success: 'Updated user',
       });
     })
     .catch((err) => {

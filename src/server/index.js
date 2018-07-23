@@ -62,7 +62,7 @@ passport.use(new LocalStrategy((username, pass, done) => {
     .where('username', username)
     .first()
     .then((user) => {
-      if (user) {
+      if (user && !user.disabled) {
         passwordHashAndSalt(pass).verifyAgainst(user.password, (error, verified) => {
           if (error) {
             throw new Error(error);
@@ -100,7 +100,10 @@ passport.deserializeUser((sessionUser, done) => {
     .where('id', sessionUser.id)
     .first()
     .then((user) => {
-      if (user.username !== sessionUser.username || user.password !== sessionUser.password) {
+      if (user.disabled) {
+        // if user is disabled don't set req.user
+        done(null, null);
+      } else if (user.username !== sessionUser.username || user.password !== sessionUser.password) {
         // if username or password hash don't match don't set req.user
         done(null, null);
       } else {

@@ -95,7 +95,7 @@ RegisterForm.propTypes = {
 };
 
 RegisterForm.defaultProps = {
-  canChangeUsername: false,
+  canChangeUsername: true,
 };
 
 export default withRouter(RegisterForm);

@@ -25,6 +25,9 @@ function initReactions(store) {
             isLoading: false,
             data: res.body.user,
           });
+          if (history.location.pathname === '/login') {
+            history.replace('/dash');
+          }
         }
       });
   });
@@ -52,6 +55,15 @@ function initReactions(store) {
               selectedUser: res.body.users[0].id,
             });
           }
+        }
+      });
+  });
+
+  store.on('users:disable', (id, disabled) => {
+    dash.disableUser(id, disabled)
+      .end((err, res) => {
+        if (!err && res.ok) {
+          store.emit('users:fetch');
         }
       });
   });

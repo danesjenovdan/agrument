@@ -6,6 +6,8 @@ import Input from '../FormControl/Input';
 import { login, logout as logoutFunc } from '../../utils/login';
 import { parseSearch } from '../../utils/url';
 
+import store from '../../store';
+
 class LoginForm extends React.Component {
   constructor() {
     super();
@@ -19,6 +21,8 @@ class LoginForm extends React.Component {
     const { logout } = parseSearch(this.props.location.search);
     if (logout) {
       logoutFunc().end();
+    } else {
+      store.emit('user:fetch', this.props.history);
     }
   }
 

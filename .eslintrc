@@ -11,6 +11,7 @@
     "jsx-a11y/label-has-for": "off",
     "prefer-destructuring": ["error", { "array": false, "object": true }],
     "import/prefer-default-export": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "react/jsx-one-expression-per-line": "off",
+    "react/destructuring-assignment": "off"
   }
 }

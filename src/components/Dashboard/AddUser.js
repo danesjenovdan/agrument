@@ -16,6 +16,12 @@ function createToken(id) {
   };
 }
 
+function disableUser(id, disabled) {
+  return () => {
+    store.emit('users:disable', id, disabled);
+  };
+}
+
 function getRegisterURL(id, token) {
   let url = '';
   if (typeof window !== 'undefined') {
@@ -58,6 +64,9 @@ class AddUser extends React.Component {
         </div>
         <div className="form-group">
           <div className="col-sm-12">
+            <div className="text-center text-uppercase">
+              <strong>Neaktivirane povezave</strong>
+            </div>
             <RenderSpinner isLoading={state.tokenUsers.isLoading} data={state.tokenUsers.data}>
               {data => (
                 <table className="table table-hover table-users-list">
@@ -78,6 +87,9 @@ class AddUser extends React.Component {
                 </table>
               )}
             </RenderSpinner>
+            <div className="text-center text-uppercase">
+              <strong>Aktivni uporabniki</strong>
+            </div>
             <table className="table table-hover table-users-list">
               <thead>
                 <tr>
@@ -87,7 +99,7 @@ class AddUser extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {state.users.data.map(e => (
+                {state.users.data.filter(e => !e.disabled).map(e => (
                   <tr key={e.id}>
                     <td>{e.id}</td>
                     <td>
@@ -99,6 +111,39 @@ class AddUser extends React.Component {
                     <td className="text-right">
                       <button type="button" className="btn btn-primary btn-xs" onClick={createToken(e.id)}>
                         <i className="glyphicon glyphicon-link" />
+                      </button>
+                      <button type="button" className={`btn btn-${e.disabled ? 'success' : 'danger'} btn-xs`} onClick={disableUser(e.id, !e.disabled)}>
+                        <i className={`glyphicon glyphicon-${e.disabled ? 'ok' : 'ban-circle'}`} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="text-center text-uppercase">
+              <strong>Onemogočeni uporabniki</strong>
+            </div>
+            <table className="table table-hover table-users-list">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ime</th>
+                  <th className="text-right">Uredi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {state.users.data.filter(e => e.disabled).map(e => (
+                  <tr key={e.id}>
+                    <td>{e.id}</td>
+                    <td>
+                      <div>{`${e.name} (${e.username})`}</div>
+                      {e.token && (
+                        <div><small>{getResetURL(e.id, e.token)}</small></div>
+                      )}
+                    </td>
+                    <td className="text-right">
+                      <button type="button" className="btn btn-warning btn-xs" onClick={disableUser(e.id, !e.disabled)}>
+                        <i className="glyphicon glyphicon-ok" />
                       </button>
                     </td>
                   </tr>
