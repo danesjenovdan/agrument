@@ -8,10 +8,13 @@
     "build:client": "rimraf dist && cross-env NODE_ENV=production webpack --progress --config webpack.config.js",
     "build:server": "rimraf dist_server && cross-env NODE_ENV=production babel src -d dist_server",
     "build": "npm run build:client && npm run build:server",
+    "migrate": "knex migrate:latest",
     "serve": "node ./dist_server/server",
     "build-serve": "npm run build && cross-env PORT=8005 npm run serve",
     "api": "npm run build:server && cross-env PORT=8080 npm run serve",
-    "lint": "eslint ./seeds ./migrations ./src"
+    "lint": "eslint ./seeds ./migrations ./src",
+    "deploy:setup": "cross-env NODE_ENV=production pm2 deploy production setup",
+    "deploy": "cross-env NODE_ENV=production pm2 deploy production"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
