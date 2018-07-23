@@ -1,6 +1,6 @@
 const project = 'agrument';
 const command = [
-  'npm i && npm run build && npm run migrate && pm2 reload ecosystem.config.js',
+  'npm i && npm run build && npm run migrate && pm2 startOrRestart ecosystem.config.js',
 ].join(' ');
 
 module.exports = {
