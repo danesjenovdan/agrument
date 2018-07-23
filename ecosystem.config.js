@@ -10,7 +10,7 @@ module.exports = {
    */
   apps: [{
     name: project,
-    script: 'dist_server/server.js',
+    script: 'dist_server/server/index.js',
     env: {
       PORT: 8000,
     },
