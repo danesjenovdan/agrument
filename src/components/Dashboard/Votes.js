@@ -13,10 +13,18 @@ class Votes extends React.PureComponent {
   render() {
     const { entry } = this.props;
     const isLoading = (entry.votes && entry.votes.isLoading) || false;
+    const voteError = entry.votes && entry.votes.voteError;
     return (
       <RenderSpinner isLoading={isLoading} data={entry.votes && entry.votes.data}>
         {() => (
           <div className="row">
+            <div className="col-md-12">
+              {!!voteError && (
+                <div className="entry__votes-error">
+                  {voteError}
+                </div>
+              )}
+            </div>
             <div className="col-md-4">
               <VoteButton entry={entry} voteType="for" />
             </div>

@@ -528,11 +528,11 @@ function initReactions(store) {
       .end((err, res) => {
         sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
 
-        if (!sub.votes) {
-          sub = sub.set({ votes: {} });
-        }
-
         if (sub) {
+          if (!sub.votes) {
+            sub = sub.set({ votes: {} });
+          }
+
           if (err || !res.ok) {
             sub.votes.set({
               isLoading: false,
@@ -548,7 +548,7 @@ function initReactions(store) {
   });
 
   store.on('votes:vote', (id, vote) => {
-    const sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+    let sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
 
     if (!sub || (sub && sub.votes && sub.votes.isLoading)) {
       return;
@@ -558,6 +558,22 @@ function initReactions(store) {
       .end((err, res) => {
         if (!err && res.ok) {
           store.emit('votes:fetch', id);
+        } else if (res && res.body && res.body.error) {
+          sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+
+          if (sub) {
+            if (!sub.votes) {
+              sub = sub.set({ votes: {} });
+            }
+
+            const errorText = res.body.error.indexOf('Veto limit reached') !== -1
+              ? 'Pravico do veta si ta mesec že izkoristil.'
+              : res.body.error;
+
+            sub.votes.set({
+              voteError: errorText,
+            });
+          }
         }
       });
   });

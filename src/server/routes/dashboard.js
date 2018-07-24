@@ -474,42 +474,66 @@ router.get('/votes/:id', (req, res) => {
 });
 
 router.post('/vote/:id', (req, res) => {
-  db.transaction((trx) => {
+  db.transaction(async (trx) => {
     const { vote } = req.body;
     const { id } = req.params;
-    return trx
+
+    if (vote === 'veto') {
+      const { lastVetoVote } = await trx
+        .from('users')
+        .where('id', req.user.id)
+        .first('lastVetoVote');
+
+      if (lastVetoVote && (new Date(lastVetoVote).getUTCMonth()) === (new Date().getUTCMonth())) {
+        throw new Error('Veto limit reached!');
+      }
+    }
+
+    const rows = await trx
       .from('votes')
       .where('post', id)
       .andWhere('author', req.user.id)
-      .select('author', 'post', 'vote')
-      .then((rows) => {
-        if (rows.length === 0) {
-          return trx
-            .insert({
-              author: req.user.id,
-              post: id,
-              vote,
-            })
-            .into('votes');
-        }
-        if (rows[0].vote !== 'veto') {
-          if (rows[0].vote === vote) {
-            return trx
-              .from('votes')
-              .where('post', id)
-              .andWhere('author', req.user.id)
-              .delete();
-          }
-          return trx
-            .from('votes')
-            .where('post', id)
-            .andWhere('author', req.user.id)
-            .update({
-              vote,
-            });
-        }
-        return null;
-      });
+      .select('author', 'post', 'vote');
+
+    // if user not voted yet just insert the vote
+    if (rows.length === 0) {
+      if (vote === 'veto') {
+        await trx
+          .from('users')
+          .where('id', req.user.id)
+          .update({
+            lastVetoVote: Date.now(),
+          });
+      }
+      return trx
+        .insert({
+          author: req.user.id,
+          post: id,
+          vote,
+        })
+        .into('votes');
+    }
+
+    // if vote is not veto allow changing
+    if (rows[0].vote !== 'veto') {
+      // voting the same again removes that vote
+      if (rows[0].vote === vote) {
+        return trx
+          .from('votes')
+          .where('post', id)
+          .andWhere('author', req.user.id)
+          .delete();
+      }
+      // voting differently changes the vote
+      return trx
+        .from('votes')
+        .where('post', id)
+        .andWhere('author', req.user.id)
+        .update({
+          vote,
+        });
+    }
+    return null;
   })
     .then(() => {
       res.json({

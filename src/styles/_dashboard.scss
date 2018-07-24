@@ -224,6 +224,12 @@
         border-color: $agrument-teal;
       }
     }
+
+    .entry__votes-error {
+      text-align: center;
+      margin: 10px 0;
+      font-weight: 700;
+    }
   }
 
   .author {
