@@ -215,10 +215,11 @@ class SubmissionEditor extends React.Component {
               <div className="form-group">
                 <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>
                 <Select
-                  multi
+                  isMulti
                   id="submissioneditor-rights"
+                  classNamePrefix="react-select"
                   name="rights"
-                  value={entry.rights}
+                  value={entry.rights.split(',').map(r => rights.find(e => e.value === r))}
                   options={rights}
                   onChange={onRightsChange}
                   placeholder="Izberi eno ali dve pravici"

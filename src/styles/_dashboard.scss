@@ -176,35 +176,40 @@
 
   img.thumbnail,
   .theeditor > div,
-  .Select > .Select-control,
-  .Select.is-focused:not(.is-open) > .Select-control {
+  .react-select__control,
+  .react-select__control--is-focused,
+  .react-select__control:hover {
     border-radius: 0px;
     border: 2px solid #c2d8d8;
     box-shadow: none;
+    background-color: #fff;
   }
 
-  .Select,
-  .Select--multi {
-    .Select-menu-outer {
-      z-index: 9999;
-    }
+  .react-select__menu {
+    z-index: 9999;
+    border-radius: 0;
+  }
 
-    .Select-value,
-    .Select-value-icon {
-      border-color: #c2d8d8;
-      color: #7ebfbf;
-      background-color: rgba(194, 216, 216, 0.15);
-    }
+  .react-select__multi-value,
+  .react-select__multi-value__remove {
+    border-color: #c2d8d8;
+    color: #7ebfbf;
+    background-color: rgba(194, 216, 216, 0.25);
+  }
 
-    .Select-value-icon:hover {
-      background-color: rgba(194, 216, 216, 0.35);
-      color: #7ebfbf;
-    }
+  .react-select__multi-value__remove:hover {
+    background-color: rgba(194, 216, 216, 0.50);
+    color: #7ebfbf;
+  }
 
-    .Select-option.is-focused,
-    .Select-option:hover {
-      background-color: rgba(194, 216, 216, 0.35);
-    }
+  .react-select__multi-value__label {
+    padding: 3px 8px;
+    font-size: 13px;
+  }
+
+  .react-select__option--is-focused,
+  .react-select__option:hover {
+    background-color: rgba(194, 216, 216, 0.50);
   }
 
   .entry__publish-errors {
