@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import React from 'react';
 import { renderToString } from 'react-dom/server';

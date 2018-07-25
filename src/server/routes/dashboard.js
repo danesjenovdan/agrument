@@ -1,8 +1,10 @@
+import fs from 'fs-extra';
 import express from 'express';
 import _ from 'lodash';
 import randomstring from 'randomstring';
 import { requireLoggedIn, requireAdmin } from '../middleware/auth';
 import db from '../database';
+import { saveDataUrlImageToFile, getFullImagePath, getFullImageURL } from '../utils/image';
 
 const router = express.Router();
 
@@ -271,19 +273,29 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
 });
 
 router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
-  db.transaction(trx => (
-    trx
+  db.transaction(async (trx) => {
+    const { imageURL } = await trx
       .from('posts')
       .whereIn('type', ['votable', 'pending'])
       .andWhere('id', req.params.id)
-      .delete()
-      .then(() => (
-        trx
-          .from('votes')
-          .where('post', req.params.id)
-          .delete()
-      ))
-  ))
+      .first('imageURL');
+
+    await trx
+      .from('posts')
+      .whereIn('type', ['votable', 'pending'])
+      .andWhere('id', req.params.id)
+      .delete();
+
+    await trx
+      .from('votes')
+      .where('post', req.params.id)
+      .delete();
+
+    const imagePath = getFullImagePath(imageURL);
+    if (fs.existsSync(imagePath)) {
+      await fs.remove(imagePath);
+    }
+  })
     .then(() => {
       res.json({
         success: 'Removed submission',
@@ -297,44 +309,46 @@ router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
 });
 
 router.post('/submissions/edit/:id', (req, res) => {
-  // clone req.body and replace some props with undefined so they are ignored by db.update and we
-  // can't for example change the id or author by mistake
-  let disallowed;
-  if (req.user.group === 'admin') {
-    disallowed = {
-      id: undefined,
-      author_name: undefined,
-    };
-  } else {
-    disallowed = {
-      id: undefined,
-      author_name: undefined,
-      author: undefined,
-      type: undefined,
-      date: undefined,
-    };
-  }
-  const data = _.assign({}, req.body, disallowed);
+  db.transaction(async (trx) => {
+    // omit some keys so you can't for example change the id or author by mistake
+    let disallowed;
+    if (req.user.group === 'admin') {
+      disallowed = ['id', 'author_name'];
+    } else {
+      disallowed = ['id', 'author_name', 'author', 'type', 'date'];
+    }
+    const { imageURL, imageName, ...data } = _.omit(req.body, disallowed);
 
-  db.transaction(trx => (
-    trx
+    const hasNewImage = imageURL && imageURL.startsWith('data:') && imageName;
+
+    if (hasNewImage) {
+      const newImageName = `${Date.now()}-${imageName}`;
+      await saveDataUrlImageToFile(imageURL, newImageName);
+      data.imageURL = newImageName;
+    }
+
+    const numRows = await trx
       .from('posts')
       .andWhere('id', req.params.id)
-      .update(data)
-      .then((numRows) => {
-        if (numRows && data.type === 'pending') {
-          return trx
-            .from('votes')
-            .where('post', req.params.id)
-            .delete();
-        }
-        return null;
-      })
-  ))
-    .then(() => {
-      res.json({
+      .update(data);
+
+    if (numRows && req.body.type === 'pending') {
+      await trx
+        .from('votes')
+        .where('post', req.params.id)
+        .delete();
+    }
+
+    return data.imageURL;
+  })
+    .then((imageURL) => {
+      const returnData = {
         success: 'Edited submission',
-      });
+      };
+      if (imageURL) {
+        returnData.imageURL = getFullImageURL(imageURL);
+      }
+      res.json(returnData);
     })
     .catch((err) => {
       res.status(500).json({
@@ -351,8 +365,17 @@ router.get('/pending', (req, res) => {
     .leftOuterJoin('users', 'posts.author', 'users.id')
     .select('posts.*', 'users.username as author_name')
     .then((data) => {
+      const mapped = data.map((post) => {
+        if (post.imageURL) {
+          return {
+            ...post,
+            imageURL: getFullImageURL(post.imageURL),
+          };
+        }
+        return post;
+      });
       res.json({
-        pending: data,
+        pending: mapped,
       });
     })
     .catch((err) => {
@@ -389,8 +412,17 @@ router.get('/votable', (req, res) => {
     .leftOuterJoin('users', 'posts.author', 'users.id')
     .select('posts.*', 'users.username as author_name')
     .then((data) => {
+      const mapped = data.map((post) => {
+        if (post.imageURL) {
+          return {
+            ...post,
+            imageURL: getFullImageURL(post.imageURL),
+          };
+        }
+        return post;
+      });
       res.json({
-        votable: data,
+        votable: mapped,
       });
     })
     .catch((err) => {
@@ -440,8 +472,12 @@ router.get('/edit/:date', (req, res) => {
     .first()
     .then((data) => {
       if (data) {
+        const post = data;
+        if (post.imageURL) {
+          post.imageURL = getFullImageURL(post.imageURL);
+        }
         res.json({
-          data,
+          data: post,
         });
       } else {
         res.status(404).json({

@@ -2,7 +2,7 @@
  * This is the entry point for the production server, don't include this file in anything that would
  * pass trough webpack!
  */
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
