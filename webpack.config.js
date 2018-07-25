@@ -167,10 +167,9 @@ module.exports = {
     port: 3000,
     compress: isProd,
     stats: 'minimal',
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-      },
-    },
+    proxy: [{
+      context: ['/media', '/api'],
+      target: 'http://localhost:8080',
+    }],
   },
 };
