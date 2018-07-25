@@ -13,7 +13,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import passwordHashAndSalt from 'password-hash-and-salt';
 import _ from 'lodash';
 import db from './database';
-import appMiddleware from './middleware/app';
+// import appMiddleware from './middleware/app';
 import getAgrument from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';

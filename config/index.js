@@ -7,7 +7,7 @@ const config = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  return merge({}, config, require('./production'));
+  module.exports = merge({}, config, require('./production'));
+} else {
+  module.exports = config;
 }
-
-return config;
