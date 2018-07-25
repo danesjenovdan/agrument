@@ -2,9 +2,15 @@ import fs from 'fs-extra';
 import express from 'express';
 import _ from 'lodash';
 import randomstring from 'randomstring';
+import request from 'superagent';
+import config from '../../../config';
 import { requireLoggedIn, requireAdmin } from '../middleware/auth';
 import db from '../database';
-import { saveDataUrlImageToFile, getFullImagePath, getFullImageURL } from '../utils/image';
+import {
+  saveDataUrlImageToFile,
+  getFullImagePath,
+  getFullImageURL,
+} from '../utils/image';
 
 const router = express.Router();
 
@@ -322,8 +328,7 @@ router.post('/submissions/edit/:id', (req, res) => {
     const hasNewImage = imageURL && imageURL.startsWith('data:') && imageName;
 
     if (hasNewImage) {
-      const newImageName = `${Date.now()}-${imageName}`;
-      await saveDataUrlImageToFile(imageURL, newImageName);
+      const newImageName = await saveDataUrlImageToFile(imageURL, imageName);
       data.imageURL = newImageName;
     }
 
@@ -433,12 +438,31 @@ router.get('/votable', (req, res) => {
 });
 
 router.post('/votable/publish/:id', requireAdmin, (req, res) => {
-  db('posts')
-    .where('type', 'votable')
-    .andWhere('id', req.params.id)
-    .update({
-      type: 'published',
-    })
+  db.transaction(async (trx) => {
+    const { tweet, imageURL } = await trx
+      .from('posts')
+      .where('type', 'votable')
+      .andWhere('id', req.params.id)
+      .first('tweet', 'imageURL');
+
+    await trx
+      .from('posts')
+      .where('type', 'votable')
+      .andWhere('id', req.params.id)
+      .update({
+        type: 'published',
+      });
+
+    if (process.env.NODE_ENV) {
+      await request
+        .post('https://api.djnd.si/sendTweet/')
+        .send({
+          tweet_text: tweet,
+          image_url: getFullImageURL(imageURL),
+          secret: config.TWITTER_SECRET,
+        });
+    }
+  })
     .then(() => {
       res.json({
         success: 'Published',

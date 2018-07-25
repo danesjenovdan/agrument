@@ -1,5 +1,7 @@
 import db from '../database';
+import { isArray } from 'lodash';
 import { toDateTimestamp } from '../../utils/date';
+import { getFullImageURL } from '../utils/image';
 
 function getAgrument(req, res) {
   let query = db('posts')
@@ -51,9 +53,32 @@ function getAgrument(req, res) {
 
   query
     .then((data) => {
-      res.json({
-        post: data,
-      });
+      if (isArray(data)) {
+        const mapped = data.map((post) => {
+          if (post.imageURL) {
+            return {
+              ...post,
+              imageURL: getFullImageURL(post.imageURL),
+            };
+          }
+          return post;
+        });
+        res.json({
+          post: mapped,
+        });
+      } else if (data) {
+        const post = data;
+        if (post.imageURL) {
+          post.imageURL = getFullImageURL(post.imageURL);
+        }
+        res.json({
+          post,
+        });
+      } else {
+        res.json({
+          post: undefined,
+        });
+      }
     })
     .catch((err) => {
       res.status(500).json({

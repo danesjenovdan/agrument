@@ -18,6 +18,7 @@ import getAgrument from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';
 import { sendErrorToSlack, sendErrorToSlackMiddleware } from './slack';
+import config from '../../config';
 
 process.on('uncaughtException', (err) => {
   // eslint-disable-next-line no-console
@@ -50,9 +51,7 @@ app.disable('x-powered-by');
 
 // serve static files first so you dont create new sessions for static files
 app.use(express.static(path.resolve(__dirname, '../../dist')));
-
-// Delay will be between 200 and 500 milliseconds
-// app.use(delay(1200, 1500));
+app.use('/media', express.static(path.resolve(__dirname, '../../media')));
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' })); // parse x-www-form-urlencoded
 app.use(bodyParser.json({ extended: true, limit: '50mb' })); // parse json
@@ -128,7 +127,7 @@ app.use(session({
   saveUninitialized: false, // save new sessions only when modified (e.g. login sessions)
   resave: false, // don't resave to store if not modified
   store: new KnexSessionStore({ knex: db }),
-  secret: 'sekkrett',
+  secret: config.SESSION_SECRET,
 }));
 
 app.use(passport.initialize());

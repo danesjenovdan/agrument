@@ -16,7 +16,7 @@ class ImageSelect extends React.Component {
     reader.onload = () => {
       this.setState({ name: file.name });
       if (onChange) {
-        onChange(reader.result);
+        onChange(reader.result, file.name);
       }
     };
 

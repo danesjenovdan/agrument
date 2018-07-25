@@ -6,3 +6,4 @@ npm-debug.log
 *.sqlite
 *.sqlite3
 /media
+/config/production.js

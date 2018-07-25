@@ -60,6 +60,11 @@ function onRightsChange(value) {
   }
 }
 
+function onImageChange(value, name) {
+  onValueChange('imageURL')(value);
+  onValueChange('imageName')(name);
+}
+
 function onSave() {
   store.emit('editable:save');
 }
@@ -230,7 +235,7 @@ class SubmissionEditor extends React.Component {
               <div className="col-sm-6">
                 <div className="form-group">
                   <label className="control-label">Slika</label>
-                  <ImageSelect onChange={onValueChange('imageURL')} />
+                  <ImageSelect onChange={onImageChange} />
                 </div>
                 <div className="form-group">
                   <label htmlFor="submissioneditor-imgcap" className="control-label">Vir slike (Opis)</label>
