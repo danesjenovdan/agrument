@@ -17,6 +17,7 @@ import db from './database';
 import getAgrument from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';
+import apiRouter from './routes/api';
 import { sendErrorToSlack, sendErrorToSlackMiddleware } from './slack';
 import config from '../../config';
 
@@ -134,6 +135,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', authRouter);
+
+app.use('/api', apiRouter);
 
 app.get('/api/agrument', getAgrument);
 
