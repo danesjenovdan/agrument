@@ -453,15 +453,15 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
-    if (process.env.NODE_ENV) {
-      await request
-        .post('https://api.djnd.si/sendTweet/')
-        .send({
-          tweet_text: tweet,
-          image_url: getFullImageURL(imageURL),
-          secret: config.TWITTER_SECRET,
-        });
-    }
+    // if (process.env.NODE_ENV) {
+    //   await request
+    //     .post('https://api.djnd.si/sendTweet/')
+    //     .send({
+    //       tweet_text: tweet,
+    //       image_url: getFullImageURL(imageURL),
+    //       secret: config.TWITTER_SECRET,
+    //     });
+    // }
   })
     .then(() => {
       res.json({
