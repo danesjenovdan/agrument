@@ -5,6 +5,8 @@ const rights = [
   { value: 'd', label: 'Pravica (do) narave' },
   { value: 'e', label: 'Pravica do človeku prijazne ekonomije' },
   { value: 'f', label: 'Pravica do vključenosti' },
+  { value: 'filo', label: 'Filozofski abecedarij' },
+  { value: 'psiho', label: 'Psihoanalitski abecedarij' },
 ];
 
 function getRightFromLetter(letter) {
