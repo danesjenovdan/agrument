@@ -453,7 +453,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
-    // if (process.env.NODE_ENV) {
+    // if (process.env.NODE_ENV === 'production') {
     //   await request
     //     .post('https://api.djnd.si/sendTweet/')
     //     .send({

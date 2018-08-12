@@ -33,6 +33,15 @@ function getTweetCharactersLeft(text) {
   return remaining;
 }
 
+const CONTENT_LIMIT = 1000;
+
+function getContentCharactersLeft(text) {
+  if (!text) {
+    return CONTENT_LIMIT;
+  }
+  return CONTENT_LIMIT - text.length;
+}
+
 const TYPE_TEXT = {
   published: 'Objavljen',
   votable: 'Na glasovanju',
@@ -65,21 +74,30 @@ function onImageChange(value, name) {
   onValueChange('imageName')(name);
 }
 
-function onSave() {
-  store.emit('editable:save');
-}
-
 class SubmissionEditor extends React.Component {
+  state = {
+    editorText: 0,
+  };
+
   onEditorChange = (value, editorValue) => {
     this.editorValue = true;
     stateToText(editorValue.getEditorState().getCurrentContent())
       .then((text) => {
+        this.setState({ editorText: text });
         store.emit('editable:updateeditor', value, text);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('onEditorChange', error);
       });
+  }
+
+  onSave = () => {
+    if (getContentCharactersLeft(this.state.editorText) < 0) {
+      alert('Vsebina je predolga!');
+      return;
+    }
+    store.emit('editable:save');
   }
 
   renderAuthor() {
@@ -152,6 +170,7 @@ class SubmissionEditor extends React.Component {
 
   render() {
     const { entry, state } = this.props;
+    const { editorText } = this.state;
     // console.log(user.id, entry.author);
     return (
       <div className="row">
@@ -210,7 +229,7 @@ class SubmissionEditor extends React.Component {
                 />
               </div>
               <div className="form-group theeditor">
-                <label htmlFor="submissioneditor-content" className="control-label">Vsebina</label>
+                <label htmlFor="submissioneditor-content" className="control-label">Vsebina ({getContentCharactersLeft(editorText)})</label>
                 <SimpleRichTextEditor
                   format="html"
                   value={this.editorValue || entry.content}
@@ -287,7 +306,7 @@ class SubmissionEditor extends React.Component {
                 className="pull-right"
                 loading={state.editable.saving}
                 error={state.editable.savingError}
-                onClick={onSave}
+                onClick={this.onSave}
               />
             </div>
           </div>
