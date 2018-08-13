@@ -48,7 +48,7 @@ class Article extends React.Component {
       <article className="agrument__article" id={`post-${this.props.data.id}`} data-id={this.props.data.id}>
         <h1 className="agrument__title">{this.props.data.title}</h1>
         {cover}
-        <div className="agrument__source"><a href={this.props.data.imageCaptionURL}>{this.props.data.imageCaption}</a></div>
+        <div className="agrument__source"><a href={this.props.data.imageCaptionURL} target="_blank" rel="noopener noreferrer">{this.props.data.imageCaption}</a></div>
         <div className="row">
           <div className="col-md-2">
             <div className="agrument__date">{date}</div>

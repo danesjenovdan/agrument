@@ -35,7 +35,7 @@ const SubmissionPreview = ({ entry }) => (
       <div className="col-sm-12">
         {entry.imageURL && <img className="img-responsive thumbnail" style={{ marginLeft: 'auto', marginRight: 'auto', maxHeight: 300 }} src={entry.imageURL} alt="preview" />}
         <div className="text-right">
-          <strong><a href={entry.imageCaptionURL} target="_blank">{entry.imageCaption}</a></strong>
+          <strong><a href={entry.imageCaptionURL} target="_blank" rel="noopener noreferrer">{entry.imageCaption}</a></strong>
         </div>
       </div>
     </section>

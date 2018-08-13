@@ -2,6 +2,40 @@ import React from 'react';
 import { filterEditorState } from 'draftjs-filters';
 import RichTextEditor from './RichTextEditor';
 
+function openLinksInNewTab(editorState) {
+  const content = editorState.getCurrentContent();
+  const blockMap = content.getBlockMap();
+
+  const blocks = blockMap.map((block) => {
+    let altered = false;
+
+    const chars = block.getCharacterList().map((char) => {
+      const entKey = char.getEntity();
+      if (entKey != null) {
+        const ent = content.getEntity(entKey);
+        if (ent.getType() === 'LINK') {
+          const linkData = ent.getData();
+          if (!linkData.target) {
+            linkData.target = '_blank';
+            altered = true;
+          }
+        }
+      }
+      return char;
+    });
+
+    return altered ? block.set('characterList', chars) : block;
+  });
+
+  const nextContent = content.merge({
+    blockMap: blockMap.merge(blocks),
+  });
+
+  return editorState.constructor.set(editorState, {
+    currentContent: nextContent,
+  });
+}
+
 /* eslint-disable no-underscore-dangle, react/prop-types */
 export default class SimpleRichTextEditor extends React.Component {
   constructor(...args) {
@@ -75,9 +109,10 @@ export default class SimpleRichTextEditor extends React.Component {
 
     let filteredState = nextEditorValue.getEditorState();
 
-    const shouldFilterPaste =
-      filteredState.getCurrentContent() !== editorValue.getEditorState().getCurrentContent() &&
-      filteredState.getLastChangeType() === 'insert-fragment';
+    const shouldFilterPaste = (
+      filteredState.getCurrentContent() !== editorValue.getEditorState().getCurrentContent()
+      && filteredState.getLastChangeType() === 'insert-fragment'
+    );
 
     if (shouldFilterPaste) {
       filteredState = filterEditorState(
@@ -97,6 +132,8 @@ export default class SimpleRichTextEditor extends React.Component {
         filteredState,
       );
     }
+
+    filteredState = openLinksInNewTab(filteredState);
 
     // eslint-disable-next-line no-param-reassign
     nextEditorValue = nextEditorValue.setEditorState(filteredState);
