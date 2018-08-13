@@ -121,9 +121,9 @@ export default class SimpleRichTextEditor extends React.Component {
           styles: ['ITALIC', 'BOLD', 'UNDERLINE'],
           entities: [{
             type: 'LINK',
-            attributes: ['href'],
+            attributes: ['target', 'url'],
             whitelist: {
-              href: '^https?://',
+              url: '^https?://',
             },
           }],
           maxNesting: 1,

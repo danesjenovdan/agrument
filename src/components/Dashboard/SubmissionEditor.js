@@ -76,6 +76,7 @@ function onImageChange(value, name) {
 
 class SubmissionEditor extends React.Component {
   state = {
+    saveErrorText: null,
     editorText: 0,
   };
 
@@ -83,7 +84,7 @@ class SubmissionEditor extends React.Component {
     this.editorValue = true;
     stateToText(editorValue.getEditorState().getCurrentContent())
       .then((text) => {
-        this.setState({ editorText: text });
+        this.setState({ editorText: text, saveErrorText: null });
         store.emit('editable:updateeditor', value, text);
       })
       .catch((error) => {
@@ -94,10 +95,17 @@ class SubmissionEditor extends React.Component {
 
   onSave = () => {
     if (getContentCharactersLeft(this.state.editorText) < 0) {
-      alert('Vsebina je predolga!');
-      return;
+      this.setState({
+        saveErrorText: 'Vsebina je predolga!',
+      });
+      return false;
     }
     store.emit('editable:save');
+    return true;
+  }
+
+  onSaveClickedSuccess = () => {
+    this.props.history.push('/dash');
   }
 
   renderAuthor() {
@@ -170,7 +178,7 @@ class SubmissionEditor extends React.Component {
 
   render() {
     const { entry, state } = this.props;
-    const { editorText } = this.state;
+    const { editorText, saveErrorText } = this.state;
     // console.log(user.id, entry.author);
     return (
       <div className="row">
@@ -299,6 +307,11 @@ class SubmissionEditor extends React.Component {
             </section> */}
           </article>
           <div className="row">
+            <div className="col-sm-12 text-center">
+              {saveErrorText && (
+                <strong>{saveErrorText}</strong>
+              )}
+            </div>
             <div className="col-sm-4 col-sm-offset-4">
               <LoadingButton
                 block
@@ -307,6 +320,7 @@ class SubmissionEditor extends React.Component {
                 loading={state.editable.saving}
                 error={state.editable.savingError}
                 onClick={this.onSave}
+                onSuccess={this.onSaveClickedSuccess}
               />
             </div>
           </div>
@@ -335,6 +349,7 @@ SubmissionEditor.propTypes = {
     author_name: PropTypes.string,
   }).isRequired,
   state: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
 };
 
 export default withRouter(SubmissionEditor);

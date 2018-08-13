@@ -6,6 +6,7 @@ class LoadingButton extends React.Component {
   state = {
     tid: null,
     didError: false,
+    wasClicked: false,
   };
 
   componentWillReceiveProps(newProps) {
@@ -17,9 +18,13 @@ class LoadingButton extends React.Component {
             didError: newProps.error,
           });
         }, 2500);
+        if (!newProps.error && this.state.wasClicked) {
+          newProps.onSuccess();
+        }
         this.setState({
           tid,
           didError: newProps.error,
+          wasClicked: false,
         });
       } else if (this.state.tid) {
         clearTimeout(this.state.tid);
@@ -33,9 +38,18 @@ class LoadingButton extends React.Component {
     }
   }
 
+  onClick = () => {
+    if (this.props.onClick()) {
+      this.setState({
+        wasClicked: true,
+      });
+    }
+  }
+
   render() {
     const {
       onClick,
+      onSuccess,
       loading,
       error,
       values,
@@ -67,7 +81,7 @@ class LoadingButton extends React.Component {
       <Button
         {...otherProps}
         style={{ backgroundColor: bgColor }}
-        onClick={onClick}
+        onClick={this.onClick}
         disabled={disabled}
         value={textValue}
       />
@@ -80,6 +94,11 @@ LoadingButton.propTypes = {
   loading: PropTypes.bool.isRequired,
   error: PropTypes.bool.isRequired,
   values: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onSuccess: PropTypes.func,
+};
+
+LoadingButton.defaultProps = {
+  onSuccess: () => {},
 };
 
 export default LoadingButton;
