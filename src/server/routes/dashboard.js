@@ -391,13 +391,54 @@ router.get('/pending', (req, res) => {
 });
 
 router.post('/pending/submit/:id', (req, res) => {
-  db('posts')
-    .where('type', 'pending')
-    .andWhere('author', req.user.id)
-    .andWhere('id', req.params.id)
-    .update({
-      type: 'votable',
-    })
+  db.transaction(async (trx) => {
+    const { title, fbtext } = await trx
+      .from('posts')
+      .where('type', 'pending')
+      .andWhere('id', req.params.id)
+      .first('title', 'fbtext');
+
+    const text = fbtext
+      .slice(fbtext.indexOf('\n\n') + 2, fbtext.lastIndexOf('\n\nSlika: '))
+      .replace(/\[.+\]/g, '');
+
+    await trx
+      .from('posts')
+      .where('type', 'pending')
+      .andWhere('author', req.user.id)
+      .andWhere('id', req.params.id)
+      .update({
+        type: 'votable',
+      });
+
+    if (process.env.NODE_ENV === 'production') {
+      await request
+        .post('https://hooks.slack.com/services/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')
+        .send({
+          text: 'Yo, <!channel>! Imamo <https://agrument.danesjenovdan.si/dash|nov agrument>!',
+          attachments: [
+            {
+              fallback: 'Your client is stupid, go vote.',
+              color: '#36a64f',
+              fields: [
+                {
+                  title,
+                  value: text,
+                  short: false,
+                },
+              ],
+              actions: [
+                {
+                  type: 'button',
+                  text: 'Glasuj! 🗳️',
+                  url: 'https://agrument.danesjenovdan.si/dash',
+                },
+              ],
+            },
+          ],
+        });
+    }
+  })
     .then(() => {
       res.json({
         success: 'Submitted for vote',
