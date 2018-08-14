@@ -335,7 +335,10 @@ function initReactions(store) {
 
       shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n\n${url}`).then((footerText) => {
         const fbtext = `${naslov}\n\n${text}\n${footerText}`;
-        const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
+
+        let desc = text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 250);
+        desc = desc.slice(0, desc.lastIndexOf(' '));
+        const description = `${desc} ...`;
 
         store.get().editable.data.set({ fbtext, description }).now();
       });
