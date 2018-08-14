@@ -11,7 +11,7 @@ class Article extends React.Component {
     super(props);
 
     this.state = {
-      longUrl: `http://agrument.danesjenovdan.si/${toSloDateString(props.data.date)}`,
+      longUrl: `https://agrument.danesjenovdan.si/${toSloDateString(props.data.date)}`,
       shortUrl: '',
     };
   }

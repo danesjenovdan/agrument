@@ -51,4 +51,5 @@ async function shortenUrls(urls, text) {
 export {
   shortenUrl,
   shortenUrls,
+  fetchShortUrl,
 };

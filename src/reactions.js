@@ -447,7 +447,6 @@ function initReactions(store) {
             if (err || !res.ok) {
               // noop
             } else {
-              alert('Twitter bi postal, ampak je še disablan!');
               store.emit('votable:fetch');
               if (store.get().submissions.data) {
                 store.emit('submissions:fetch');

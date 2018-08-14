@@ -11,6 +11,8 @@ import {
   getFullImagePath,
   getFullImageURL,
 } from '../utils/image';
+import { fetchShortUrl } from '../../utils/shortener';
+import { toSloDateString } from '../../utils/date';
 
 const router = express.Router();
 
@@ -480,11 +482,14 @@ router.get('/votable', (req, res) => {
 
 router.post('/votable/publish/:id', requireAdmin, (req, res) => {
   db.transaction(async (trx) => {
-    const { tweet, imageURL } = await trx
+    const { tweet, date } = await trx
       .from('posts')
       .where('type', 'votable')
       .andWhere('id', req.params.id)
-      .first('tweet', 'imageURL');
+      .first('tweet', 'date');
+
+    const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
+    const text = `${tweet}\n${url}`;
 
     await trx
       .from('posts')
@@ -494,15 +499,14 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
-    // if (process.env.NODE_ENV === 'production') {
-    //   await request
-    //     .post('https://api.djnd.si/sendTweet/')
-    //     .send({
-    //       tweet_text: tweet,
-    //       image_url: getFullImageURL(imageURL),
-    //       secret: config.TWITTER_SECRET,
-    //     });
-    // }
+    if (process.env.NODE_ENV === 'production') {
+      await request
+        .post('https://api.djnd.si/sendTweet/')
+        .send({
+          tweet_text: text,
+          secret: config.TWITTER_SECRET,
+        });
+    }
   })
     .then(() => {
       res.json({

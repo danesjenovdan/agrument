@@ -15,8 +15,8 @@ import { stateToText } from '../../utils/draft-js-export-text';
 
 import store from '../../store';
 
-const TWITTER_LIMIT = 280;
 const TWITTER_LINK_LENGTH = 23;
+const TWITTER_LIMIT = 280 - TWITTER_LINK_LENGTH - 1; // link + 1 space gets auto added to tweet
 const DUMB_LINK_REGEX = /(?:^|\s)(https?:\/\/[^ ]+\.[^ ]+)/g;
 
 function getTweetCharactersLeft(text) {

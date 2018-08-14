@@ -22,7 +22,7 @@ class SubscribeForm extends React.Component {
     if (validateEmail(this.emailInput.value)) {
       this.setState({ disableButton: true });
       request
-        .post('http://agrument.danesjenovdan.si/subscribe/')
+        .post('https://agrument.danesjenovdan.si/subscribe/')
         .send({
           email: this.emailInput.value,
           sig: this.checkBox.state.checked ? 1 : 0,
@@ -75,7 +75,7 @@ class SubscribeForm extends React.Component {
       <form className="agrument__subscribe" onSubmit={this.handleSubmit}>
         {content}
         <div className="agrument__rss-container">
-          <Button block external href="http://agrument.danesjenovdan.si/rss/">
+          <Button block external href="https://agrument.danesjenovdan.si/rss/">
             RSS <span className="icon icon-rss" />
           </Button>
         </div>
