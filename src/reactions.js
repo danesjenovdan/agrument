@@ -333,8 +333,8 @@ function initReactions(store) {
       const timestamp = store.get().editable.data.date;
       const url = `${window.location.origin}/${toSloDateString(timestamp)}`;
 
-      shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n${url}`).then((footerText) => {
-        const fbtext = `${naslov}\n${text}${footerText}`;
+      shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n\n${url}`).then((footerText) => {
+        const fbtext = `${naslov}\n\n${text}\n${footerText}`;
         const description = `${text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 237)}...`;
 
         store.get().editable.data.set({ fbtext, description }).now();

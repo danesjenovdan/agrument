@@ -144,7 +144,7 @@ class MarkupGenerator {
 
   insertLineBreak() {
     if (this.currentBlock > 0) {
-      // this.output.push('\n');
+      this.output.push('\n');
     }
   }
 
