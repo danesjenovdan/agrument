@@ -38,6 +38,10 @@
 
   .component__entry {
     margin-bottom: 35px;
+
+    .entry__buttons .component__button {
+      margin-bottom: 10px;
+    }
   }
 
   hr {
@@ -219,21 +223,35 @@
   .entry__votes {
     margin-top: 10px;
 
-    .component__social-pulse-btn {
-      background-color: $agrument-teal;
-      width: 30px;
-      height: 30px;
-      margin-bottom: 5px;
-
-      .pulse {
-        border-color: $agrument-teal;
-      }
-    }
-
     .entry__votes-error {
       text-align: center;
       margin: 10px 0;
       font-weight: 700;
+    }
+
+    .vote-button {
+      display: flex;
+      margin-bottom: 10px;
+
+      .vote-button__icon {
+        .component__social-pulse-btn {
+          background-color: $agrument-teal;
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+          line-height: 20px;
+
+          .pulse {
+            border-color: $agrument-teal;
+          }
+        }
+      }
+
+      .vote-button__text {
+        align-items: center;
+        display: flex;
+        margin-left: 8px;
+      }
     }
   }
 
@@ -248,5 +266,11 @@
     font-weight: bold;
     text-align: center;
     padding: 5px;
+  }
+
+  .component__submission-preview {
+    .agrument__text {
+      margin-bottom: 20px;
+    }
   }
 }

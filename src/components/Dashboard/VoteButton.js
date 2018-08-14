@@ -23,14 +23,14 @@ function submitVote(post, vote) {
 }
 
 const VoteButton = ({ entry, voteType }) => (
-  <div className="text-center">
-    <div>
-      <button className="component__social-pulse-btn" onClick={submitVote(entry.id, voteType)}>
+  <div className="vote-button">
+    <div className="vote-button__icon">
+      <button type="button" className="component__social-pulse-btn" onClick={submitVote(entry.id, voteType)}>
         <div className="pulse" />
         <div className={`glyphicon glyphicon-${iconMap[voteType]}`} />
       </button>
     </div>
-    <div>
+    <div className="vote-button__text">
       {entry.votes.data.filter(v => v.vote === voteType).map(v => v.author_name).join(', ')}
     </div>
   </div>
