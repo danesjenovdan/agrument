@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import store from '../../store';
 
 const iconMap = {
-  for: 'thumbs-up',
-  against: 'thumbs-down',
-  veto: 'remove',
+  for: 'glyphicon glyphicon-thumbs-up',
+  against: 'glyphicon glyphicon-thumbs-down',
+  veto: 'icon-custom-veto',
 };
 
 function submitVote(post, vote) {
@@ -27,7 +27,7 @@ const VoteButton = ({ entry, voteType }) => (
     <div className="vote-button__icon">
       <button type="button" className="component__social-pulse-btn" onClick={submitVote(entry.id, voteType)}>
         <div className="pulse" />
-        <div className={`glyphicon glyphicon-${iconMap[voteType]}`} />
+        <div className={iconMap[voteType]} />
       </button>
     </div>
     <div className="vote-button__text">
