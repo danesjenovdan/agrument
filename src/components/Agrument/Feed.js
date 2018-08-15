@@ -9,7 +9,6 @@ import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
 // import Button from '../FormControl/Button';
 import RenderSpinner from '../../hoc/RenderSpinner';
-import ScrollBodyOnFirstRender from '../../hoc/ScrollBodyOnFirstRender';
 import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';
 import { toSloDateString } from '../../utils/date';
 
@@ -27,7 +26,6 @@ class Feed extends React.Component {
       shouldLoadAbove: !!this.initialDate,
       shouldLoadBelow: true,
       activePost: null,
-      firstLoad: true,
     };
   }
 
@@ -132,7 +130,7 @@ class Feed extends React.Component {
 
   lazyLoadBelow() {
     if (!this.state.loading && this.state.shouldLoadBelow) {
-      this.setState({ loading: true, firstLoad: false });
+      this.setState({ loading: true });
       const lastDate = this.state.data[this.state.data.length - 1].date;
       this.dataRequest = getOlderPost(lastDate)
         .end((err, res) => this.updateArticleState(err, res, false));
@@ -144,7 +142,7 @@ class Feed extends React.Component {
       && !this.state.loading
       && this.state.shouldLoadAbove
       && !this.oldHeight) {
-      this.setState({ loading: true, firstLoad: false });
+      this.setState({ loading: true });
       const firstDate = this.state.data[0].date;
       this.dataRequest = getNewerPost(firstDate)
         .end((err, res) => this.updateArticleState(err, res, true));
@@ -155,9 +153,9 @@ class Feed extends React.Component {
     if (this.dontChangeURLOnScroll) {
       return;
     }
-    const newPath = `/${toSloDateString(post.date)}`;
+    const newPath = post ? `/${toSloDateString(post.date)}` : '/';
     if (window.location.pathname !== newPath) {
-      this.props.history.push(newPath, { postId: +post.id });
+      this.props.history.push(newPath, { postId: post ? +post.id : 0 });
       this.setState({ activePost: post });
     }
   }
@@ -181,12 +179,24 @@ class Feed extends React.Component {
       //   ));
       // }
 
-      const articles = this.state.data.map((post, i) => (
-        <ScrollBodyOnFirstRender key={post.id} selector={`#post-${post.id}`} enabled={this.state.firstLoad && i === 0}>
-          <WaypointBlock onEnterFunc={() => this.changeActiveArticle(post)}>
-            <Article data={post} />
-          </WaypointBlock>
-        </ScrollBodyOnFirstRender>
+      content.push((
+        <Waypoint
+          key="top-enter-waypoint"
+          onEnter={() => this.changeActiveArticle()}
+          topOffset="100px"
+        />
+      ));
+      content.push((
+        <Waypoint
+          key="top-leave-waypoint"
+          onLeave={() => this.changeActiveArticle(this.state.data[0])}
+        />
+      ));
+
+      const articles = this.state.data.map(post => (
+        <WaypointBlock key={post.id} onEnterFunc={() => this.changeActiveArticle(post)}>
+          <Article data={post} />
+        </WaypointBlock>
       ));
       content.push(...articles);
 

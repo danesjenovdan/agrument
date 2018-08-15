@@ -14,7 +14,7 @@ import passwordHashAndSalt from 'password-hash-and-salt';
 import _ from 'lodash';
 import db from './database';
 // import appMiddleware from './middleware/app';
-import getAgrument from './routes/agrument';
+import agrumentRouter from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';
 import apiRouter from './routes/api';
@@ -140,7 +140,7 @@ app.use(passport.session());
 
 app.use('/api', authRouter);
 
-app.get('/api/agrument', getAgrument);
+app.use('/api/agrument', agrumentRouter);
 
 app.use('/api/dash', dashRouter);
 

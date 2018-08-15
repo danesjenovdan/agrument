@@ -1,9 +1,12 @@
+import express from 'express';
 import { isArray } from 'lodash';
 import db from '../database';
 import { toDateTimestamp } from '../../utils/date';
 import { getFullImageURL } from '../utils/image';
 
-function getAgrument(req, res) {
+const router = express.Router();
+
+router.get('/', (req, res) => {
   let query = db('posts')
     .where('type', 'published');
   if (req.query.all) {
@@ -85,6 +88,6 @@ function getAgrument(req, res) {
         error: err.message,
       });
     });
-}
+});
 
-export default getAgrument;
+export default router;

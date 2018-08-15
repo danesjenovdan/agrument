@@ -4,7 +4,8 @@ import Waypoint from 'react-waypoint';
 
 class WaypointBlock extends React.Component {
   handleWaypointEnter = (event, position) => {
-    if ((event.previousPosition === 'below' && position === 'top') || (event.previousPosition === 'above' && position === 'bottom')) {
+    if ((event.previousPosition === 'below' && position === 'top')
+      || (event.previousPosition === 'above' && position === 'bottom')) {
       this.props.onEnterFunc();
     }
   }
