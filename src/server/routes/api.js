@@ -4,7 +4,7 @@ import db from '../database';
 
 const router = express.Router();
 
-router.get('/last_agrument', (req, res) => {
+router.get('/last-agrument', (req, res) => {
   db('posts')
     .where('type', 'published')
     .orderBy('date', 'desc')
@@ -16,14 +16,13 @@ router.get('/last_agrument', (req, res) => {
     });
 });
 
-router.get('/word_count', (req, res) => {
+router.get('/word-count', (req, res) => {
   db('posts')
     .where('type', 'published')
-    .select()
+    .select('content')
     .then((data) => {
       const allWords = data
-        .map(e => e.content)
-        .map(e => (e ? e.split(' ').length : 0));
+        .map(e => (e.content ? e.content.split(' ').length : 0));
       res.json({
         count: _.sum(allWords),
       });

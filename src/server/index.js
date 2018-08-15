@@ -57,6 +57,8 @@ app.use('/media', express.static(path.resolve(__dirname, '../../media')));
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' })); // parse x-www-form-urlencoded
 app.use(bodyParser.json({ extended: true, limit: '50mb' })); // parse json
 
+app.use('/get', apiRouter);
+
 passport.use(new LocalStrategy((username, pass, done) => {
   db('users')
     .where('username', username)
@@ -135,8 +137,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', authRouter);
-
-app.use('/api', apiRouter);
 
 app.get('/api/agrument', getAgrument);
 
