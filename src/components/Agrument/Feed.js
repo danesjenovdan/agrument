@@ -238,10 +238,15 @@ class Feed extends React.Component {
       <Helmet>
         <title>{this.state.activePost.title}</title>
         <meta name="description" content={this.state.activePost.description} />
-        <meta property="og:title" content={this.state.activePost.title} />
         <meta property="og:type" content="article" />
+        <meta property="og:title" content={this.state.activePost.title} />
         <meta property="og:description" content={this.state.activePost.description} />
         <meta property="og:image" content={this.state.activePost.imageURL} />
+        <meta name="twitter:creator" content="@danesjenovdan" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={this.state.activePost.title} />
+        <meta name="twitter:description" content={this.state.activePost.description} />
+        <meta name="twitter:image" content={this.state.activePost.imageURL} />
       </Helmet>
     ) : null;
     return (
