@@ -236,7 +236,7 @@ class Feed extends React.Component {
       ));
     }
     const imageURL = this.state.activePost
-      ? `https://agrument.danesjenovdan.si${getFullImageURL(this.state.activePost.imageURL)}`
+      ? `https://agrument.danesjenovdan.si${this.state.activePost.imageURL}`
       : null;
     const meta = this.state.activePost ? (
       <Helmet>
