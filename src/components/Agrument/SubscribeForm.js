@@ -68,11 +68,11 @@ class SubscribeForm extends React.Component {
     return (
       <form className="agrument__subscribe" onSubmit={this.handleSubmit}>
         {content}
-        {/* <div className="agrument__rss-container">
+        <div className="agrument__rss-container">
           <Button block external href="https://agrument.danesjenovdan.si/rss/">
             RSS <span className="icon icon-rss" />
           </Button>
-        </div> */}
+        </div>
       </form>
     );
   }
