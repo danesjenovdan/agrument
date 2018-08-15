@@ -2,7 +2,7 @@
  * This is the entry point for webpack!
  */
 import React from 'react';
-import { render } from 'react-dom';
+import { render, hydrate } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import './styles/general.scss';
@@ -15,4 +15,4 @@ const RootComponent = () => (
   </BrowserRouter>
 );
 
-render(<RootComponent />, document.getElementById('root'));
+hydrate(<RootComponent />, document.getElementById('root'));

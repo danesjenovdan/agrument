@@ -33,10 +33,11 @@ if (isProd) {
 }
 
 activePlugins.push(new HtmlWebpackPlugin({
-  template: './index.html',
+  template: './template.html',
   hash: false,
   inject: 'body',
   cache: true,
+  filename: 'template.html',
 }));
 
 module.exports = {
@@ -159,6 +160,7 @@ module.exports = {
     children: false,
   },
   devServer: {
+    index: 'template.html',
     contentBase: './src',
     historyApiFallback: {
       index: '/',

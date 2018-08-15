@@ -27,12 +27,21 @@ class Feed extends React.Component {
       shouldLoadBelow: true,
       activePost: null,
     };
+
+    if (props.staticContext) {
+      if (props.staticContext.data && props.staticContext.data.post) {
+        this.state.data = [props.staticContext.data.post];
+        this.state.activePost = props.staticContext.data.post;
+      }
+    }
   }
 
   componentDidMount() {
     const { history } = this.props;
 
-    this.dataRequest = getInitialPost(this.initialDate).end(this.setInitialArticleState);
+    if (!this.state.activePost) {
+      this.dataRequest = getInitialPost(this.initialDate).end(this.setInitialArticleState);
+    }
 
     this.cancelListen = history.listen((event) => {
       if (event.state && event.state.postId && event.action === 'POP') {
@@ -247,6 +256,11 @@ class Feed extends React.Component {
 Feed.propTypes = {
   location: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
+  staticContext: PropTypes.shape(),
+};
+
+Feed.defaultProps = {
+  staticContext: {},
 };
 
 export default withRouter(Feed);

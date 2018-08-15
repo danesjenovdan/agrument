@@ -2,7 +2,6 @@
  * This is the entry point for the production server, don't include this file in anything that would
  * pass trough webpack!
  */
-import fs from 'fs-extra';
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
@@ -13,7 +12,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import passwordHashAndSalt from 'password-hash-and-salt';
 import _ from 'lodash';
 import db from './database';
-// import appMiddleware from './middleware/app';
+import renderApp from './middleware/app';
 import agrumentRouter from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';
@@ -150,15 +149,7 @@ app.get(['/api', '/api/*'], (req, res) => {
   });
 });
 
-// app.get('*', appMiddleware);
-app.get('*', (req, res) => {
-  const filePath = path.resolve(__dirname, '../../dist/index.html');
-  if (fs.existsSync(filePath)) {
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send('index.html not found; client is probably not built');
-  }
-});
+app.get('*', renderApp);
 
 app.use(sendErrorToSlackMiddleware);
 

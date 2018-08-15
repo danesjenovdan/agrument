@@ -30,7 +30,7 @@ class Article extends React.Component {
   }
 
   render() {
-    const date = new Date(this.props.data.date).toLocaleDateString('sl');
+    const date = toSloDateString(this.props.data.date, true);
     let cover;
     if (!this.props.data.embedCode) {
       cover = <img src={this.props.data.imageURL} className="img-responsive agrument__image" alt={this.props.data.imageCaption} />;
