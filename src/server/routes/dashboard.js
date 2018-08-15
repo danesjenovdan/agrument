@@ -488,8 +488,8 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
       .andWhere('id', req.params.id)
       .first('tweet', 'date');
 
-    const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
-    const text = `${tweet}\n${url}`;
+    // const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
+    // const text = `${tweet}\n${url}`;
 
     await trx
       .from('posts')
@@ -499,14 +499,14 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
-    if (process.env.NODE_ENV === 'production') {
-      await request
-        .post('https://api.djnd.si/sendTweet/')
-        .send({
-          tweet_text: text,
-          secret: config.TWITTER_SECRET,
-        });
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   await request
+    //     .post('https://api.djnd.si/sendTweet/')
+    //     .send({
+    //       tweet_text: text,
+    //       secret: config.TWITTER_SECRET,
+    //     });
+    // }
   })
     .then(() => {
       res.json({
@@ -514,6 +514,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
       });
     })
     .catch((err) => {
+      console.error(err);
       res.status(500).json({
         error: err.message,
       });
