@@ -168,7 +168,7 @@ module.exports = {
     compress: isProd,
     stats: 'minimal',
     proxy: [{
-      context: ['/media/**', '/api/**', '/get/**'],
+      context: ['/media/**', '/api/**', '/get/**', '/rss*', '/rss/**'],
       target: 'http://localhost:8080',
     }],
   },

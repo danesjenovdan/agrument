@@ -18,6 +18,7 @@ import getAgrument from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';
 import apiRouter from './routes/api';
+import feedRouter from './routes/feed';
 import { sendErrorToSlack, sendErrorToSlackMiddleware } from './slack';
 import config from '../../config';
 
@@ -58,6 +59,7 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' })); // parse x-w
 app.use(bodyParser.json({ extended: true, limit: '50mb' })); // parse json
 
 app.use('/get', apiRouter);
+app.use('/rss', feedRouter);
 
 passport.use(new LocalStrategy((username, pass, done) => {
   db('users')
