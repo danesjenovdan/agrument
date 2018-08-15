@@ -21,38 +21,26 @@ async function getFeed() {
     link: 'https://agrument.danesjenovdan.si/',
     image: 'https://danesjenovdan.si/img/agrum.png',
     favicon: 'https://danesjenovdan.si/favicon.ico',
-    // copyright: 'Danes je nov dan',
     updated: new Date(posts[0].date),
     generator: 'feed',
     feedLinks: {
       json: 'https://agrument.danesjenovdan.si/rss/json',
       atom: 'https://agrument.danesjenovdan.si/rss/atom',
     },
-    author: {
-      name: 'Danes je nov dan',
-      email: 'vsi@danesjenovdan.si',
-      link: 'https://danesjenovdan.si',
-    },
   });
 
   posts.forEach((post) => {
     const url = `https://agrument.danesjenovdan.si/${toSloDateString(post.date)}`;
+    const imageURL = `https://agrument.danesjenovdan.si${getFullImageURL(post.imageURL)}`;
     feed.addItem({
       guid: url,
       title: post.title,
       id: url,
       link: url,
       description: post.description,
-      content: post.content,
-      author: [
-        {
-          name: 'Danes je nov dan',
-          email: 'vsi@danesjenovdan.si',
-          link: 'https://danesjenovdan.si',
-        },
-      ],
+      content: `<img src="${imageURL}"><br>${post.content}`,
       date: new Date(post.date),
-      image: `https://agrument.danesjenovdan.si${getFullImageURL(post.imageURL)}`,
+      image: imageURL,
     });
   });
 
