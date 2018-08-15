@@ -4,7 +4,7 @@ tmux new-session -d -s agrumentdev
 tmux send-keys "npm start" C-m
 
 tmux split-window -h
-tmux send-keys "npm run api" C-m
+tmux send-keys "npm run api:dev" C-m
 
 tmux split-window -v
 tmux send-keys "code ." C-m

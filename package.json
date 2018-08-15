@@ -12,6 +12,7 @@
     "serve": "node ./dist_server/server",
     "build-serve": "npm run build && cross-env PORT=8005 npm run serve",
     "api": "npm run build:server && cross-env PORT=8080 npm run serve",
+    "api:dev": "cross-env PORT=8080 nodemon --watch ./src --exec babel-node ./src/server",
     "lint": "eslint ./seeds ./migrations ./src",
     "deploy:setup": "cross-env NODE_ENV=production pm2 deploy production setup",
     "deploy": "cross-env NODE_ENV=production pm2 deploy production"
@@ -40,6 +41,7 @@
     "express-error-slack": "^1.0.2",
     "express-session": "^1.15.6",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "feed": "^2.0.1",
     "file-loader": "^1.1.11",
     "freezer-js": "^0.14.0",
     "fs-extra": "^7.0.0",
@@ -48,6 +50,7 @@
     "knex": "^0.15.2",
     "lodash": "^4.17.10",
     "node-sass": "^4.9.3",
+    "nodemon": "^1.18.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "password-hash-and-salt": "^0.1.4",
