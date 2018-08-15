@@ -53,10 +53,9 @@ class MarkupGenerator {
         const blockDepth = block.getDepth();
         const lastBlock = this.getLastBlock();
         const lastBlockType = lastBlock ? lastBlock.getType() : null;
-        const lastBlockDepth =
-          lastBlock && canHaveDepth(lastBlockType)
-            ? lastBlock.getDepth()
-            : null;
+        const lastBlockDepth = lastBlock && canHaveDepth(lastBlockType)
+          ? lastBlock.getDepth()
+          : null;
         if (lastBlockType !== blockType && lastBlockDepth !== blockDepth - 1) {
           this.insertLineBreak();
           // Insert an additional line break if following opposite list type.
@@ -72,10 +71,9 @@ class MarkupGenerator {
         const blockDepth = block.getDepth();
         const lastBlock = this.getLastBlock();
         const lastBlockType = lastBlock ? lastBlock.getType() : null;
-        const lastBlockDepth =
-          lastBlock && canHaveDepth(lastBlockType)
-            ? lastBlock.getDepth()
-            : null;
+        const lastBlockDepth = lastBlock && canHaveDepth(lastBlockType)
+          ? lastBlock.getDepth()
+          : null;
         if (lastBlockType !== blockType && lastBlockDepth !== blockDepth - 1) {
           this.insertLineBreak();
           // Insert an additional line break if following opposite list type.
@@ -123,19 +121,11 @@ class MarkupGenerator {
     // items that are of greater depth)
     let index = this.currentBlock - 1;
     let prevBlock = this.blocks[index];
-    while (
-      prevBlock &&
-      canHaveDepth(prevBlock.getType()) &&
-      prevBlock.getDepth() > blockDepth
-    ) {
+    while (prevBlock && canHaveDepth(prevBlock.getType()) && prevBlock.getDepth() > blockDepth) {
       index -= 1;
       prevBlock = this.blocks[index];
     }
-    if (
-      !prevBlock ||
-      prevBlock.getType() !== blockType ||
-      prevBlock.getDepth() !== blockDepth
-    ) {
+    if (!prevBlock || prevBlock.getType() !== blockType || prevBlock.getDepth() !== blockDepth) {
       this.listItemCounts[blockDepth] = 0;
     }
     this.listItemCounts[blockDepth] = this.listItemCounts[blockDepth] + 1;
@@ -176,7 +166,8 @@ class MarkupGenerator {
           const url = (data.url && encodeURL(data.url)) || '';
           this.urls.push(url);
           return `${content.trim()} [${url}] `;
-        } else if (entity != null && entity.getType() === ENTITY_TYPE.IMAGE) {
+        }
+        if (entity != null && entity.getType() === ENTITY_TYPE.IMAGE) {
           return '';
         }
         return content;

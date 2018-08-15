@@ -26,12 +26,14 @@ class List extends React.Component {
       return;
     }
     if (state.published.data && state.published.data.length > PER_PAGE) {
-      const offsetDate = this.state.firstDateForOffset || state.published.data[0].date;
-      const newOffset = this.state.currentPageOffset + PER_PAGE;
-      store.emit('published:fetch', offsetDate, newOffset);
-      this.setState({
-        firstDateForOffset: offsetDate,
-        currentPageOffset: newOffset,
+      this.setState((prevState) => {
+        const offsetDate = prevState.firstDateForOffset || state.published.data[0].date;
+        const newOffset = prevState.currentPageOffset + PER_PAGE;
+        store.emit('published:fetch', offsetDate, newOffset);
+        return {
+          firstDateForOffset: offsetDate,
+          currentPageOffset: newOffset,
+        };
       });
       document.documentElement.scrollTop = 0;
     }
@@ -43,12 +45,14 @@ class List extends React.Component {
       return;
     }
     if (this.state.currentPageOffset > 0) {
-      const offsetDate = this.state.firstDateForOffset || state.published.data[0].date;
-      const newOffset = Math.max(0, this.state.currentPageOffset - PER_PAGE);
-      store.emit('published:fetch', offsetDate, newOffset);
-      this.setState({
-        firstDateForOffset: offsetDate,
-        currentPageOffset: newOffset,
+      this.setState((prevState) => {
+        const offsetDate = prevState.firstDateForOffset || state.published.data[0].date;
+        const newOffset = Math.max(0, prevState.currentPageOffset - PER_PAGE);
+        store.emit('published:fetch', offsetDate, newOffset);
+        return {
+          firstDateForOffset: offsetDate,
+          currentPageOffset: newOffset,
+        };
       });
       document.documentElement.scrollTop = 0;
     }

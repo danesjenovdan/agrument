@@ -7,7 +7,7 @@ import { concat, last } from 'lodash';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
-import Button from '../FormControl/Button';
+// import Button from '../FormControl/Button';
 import RenderSpinner from '../../hoc/RenderSpinner';
 import ScrollBodyOnFirstRender from '../../hoc/ScrollBodyOnFirstRender';
 import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';

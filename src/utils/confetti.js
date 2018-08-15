@@ -1,3 +1,4 @@
+/* eslint-disable */
 // confetti
 // Modified from https://code.google.com/p/pamelafox-samplecode/ (r343).
 // The original code is under the Apache 2.0 license.

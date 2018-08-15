@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import RenderSpinner from '../../../hoc/RenderSpinner';
 import TriangleHeading from '../../Card/TriangleHeading';
-import SubmissionEditor from '../../../components/Dashboard/SubmissionEditor';
+import SubmissionEditor from '../SubmissionEditor';
 import { parseDate } from '../../../utils/date';
 
 import store from '../../../store';

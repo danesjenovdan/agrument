@@ -1,15 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { uniqueId } from 'lodash';
 import Button from './Button';
 
 class FileChooser extends React.Component {
-  componentWillMount() {
-    const id = uniqueId('filechooser-');
-    this.setState({ id });
-  }
-
   onClick = () => {
     if (this.input) {
       this.input.click();

@@ -54,6 +54,7 @@ router.get('/', (req, res) => {
       res.send(feed.rss2());
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.error(err);
       res.send(err);
     });
@@ -66,6 +67,7 @@ router.get('/atom', (req, res) => {
       res.send(feed.atom1());
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.error(err);
       res.send(err);
     });
@@ -78,6 +80,7 @@ router.get('/json', (req, res) => {
       res.send(feed.json1());
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.error(err);
       res.send(err);
     });

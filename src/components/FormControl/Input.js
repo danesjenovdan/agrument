@@ -6,7 +6,7 @@ import classnames from 'classnames';
 class Input extends React.Component {
   componentWillMount() {
     const id = uniqueId('input-');
-    this.setState({ id, checked: false });
+    this.setState({ id });
   }
 
   get value() {
@@ -22,7 +22,9 @@ class Input extends React.Component {
   }
 
   render() {
-    const { inline, label, value, placeholder, type, onChange } = this.props;
+    const {
+      inline, label, value, placeholder, type, onChange,
+    } = this.props;
     const classes = classnames(
       'component__input',
       { 'component__input--inline': inline },

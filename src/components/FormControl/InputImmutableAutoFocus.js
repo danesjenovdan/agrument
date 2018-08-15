@@ -20,4 +20,9 @@ Input.propTypes = {
   inline: PropTypes.bool,
 };
 
+Input.defaultProps = {
+  value: '',
+  inline: false,
+};
+
 export default Input;

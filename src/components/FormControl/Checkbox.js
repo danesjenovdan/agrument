@@ -6,11 +6,10 @@ import classnames from 'classnames';
 class Checkbox extends React.Component {
   componentWillMount() {
     const id = uniqueId('checkbox-');
-    this.setState({ id, checked: false });
+    this.setState({ id });
   }
 
   handleChange = (event) => {
-    this.setState({ checked: event.target.checked });
     if (this.props.onChange) {
       this.props.onChange(event);
     }

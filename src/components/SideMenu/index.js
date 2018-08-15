@@ -12,7 +12,7 @@ class SideMenu extends React.Component {
   }
 
   toggleMenu() {
-    this.setState({ isOpen: !this.state.isOpen });
+    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
   }
 
   render() {
@@ -22,7 +22,7 @@ class SideMenu extends React.Component {
     );
     return (
       <div className={classes}>
-        <button className="sidemenu__toggle" onClick={() => { this.toggleMenu(); }}>
+        <button className="sidemenu__toggle" type="button" onClick={() => { this.toggleMenu(); }}>
           <div className="sidemenu__toggle__icon">
             <div className="icon-menu" />
           </div>
@@ -30,7 +30,7 @@ class SideMenu extends React.Component {
         </button>
         <div className="sidemenu__content">
           <div className="sidemenu__header">
-            <button className="sidemenu__close" onClick={() => { this.toggleMenu(); }}>
+            <button className="sidemenu__close" type="button" onClick={() => { this.toggleMenu(); }}>
               <div>×</div>
             </button>
             <div className="sidemenu__title">Danes je nov dan</div>
