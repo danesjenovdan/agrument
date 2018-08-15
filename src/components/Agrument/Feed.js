@@ -11,6 +11,7 @@ import Spinner from '../Spinner';
 import RenderSpinner from '../../hoc/RenderSpinner';
 import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';
 import { toSloDateString } from '../../utils/date';
+import { getFullImageURL } from '../../utils/image';
 
 class Feed extends React.Component {
   constructor(props) {
@@ -234,6 +235,9 @@ class Feed extends React.Component {
         </div>
       ));
     }
+    const imageURL = this.state.activePost
+      ? `https://agrument.danesjenovdan.si${getFullImageURL(this.state.activePost.imageURL)}`
+      : null;
     const meta = this.state.activePost ? (
       <Helmet>
         <title>{this.state.activePost.title}</title>
@@ -241,12 +245,12 @@ class Feed extends React.Component {
         <meta property="og:type" content="article" />
         <meta property="og:title" content={this.state.activePost.title} />
         <meta property="og:description" content={this.state.activePost.description} />
-        <meta property="og:image" content={this.state.activePost.imageURL} />
+        <meta property="og:image" content={imageURL} />
         <meta name="twitter:creator" content="@danesjenovdan" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={this.state.activePost.title} />
         <meta name="twitter:description" content={this.state.activePost.description} />
-        <meta name="twitter:image" content={this.state.activePost.imageURL} />
+        <meta name="twitter:image" content={imageURL} />
       </Helmet>
     ) : null;
     return (
