@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import imageType from 'image-type';
-import { getFullImagePath, getFullImageURL } from '../../utils/image';
 
 const DATA_URL_REGEX = /^data:.+\/(.+);base64,(.*)$/;
 
@@ -35,6 +34,17 @@ async function saveDataUrlImageToFile(dataUrl, imageName) {
     throw new Error('data url was not and image');
   }
   throw new Error('data url did not match regex');
+}
+
+function getFullImagePath(imageName) {
+  return `./media/${imageName}`;
+}
+
+function getFullImageURL(imageName) {
+  if (fs.existsSync(getFullImagePath(imageName))) {
+    return `/media/${imageName}`;
+  }
+  return 'https://danesjenovdan.si/img/djndog.png';
 }
 
 export {

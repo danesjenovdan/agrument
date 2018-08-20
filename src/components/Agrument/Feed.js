@@ -11,7 +11,6 @@ import Spinner from '../Spinner';
 import RenderSpinner from '../../hoc/RenderSpinner';
 import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';
 import { toSloDateString } from '../../utils/date';
-import { getFullImageURL } from '../../utils/image';
 
 class Feed extends React.Component {
   constructor(props) {
