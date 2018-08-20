@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import imageType from 'image-type';
+import config from '../../../config';
 
 const DATA_URL_REGEX = /^data:.+\/(.+);base64,(.*)$/;
 
@@ -27,8 +28,8 @@ async function saveDataUrlImageToFile(dataUrl, imageName) {
     const buffer = Buffer.from(matches[2], 'base64');
     const type = imageType(buffer);
     if (type) {
-      await fs.ensureDir('./media');
-      await fs.writeFile(`./media/${newImageName}.${type.ext}`, buffer);
+      await fs.ensureDir(config.MEDIA_PATH);
+      await fs.writeFile(`${config.MEDIA_PATH}${newImageName}.${type.ext}`, buffer);
       return `${newImageName}.${type.ext}`;
     }
     throw new Error('data url was not and image');
@@ -37,12 +38,12 @@ async function saveDataUrlImageToFile(dataUrl, imageName) {
 }
 
 function getFullImagePath(imageName) {
-  return `./media/${imageName}`;
+  return `${config.MEDIA_PATH}${imageName}`;
 }
 
 function getFullImageURL(imageName) {
   if (fs.existsSync(getFullImagePath(imageName))) {
-    return `/media/${imageName}`;
+    return `${config.MEDIA_URL}${imageName}`;
   }
   return 'https://danesjenovdan.si/img/djndog.png';
 }
