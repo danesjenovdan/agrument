@@ -2,21 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-class SideMenuItem extends React.Component {
-  render() {
-    const { text, link, active, color } = this.props;
-    const classes = classnames(
-      'sidemenu__item',
-      { 'active': active }
-    );
-    return (
-      <div className={classes}>
-        <div className="sidemenu__item-ribbon" style={{ backgroundColor: color }} />
-        <a href={link} target="_blank" rel="noopener noreferrer">{text}</a>
-      </div>
-    );
-  }
-}
+const SideMenuItem = ({
+  text,
+  link,
+  active,
+  color,
+}) => {
+  const classes = classnames('sidemenu__item', { active });
+  return (
+    <div className={classes}>
+      <div className="sidemenu__item-ribbon" style={{ backgroundColor: color }} />
+      <a href={link} target="_blank" rel="noopener noreferrer">{text}</a>
+    </div>
+  );
+};
 
 SideMenuItem.propTypes = {
   text: PropTypes.string.isRequired,

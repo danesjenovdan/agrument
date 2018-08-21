@@ -36,7 +36,7 @@ class SideMenu extends React.Component {
             <div className="sidemenu__title">Danes je nov dan</div>
             <div className="sidemenu__title-back">Danes je nov dan</div>
           </div>
-          <SideMenuItem color="#c2d8d8" text="Agrument" link="https://agrument.danesjenovdan.si" active={true} />
+          <SideMenuItem color="#c2d8d8" text="Agrument" link="https://agrument.danesjenovdan.si" active />
           <SideMenuItem color="#e3c3bf" text="Občasnik" link="https://danesjenovdan.si/obcasnik" />
           <SideMenuItem color="#e3c3bf" text="Projekti" link="https://danesjenovdan.si/projekti" />
           <SideMenuItem color="#c2d8d8" text="Krivi" link="https://danesjenovdan.si/krivi" />
