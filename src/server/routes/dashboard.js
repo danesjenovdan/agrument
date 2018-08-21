@@ -13,6 +13,7 @@ import {
 } from '../utils/image';
 import { fetchShortUrl } from '../../utils/shortener';
 import { toSloDateString } from '../../utils/date';
+import { sendErrorToSlack } from '../slack';
 
 const router = express.Router();
 
@@ -489,9 +490,6 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
       .andWhere('id', req.params.id)
       .first('tweet', 'date');
 
-    // const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
-    // const text = `${tweet}\n${url}`;
-
     await trx
       .from('posts')
       .where('type', 'votable')
@@ -500,14 +498,27 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
-    // if (process.env.NODE_ENV === 'production') {
-    //   await request
-    //     .post('https://api.djnd.si/sendTweet/')
-    //     .send({
-    //       tweet_text: text,
-    //       secret: config.TWITTER_SECRET,
-    //     });
-    // }
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
+        const text = `${tweet}\n${url}`;
+        await request
+          .post('https://api.djnd.si/sendTweet/')
+          .send({
+            tweet_text: text,
+            secret: config.TWITTER_SECRET,
+          });
+      } catch (error) {
+        console.error('Twitter post ERRORED!');
+        console.error(error);
+        sendErrorToSlack('twitterPost', error, (error2) => {
+          if (error2) {
+            // eslint-disable-next-line no-console
+            console.error(error2);
+          }
+        });
+      }
+    }
   })
     .then(() => {
       res.json({
@@ -515,7 +526,6 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
       });
     })
     .catch((err) => {
-      console.error(err);
       res.status(500).json({
         error: err.message,
       });
