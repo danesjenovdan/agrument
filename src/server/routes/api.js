@@ -1,8 +1,11 @@
 import _ from 'lodash';
 import express from 'express';
+import cors from 'cors';
 import db from '../database';
 
 const router = express.Router();
+
+router.use(cors());
 
 router.get('/last-agrument', (req, res) => {
   db('posts')
