@@ -402,7 +402,8 @@ router.post('/pending/submit/:id', (req, res) => {
 
     const text = fbtext
       .slice(fbtext.indexOf('\n\n') + 2, fbtext.lastIndexOf('\n\nSlika: '))
-      .replace(/\[.+\]/g, '');
+      .replace(/\[.+\]/g, '')
+      .replace(/\s\s+/g, ' ');
 
     await trx
       .from('posts')

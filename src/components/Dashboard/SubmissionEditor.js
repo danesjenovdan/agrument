@@ -39,7 +39,7 @@ function getContentCharactersLeft(text) {
   if (!text) {
     return CONTENT_LIMIT;
   }
-  return CONTENT_LIMIT - text.length;
+  return CONTENT_LIMIT - text.replace(/\[.+\]/g, '').replace(/\s\s+/g, ' ').length;
 }
 
 const TYPE_TEXT = {

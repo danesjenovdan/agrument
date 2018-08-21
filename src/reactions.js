@@ -336,7 +336,11 @@ function initReactions(store) {
       shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n\n${url}`).then((footerText) => {
         const fbtext = `${naslov}\n\n${text}\n${footerText}`;
 
-        let desc = text.replace(/\n/g, ' ').replace(/\[.+\]/g, '').slice(0, 250);
+        let desc = text
+          .replace(/\n/g, ' ')
+          .replace(/\[.+\]/g, '')
+          .replace(/\s\s+/g, ' ')
+          .slice(0, 250);
         desc = desc.slice(0, desc.lastIndexOf(' '));
         const description = `${desc} ...`;
 
