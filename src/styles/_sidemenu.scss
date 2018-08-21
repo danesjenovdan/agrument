@@ -153,6 +153,15 @@
         background: #c2d8d8;
       }
 
+      a,
+      a:hover,
+      a:active,
+      a:visited {
+        display: block;
+        text-decoration: none;
+        color: #fff;
+      }
+
       &:hover .sidemenu__item-ribbon,
       &.active .sidemenu__item-ribbon {
         transform: none;
