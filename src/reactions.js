@@ -338,7 +338,7 @@ function initReactions(store) {
 
         let desc = text
           .replace(/\n/g, ' ')
-          .replace(/\[.+\]/g, '')
+          .replace(/\[https?:\/\/.+?\]/g, '')
           .replace(/\s\s+/g, ' ')
           .slice(0, 250);
         desc = desc.slice(0, desc.lastIndexOf(' '));

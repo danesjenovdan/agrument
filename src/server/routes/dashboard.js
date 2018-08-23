@@ -403,7 +403,7 @@ router.post('/pending/submit/:id', (req, res) => {
 
     const text = fbtext
       .slice(fbtext.indexOf('\n\n') + 2, fbtext.lastIndexOf('\n\nSlika: '))
-      .replace(/\[.+\]/g, '')
+      .replace(/\[https?:\/\/.+?\]/g, '')
       .replace(/\s\s+/g, ' ');
 
     await trx
@@ -498,18 +498,23 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
+    console.log('-- objava: before env:', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'production') {
       try {
+        console.log('-- objava: Twitter start');
         const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
         const text = `${tweet}\n${url}`;
-        await request
+        console.log('-- objava: Twitter text:', text);
+        const tweetRes = await request
           .post('https://api.djnd.si/sendTweet/')
           .send({
             tweet_text: text,
             secret: config.TWITTER_SECRET,
           });
+        console.log('-- objava: Twitter response:', tweetRes);
+        console.log('-- objava: Twitter end');
       } catch (error) {
-        console.error('Twitter post ERRORED!');
+        console.log('-- objava: Twitter error');
         console.error(error);
         sendErrorToSlack('twitterPost', error, (error2) => {
           if (error2) {
@@ -519,6 +524,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         });
       }
     }
+    console.log('-- objava: after env:', process.env.NODE_ENV);
   })
     .then(() => {
       res.json({
