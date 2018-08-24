@@ -22,7 +22,7 @@ router.use(requireLoggedIn);
 
 router.get('/user', (req, res) => {
   res.json({
-    user: req.user,
+    user: _.pick(req.user, ['id', 'username', 'name', 'group']),
   });
 });
 
