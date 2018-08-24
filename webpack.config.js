@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -12,6 +13,7 @@ const sourcePath = path.resolve(__dirname, './src');
 const distPath = path.resolve(__dirname, './dist');
 
 const activePlugins = [
+  new CleanWebpackPlugin(['dist'], { beforeEmit: true }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(nodeEnv),
