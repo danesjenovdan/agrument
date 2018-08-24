@@ -507,10 +507,8 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         console.log('-- objava: Twitter text:', text);
         const tweetRes = await request
           .post('https://api.djnd.si/sendTweet/')
-          .send({
-            tweet_text: text,
-            secret: config.TWITTER_SECRET,
-          });
+          .field('tweet_text', text)
+          .field('secret', config.TWITTER_SECRET);
         console.log('-- objava: Twitter response:', tweetRes);
         console.log('-- objava: Twitter end');
       } catch (error) {
