@@ -291,4 +291,23 @@
       margin-bottom: 20px;
     }
   }
+
+  .input-group-spinner {
+    min-width: 48px;
+    background-color: #fff;
+    border-color: #c2d8d8;
+    border-width: 2px;
+    border-radius: 0;
+
+    .component__spinner {
+      display: flex;
+      align-items: center;
+
+      .spinner {
+        width: 22px;
+        height: 22px;
+        border-width: 7px;
+      }
+    }
+  }
 }

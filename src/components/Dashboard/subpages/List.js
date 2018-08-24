@@ -5,6 +5,7 @@ import Button from '../../FormControl/Button';
 import TriangleHeading from '../../Card/TriangleHeading';
 import RenderSpinner from '../../../hoc/RenderSpinner';
 import { toSloDateString } from '../../../utils/date';
+import Spinner from '../../Spinner';
 
 import store from '../../../store';
 
@@ -35,7 +36,9 @@ class List extends React.Component {
           currentPageOffset: newOffset,
         };
       });
-      document.documentElement.scrollTop = 0;
+      if (this.inputElement) {
+        this.inputElement.scrollIntoView();
+      }
     }
   }
 
@@ -54,7 +57,9 @@ class List extends React.Component {
           currentPageOffset: newOffset,
         };
       });
-      document.documentElement.scrollTop = 0;
+      if (this.inputElement) {
+        this.inputElement.scrollIntoView();
+      }
     }
   }
 
@@ -95,12 +100,26 @@ class List extends React.Component {
         <div className="col-md-12">
           <TriangleHeading title="Agrumenti, ki so že objavljeni" />
           <div className="card__content clearfix">
-            <RenderSpinner isLoading={state.published.isLoading} data={state.published.data}>
+            <div className="form-group">
+              <div className="input-group">
+                <div className="input-group-addon input-group-spinner">
+                  {state.published.isLoading && <Spinner />}
+                </div>
+                <input
+                  className="form-control"
+                  placeholder="Iskanje po naslovu in vsebini..."
+                  value={state.published.searchQuery}
+                  onChange={this.onSearchQueryChange}
+                  ref={(elem) => { this.inputElement = elem; }}
+                />
+              </div>
+            </div>
+            <RenderSpinner
+              isLoading={state.published.isLoading && !state.published.data}
+              data={state.published.data}
+            >
               {data => (
                 <Fragment>
-                  <div className="form-group">
-                    <input className="form-control" placeholder="Iskanje..." value={state.published.searchQuery} onChange={this.onSearchQueryChange} />
-                  </div>
                   <table className="table table-hover table-agrument-list">
                     <thead>
                       <tr>

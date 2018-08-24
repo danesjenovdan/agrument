@@ -150,7 +150,10 @@ router.get('/published', (req, res) => {
 
   if (req.query.q) {
     query = query
-      .andWhere('title', 'like', `%${req.query.q}%`);
+      .andWhere((qb) => {
+        const q = `%${req.query.q}%`;
+        qb.where('title', 'like', q).orWhere('content', 'like', q);
+      });
   }
 
   query = query
