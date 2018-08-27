@@ -13,6 +13,20 @@ if (!markup) {
   throw new Error('template.html not found; client is probably not built');
 }
 
+function isValidRoute(req) {
+  // TODO: use react-router-config
+  if (req.url === '/') {
+    return true;
+  }
+  if (/^\/\d{1,2}\.\d{1,2}\.\d{4}$/.test(req.url)) {
+    return true;
+  }
+  if (/^\/dash(?:\/|$)/.test(req.url)) {
+    return true;
+  }
+  return false;
+}
+
 async function loadData(query) {
   const post = await getPost(query);
   return {
@@ -20,7 +34,12 @@ async function loadData(query) {
   };
 }
 
-function render(req, res) {
+function render(req, res, next) {
+  if (!isValidRoute(req)) {
+    next();
+    return;
+  }
+
   let promise = Promise.resolve(null);
   if (req.url === '/' || /^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.url)) {
     promise = loadData({ date: req.url.replace(/^\/+|\/+$/g, '') });
@@ -49,7 +68,7 @@ function render(req, res) {
           .replace('<body>', `<body ${bodyAttrString}>`)
           .replace('<!-- helmet -->', headString)
           .replace('<!-- markup -->', reactString);
-        res.status(200).send(html);
+        res.send(html);
       }
     })
     .catch((error) => {
