@@ -17,7 +17,7 @@ class Feed extends React.Component {
     super(props);
 
     const { location } = props;
-    this.initialDate = last(location.pathname.split('/'));
+    this.initialDate = last(location.pathname.replace(/^\/+|\/+$/g, '').split('/'));
 
     this.state = {
       loading: true,

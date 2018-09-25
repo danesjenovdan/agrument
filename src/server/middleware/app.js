@@ -22,8 +22,8 @@ async function loadData(query) {
 
 function render(req, res) {
   let promise = Promise.resolve(null);
-  if (req.url === '/' || /^\/\d{1,2}\.\d{1,2}\.\d{4}$/.test(req.url)) {
-    promise = loadData({ date: req.url.slice(1) });
+  if (req.url === '/' || /^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.url)) {
+    promise = loadData({ date: req.url.replace(/^\/+|\/+$/g, '') });
   }
   promise
     .then((data) => {
