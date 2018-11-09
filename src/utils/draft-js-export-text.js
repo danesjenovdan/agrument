@@ -172,7 +172,8 @@ class MarkupGenerator {
         }
         return content;
       })
-      .join('');
+      .join('')
+      .replace(/\s\s+/g, ' ');
   }
 }
 
