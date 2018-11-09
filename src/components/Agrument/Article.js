@@ -50,7 +50,7 @@ class Article extends React.Component {
         {cover}
         <div className="agrument__source"><a href={this.props.data.imageCaptionURL} target="_blank" rel="noopener noreferrer">{this.props.data.imageCaption}</a></div>
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-lg-2">
             <div className="agrument__date">{date}</div>
             <div className="agrument__copy-text">Skopiraj povezavo!</div>
             <div className="agrument__copy-input">
@@ -62,7 +62,7 @@ class Article extends React.Component {
               <PulseIconButton iconName="googleplus" onClick={() => shareOnGooglePlus(this.props.data.title, this.state.longUrl)} />
             </div>
           </div>
-          <div className="col-md-10">
+          <div className="col-lg-10">
             <div
               className="agrument__text"
               // eslint-disable-next-line react/no-danger
