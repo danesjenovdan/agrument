@@ -173,7 +173,8 @@ class MarkupGenerator {
         return content;
       })
       .join('')
-      .replace(/\s\s+/g, ' ');
+      .replace(/\s\s+/g, ' ')
+      .replace(/\]\s([.,;:!?)])/g, ']$1');
   }
 }
 
