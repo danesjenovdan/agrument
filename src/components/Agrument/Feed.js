@@ -3,11 +3,17 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import Waypoint from 'react-waypoint';
 import { withRouter } from 'react-router-dom';
-import { concat, last } from 'lodash';
+import {
+  concat,
+  last,
+  head,
+  tail,
+} from 'lodash';
 import Article from './Article';
 import WaypointBlock from '../WaypointBlock';
 import Spinner from '../Spinner';
 // import Button from '../FormControl/Button';
+import SubscribeForm from './SubscribeForm';
 import RenderSpinner from '../../hoc/RenderSpinner';
 import { getInitialPost, getOlderPost, getNewerPost } from '../../utils/agrument';
 import { toSloDateString } from '../../utils/date';
@@ -207,7 +213,14 @@ class Feed extends React.Component {
           <Article data={post} />
         </WaypointBlock>
       ));
-      content.push(...articles);
+
+      content.push(head(articles));
+      content.push((
+        <div key="in-feed-subscribe" className="hidden-md hidden-lg in-feed-subscribe">
+          <SubscribeForm />
+        </div>
+      ));
+      content.push(...tail(articles));
 
       if (this.state.shouldLoadBelow) {
         content.push((
