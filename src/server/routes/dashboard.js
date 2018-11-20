@@ -301,9 +301,10 @@ router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
       .delete();
 
     const imagePath = getFullImagePath(imageURL);
-    if (fs.existsSync(imagePath)) {
-      await fs.remove(imagePath);
-    }
+    console.log('tried to remove', imagePath);
+    // if (imageURL && imagePath && fs.existsSync(imagePath)) {
+    //   await fs.remove(imagePath);
+    // }
   })
     .then(() => {
       res.json({

@@ -38,6 +38,9 @@ async function saveDataUrlImageToFile(dataUrl, imageName) {
 }
 
 function getFullImagePath(imageName) {
+  if (typeof imageName !== 'string' || !imageName.trim() || imageName.indexOf('.') === -1) {
+    return `${config.MEDIA_PATH}DOES_NOT_EXIST`;
+  }
   return `${config.MEDIA_PATH}${imageName}`;
 }
 
