@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Textarea from 'react-textarea-autosize';
 import SimpleRichTextEditor from '../SimpleRichTextEditor';
+import SimpleQuillEditor from '../SimpleQuillEditor';
 import DatePicker from '../DatePicker';
 import { toSloDateString, parseDate } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
@@ -241,11 +242,12 @@ class SubmissionEditor extends React.Component {
               </div>
               <div className="form-group theeditor">
                 <label htmlFor="submissioneditor-content" className="control-label">Vsebina ({getContentCharactersLeft(editorText)})</label>
-                <SimpleRichTextEditor
+                {/* <SimpleRichTextEditor
                   format="html"
                   value={this.editorValue || entry.content}
                   onChange={this.onEditorChange}
-                />
+                /> */}
+                <SimpleQuillEditor />
               </div>
               <div className="form-group">
                 <label htmlFor="submissioneditor-rights" className="control-label">Pravice</label>

@@ -155,7 +155,7 @@ app.use(sendErrorToSlackMiddleware);
 
 const port = parseInt(process.env.PORT, 10) || 80;
 
-app.listen(port, (err) => {
+app.listen(port, '0.0.0.0', (err) => {
   if (err) {
     // eslint-disable-next-line no-console
     console.error(err);

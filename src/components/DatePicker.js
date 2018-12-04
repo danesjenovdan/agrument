@@ -1,6 +1,6 @@
 /**
- * This component wraps react-rte and does nothing when required on server-side to prevent crashing
- * by accesing the 'window' property.
+ * This component wraps react-date-picker and does nothing when required on server-side to prevent
+ * crashing by accesing the 'window' property.
  */
 
 let DatePicker = null; // eslint-disable-line import/no-mutable-exports
