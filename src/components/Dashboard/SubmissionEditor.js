@@ -81,19 +81,41 @@ class SubmissionEditor extends React.Component {
   state = {
     saveErrorText: null,
     editorText: 0,
+    editorHtml: '',
+    showRawHtml: false,
   };
+
+  onRawClick = (event) => {
+    event.preventDefault();
+    this.setState(prevState => ({ showRawHtml: !prevState.showRawHtml }));
+  }
+
+  onRawHtmlChange = (event) => {
+    const html = event.target.value;
+    this.onEditorChange(html);
+    this.editorValue = false;
+    if (this.rte) {
+      // eslint-disable-next-line no-underscore-dangle
+      this.rte._currentValue = null;
+      this.rte.forceUpdate();
+    }
+  }
 
   onEditorChange = (value, editorValue) => {
     this.editorValue = true;
-    stateToText(editorValue.getEditorState().getCurrentContent())
-      .then((text) => {
-        this.setState({ editorText: text, saveErrorText: null });
-        store.emit('editable:updateeditor', value, text);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('onEditorChange', error);
-      });
+    this.setState({ editorHtml: value });
+
+    if (editorValue) {
+      stateToText(editorValue.getEditorState().getCurrentContent())
+        .then((text) => {
+          this.setState({ editorText: text, saveErrorText: null });
+          store.emit('editable:updateeditor', value, text);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error('onEditorChange', error);
+        });
+    }
   }
 
   onSave = () => {
@@ -181,7 +203,12 @@ class SubmissionEditor extends React.Component {
 
   render() {
     const { entry, state } = this.props;
-    const { editorText, saveErrorText } = this.state;
+    const {
+      editorText,
+      editorHtml,
+      saveErrorText,
+      showRawHtml,
+    } = this.state;
     // console.log(user.id, entry.author);
     return (
       <div className="row">
@@ -241,10 +268,15 @@ class SubmissionEditor extends React.Component {
               </div>
               <div className="form-group theeditor">
                 <label htmlFor="submissioneditor-content" className="control-label">Vsebina ({getContentCharactersLeft(editorText)})</label>
+                <a className="small pull-right" href="#" onClick={this.onRawClick}>raw html</a>
+                {showRawHtml && (
+                  <Textarea value={editorHtml} onChange={this.onRawHtmlChange} className="form-control" />
+                )}
                 <SimpleRichTextEditor
                   format="html"
-                  value={this.editorValue || entry.content}
+                  value={this.editorValue || editorHtml || entry.content}
                   onChange={this.onEditorChange}
+                  ref={(e) => { this.rte = e; }}
                 />
               </div>
               <div className="form-group">
