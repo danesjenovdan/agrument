@@ -41,11 +41,13 @@ function getContentCharactersLeft(text) {
   }
   const plain = text
     .replace(/\s?\[https?:\/\/.+?\]/g, '')
-    .replace(/\s\s+/g, ' ');
+    .replace(/\s\s+/g, ' ')
+    .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, ''); // \u200b is zero-width space
 
   console.log('--------------------------');
   console.log('text', text.length, text);
   console.log('plain', plain.length, plain);
+  console.log('plain', Array.from(plain).map(c => c.charCodeAt(0)));
   console.log('--------------------------');
 
   return CONTENT_LIMIT - plain.length;

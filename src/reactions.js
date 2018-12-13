@@ -340,6 +340,7 @@ function initReactions(store) {
           .replace(/\n/g, ' ')
           .replace(/\s?\[https?:\/\/.+?\]/g, '')
           .replace(/\s\s+/g, ' ')
+          .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, '') // \u200b is zero-width space
           .slice(0, 250);
         desc = desc.slice(0, desc.lastIndexOf(' '));
         const description = `${desc} ...`;

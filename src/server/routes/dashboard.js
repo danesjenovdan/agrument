@@ -405,7 +405,8 @@ router.post('/pending/submit/:id', (req, res) => {
     const text = fbtext
       .slice(fbtext.indexOf('\n\n') + 2, fbtext.lastIndexOf('\n\nSlika: '))
       .replace(/\s?\[https?:\/\/.+?\]/g, '')
-      .replace(/\s\s+/g, ' ');
+      .replace(/\s\s+/g, ' ')
+      .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, ''); // \u200b is zero-width space
 
     await trx
       .from('posts')
