@@ -42,6 +42,12 @@ function getContentCharactersLeft(text) {
   const plain = text
     .replace(/\[https?:\/\/.+?\]/g, '')
     .replace(/\s\s+/g, ' ');
+
+  console.log('--------------------------');
+  console.log('text', text.length, text);
+  console.log('plain', plain.length, plain);
+  console.log('--------------------------');
+
   return CONTENT_LIMIT - plain.length;
 }
 
@@ -123,6 +129,9 @@ class SubmissionEditor extends React.Component {
       this.setState({
         saveErrorText: 'Vsebina je predolga!',
       });
+      if (this.props.state.user.data.group === 'admin') {
+        store.emit('editable:save');
+      }
       return false;
     }
     store.emit('editable:save');
