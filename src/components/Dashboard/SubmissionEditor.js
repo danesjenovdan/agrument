@@ -40,7 +40,7 @@ function getContentCharactersLeft(text) {
     return CONTENT_LIMIT;
   }
   const plain = text
-    .replace(/\[https?:\/\/.+?\]/g, '')
+    .replace(/\s?\[https?:\/\/.+?\]/g, '')
     .replace(/\s\s+/g, ' ');
 
   console.log('--------------------------');

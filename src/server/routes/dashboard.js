@@ -404,7 +404,7 @@ router.post('/pending/submit/:id', (req, res) => {
 
     const text = fbtext
       .slice(fbtext.indexOf('\n\n') + 2, fbtext.lastIndexOf('\n\nSlika: '))
-      .replace(/\[https?:\/\/.+?\]/g, '')
+      .replace(/\s?\[https?:\/\/.+?\]/g, '')
       .replace(/\s\s+/g, ' ');
 
     await trx
