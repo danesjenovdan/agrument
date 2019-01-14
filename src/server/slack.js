@@ -1,8 +1,11 @@
 import Slack from 'slack-node';
 import expressErrorSlack from 'express-error-slack';
+import config from '../../config';
 
-const webhook = 'https://hooks.slack.com/services/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';
-const sendErrorToSlackMiddleware = expressErrorSlack({ webhookUri: webhook });
+const webhook = config.SLACK_WEBHOOK_URL;
+const sendErrorToSlackMiddleware = webhook
+  ? expressErrorSlack({ webhookUri: webhook })
+  : (req, res, next) => { next(); };
 
 function stringify(obj) {
   try {
@@ -13,6 +16,13 @@ function stringify(obj) {
 }
 
 function sendErrorToSlack(type, err, cb) {
+  if (!webhook) {
+    if (cb) {
+      cb(null, null);
+    }
+    return;
+  }
+
   const slack = new Slack();
   slack.setWebhook(webhook);
 

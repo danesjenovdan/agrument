@@ -2,6 +2,7 @@
 const { merge } = require('lodash');
 
 const config = {
+  SLACK_WEBHOOK_URL: '',
   SESSION_SECRET: 'sekkrett',
   TWITTER_SECRET: '',
   MEDIA_PATH: './media/',
