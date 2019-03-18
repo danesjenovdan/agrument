@@ -17,6 +17,7 @@ import agrumentRouter from './routes/agrument';
 import dashRouter from './routes/dashboard';
 import authRouter from './routes/auth';
 import apiRouter from './routes/api';
+import apiRouterV2 from './routes/api_v2';
 import feedRouter from './routes/feed';
 import { sendErrorToSlack, sendErrorToSlackMiddleware } from './slack';
 import config from '../../config';
@@ -56,6 +57,8 @@ app.use('/media', express.static(path.resolve(__dirname, '../../media')));
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' })); // parse x-www-form-urlencoded
 app.use(bodyParser.json({ extended: true, limit: '50mb' })); // parse json
+
+app.use('/api/v2', apiRouterV2);
 
 app.use('/get', apiRouter);
 app.use('/rss', feedRouter);
