@@ -149,6 +149,29 @@ router.get('/published', (req, res) => {
   }
 
   if (req.query.q) {
+    if (req.query.q === 'X:no-image') {
+      query = query
+        .orderBy('date', 'desc')
+        .leftOuterJoin('users', 'posts.author', 'users.id')
+        .select('posts.imageURL', 'posts.id', 'posts.date', 'posts.author', 'posts.title', 'users.username as author_name')
+        .then((data) => {
+          const noImage = data.filter((e) => {
+            const img = getFullImagePath(e.imageURL);
+            return !fs.existsSync(img);
+          });
+          res.json({
+            ignorePagination: true,
+            published: noImage,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            error: err.message,
+          });
+        });
+      return;
+    }
+
     query = query
       .andWhere((qb) => {
         const q = `%${req.query.q}%`;

@@ -30,6 +30,7 @@ const store = new Freezer({
     isLoading: false,
     searchQuery: '',
     data: null,
+    ignorePagination: false,
   },
   submissions: {
     isLoading: false,

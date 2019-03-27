@@ -143,11 +143,13 @@ function initReactions(store) {
         if (err || !res.ok) {
           store.get().published.set({
             isLoading: false,
+            ignorePagination: false,
           });
         } else {
           store.get().published.set({
             isLoading: false,
             data: res.body.published,
+            ignorePagination: res.body.ignorePagination || false,
           });
         }
       });

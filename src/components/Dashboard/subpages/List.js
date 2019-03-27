@@ -95,6 +95,7 @@ class List extends React.Component {
 
   render() {
     const { state } = this.props;
+    const { published } = state;
     return (
       <div className="row">
         <div className="col-md-12">
@@ -103,20 +104,20 @@ class List extends React.Component {
             <div className="form-group">
               <div className="input-group">
                 <div className="input-group-addon input-group-spinner">
-                  {state.published.isLoading && <Spinner />}
+                  {published.isLoading && <Spinner />}
                 </div>
                 <input
                   className="form-control"
                   placeholder="Iskanje po naslovu in vsebini..."
-                  value={state.published.searchQuery}
+                  value={published.searchQuery}
                   onChange={this.onSearchQueryChange}
                   ref={(elem) => { this.inputElement = elem; }}
                 />
               </div>
             </div>
             <RenderSpinner
-              isLoading={state.published.isLoading && !state.published.data}
-              data={state.published.data}
+              isLoading={published.isLoading && !published.data}
+              data={published.data}
             >
               {data => (
                 <Fragment>
@@ -131,7 +132,7 @@ class List extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.slice(0, PER_PAGE).map(e => (
+                      {(published.ignorePagination ? data : data.slice(0, PER_PAGE)).map(e => (
                         <tr key={e.id}>
                           <td>{e.id}</td>
                           <td>{toSloDateString(e.date)}</td>
@@ -146,11 +147,15 @@ class List extends React.Component {
                       ))}
                     </tbody>
                   </table>
-                  <div className="text-center">
-                    <Button value="Novejši" disabled={this.isNewerDisabled()} onClick={this.onNewerClick} />
-                    {' '}
-                    <Button value="Starejši" disabled={this.isOlderDisabled()} onClick={this.onOlderClick} />
-                  </div>
+                  {published.ignorePagination
+                    ? `Rezultatov: ${published.data.length}`
+                    : (
+                      <div className="text-center">
+                        <Button value="Novejši" disabled={this.isNewerDisabled()} onClick={this.onNewerClick} />
+                        {' '}
+                        <Button value="Starejši" disabled={this.isOlderDisabled()} onClick={this.onOlderClick} />
+                      </div>
+                    )}
                 </Fragment>
               )}
             </RenderSpinner>
