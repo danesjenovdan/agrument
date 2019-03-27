@@ -88,15 +88,10 @@ app.get('*', (req, res) => {
 
 // catch-all error handler (needs all 4 args)
 // eslint-disable-next-line no-unused-vars
-app.use((error, req, res, next) => {
-  // TODO: sentry
-  console.log('error', error);
-  res.status(500).render('error/500', {
-    pageTitle: '500 Internal Server Error',
-    activeMenu: '',
-    error,
-  });
-});
+// app.use((error, req, res, next) => {
+//   console.log('error', error);
+//   res.status(500).send('TODO: == 500 Server Error == ');
+// });
 
 // error handler
 app.use(sendErrorToSlackMiddleware);
