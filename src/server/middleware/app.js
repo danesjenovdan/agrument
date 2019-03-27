@@ -18,7 +18,7 @@ function isValidRoute(req) {
   if (req.url === '/') {
     return true;
   }
-  if (/^\/\d{1,2}\.\d{1,2}\.\d{4}$/.test(req.url)) {
+  if (/^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.url)) {
     return true;
   }
   if (/^\/dash(?:\/|$)/.test(req.url)) {
@@ -46,6 +46,11 @@ function render(req, res, next) {
   }
   promise
     .then((data) => {
+      if (data && !data.post) {
+        res.redirect('/');
+        return;
+      }
+
       const context = { data };
       const reactString = renderToString((
         <StaticRouter location={req.url} context={context}>
@@ -55,26 +60,24 @@ function render(req, res, next) {
       const helmet = Helmet.renderStatic();
 
       if (context.url) {
-        res.writeHead(302, {
-          Location: context.url,
-        });
-        res.end();
-      } else {
-        const htmlAttrString = helmet.htmlAttributes.toString();
-        const bodyAttrString = helmet.bodyAttributes.toString();
-        const headString = `${helmet.title} ${helmet.meta} ${helmet.link}`;
-        const html = markup
-          .replace('<html>', `<html ${htmlAttrString}>`)
-          .replace('<body>', `<body ${bodyAttrString}>`)
-          .replace('<!-- helmet -->', headString)
-          .replace('<!-- markup -->', reactString);
-        res.send(html);
+        res.redirect(context.url);
+        return;
       }
+
+      const htmlAttrString = helmet.htmlAttributes.toString();
+      const bodyAttrString = helmet.bodyAttributes.toString();
+      const headString = `${helmet.title} ${helmet.meta} ${helmet.link}`;
+      const html = markup
+        .replace('<html>', `<html ${htmlAttrString}>`)
+        .replace('<body>', `<body ${bodyAttrString}>`)
+        .replace('<!-- helmet -->', headString)
+        .replace('<!-- markup -->', reactString);
+      res.send(html);
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error.message);
+      next(error);
     });
 }
 
