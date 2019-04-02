@@ -77,12 +77,21 @@ passport.deserializeUser((sessionUser, done) => {
 function useSessionAuth(app) {
   const KnexSessionStore = sessionKnex(session);
 
-  app.use(session({
+  const sessionOptions = {
     saveUninitialized: false, // save new sessions only when modified (e.g. login sessions)
     resave: false, // don't resave to store if not modified
     store: new KnexSessionStore({ knex: db }),
     secret: config.SESSION_SECRET,
-  }));
+    cookie: {},
+  };
+
+  if (app.get('env') === 'production') {
+    app.set('trust proxy', 1); // trust first proxy
+    sessionOptions.cookie.secure = true; // serve secure cookies
+    sessionOptions.cookie.maxAge = 1000 * 60 * 60 * 24 * 14; // 14 days
+  }
+
+  app.use(session(sessionOptions));
 
   app.use(passport.initialize());
   app.use(passport.session());
