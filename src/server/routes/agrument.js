@@ -4,6 +4,8 @@ import db from '../database';
 import { toDateTimestamp } from '../../utils/date';
 import { getFullImageURL } from '../utils/image';
 
+const MLADINA_EXTRA_PARAGRAPH = '<p><a href="https://agrument.danesjenovdan.si" target="blank">Agrument</a> ustvarja <a href="https://danesjenovdan.si/" target="blank">Danes je nov dan</a>.</p>';
+
 const router = express.Router();
 
 function getData(queryObj) {
@@ -61,6 +63,7 @@ async function getPost(queryObj) {
         return {
           ...post,
           imageURL: getFullImageURL(post.imageURL),
+          content: queryObj.mladina ? (post.content + MLADINA_EXTRA_PARAGRAPH) : post.content,
         };
       }
       return post;
@@ -71,6 +74,9 @@ async function getPost(queryObj) {
     const post = data;
     if (post.imageURL) {
       post.imageURL = getFullImageURL(post.imageURL);
+    }
+    if (queryObj.mladina && post.content) {
+      post.content += MLADINA_EXTRA_PARAGRAPH;
     }
     return post;
   }
