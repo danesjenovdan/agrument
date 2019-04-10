@@ -4,13 +4,32 @@ import { toSloDateString } from '../../utils/date';
 import TimeAgo from '../LocalizedTimeAgo';
 import { getRightFromLetter } from '../../utils/rights';
 
+// date is on midnight and we publish at 9am so add 9 hours
+const PUBLISH_TIME = 1000 * 60 * 60 * 9;
+// deadline is 24 hours and 1 minute before the date
+const DEADLINE_OFFSET = -((1000 * 60 * 60 * 24) + (1000 * 60));
+
 const SubmissionPreview = ({ entry }) => (
   <article className="component__submission-preview">
     <section className="row clearfix">
       <div className="col-sm-12">
-        <p className="lead">
+        <div>
           <strong>Datum: </strong>
-          <span>{toSloDateString(entry.date)} (<TimeAgo date={entry.date} />)</span>
+          <span>
+            {toSloDateString(entry.date + PUBLISH_TIME)}
+            {' '}
+            (<TimeAgo date={entry.date + PUBLISH_TIME} />)
+          </span>
+        </div>
+      </div>
+      <div className="col-sm-12">
+        <p className="lead">
+          <strong>Rok za oddajo: </strong>
+          <span>
+            {toSloDateString(entry.date + DEADLINE_OFFSET)}
+            {' '}
+            (<TimeAgo date={entry.date + DEADLINE_OFFSET} />)
+          </span>
         </p>
       </div>
       <div className="col-sm-12">
