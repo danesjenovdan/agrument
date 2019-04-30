@@ -10,6 +10,9 @@ const Sidebar = () => (
     <CardContent>
       <SubscribeForm />
     </CardContent>
+    <div className="agrument__license">
+      Izdano pod licenco <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.sl" target="_blank" rel="noopener noreferrer">CC0</a>.
+    </div>
   </div>
 );
 

@@ -218,6 +218,9 @@ class Feed extends React.Component {
       content.push((
         <div key="in-feed-subscribe" className="hidden-md hidden-lg in-feed-subscribe">
           <SubscribeForm />
+          <div className="agrument__license">
+            Izdano pod licenco <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.sl" target="_blank" rel="noopener noreferrer">CC0</a>.
+          </div>
         </div>
       ));
       content.push(...tail(articles));
