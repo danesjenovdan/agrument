@@ -443,9 +443,9 @@ router.post('/pending/submit/:id', (req, res) => {
         type: 'votable',
       });
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' && config.SLACK_WEBHOOK_NOTIFY_URL) {
       await request
-        .post('https://hooks.slack.com/services/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')
+        .post(config.SLACK_WEBHOOK_NOTIFY_URL)
         .send({
           text: 'Yo, <!channel>! Imamo <https://agrument.danesjenovdan.si/dash|nov agrument>!',
           attachments: [

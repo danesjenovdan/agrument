@@ -2,7 +2,7 @@ import Slack from 'slack-node';
 import expressErrorSlack from 'express-error-slack';
 import config from '../../config';
 
-const webhook = config.SLACK_WEBHOOK_URL;
+const webhook = config.SLACK_WEBHOOK_ERROR_URL;
 const sendErrorToSlackMiddleware = webhook
   ? expressErrorSlack({ webhookUri: webhook })
   : (req, res, next) => { next(); };

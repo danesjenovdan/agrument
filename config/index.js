@@ -2,7 +2,8 @@
 const { merge } = require('lodash');
 
 const config = {
-  SLACK_WEBHOOK_URL: '',
+  SLACK_WEBHOOK_ERROR_URL: '',
+  SLACK_WEBHOOK_NOTIFY_URL: '',
   SESSION_SECRET: 'sekkrett',
   TWITTER_SECRET: '',
   // These MEDIA_PATH and MEDIA_URL default values are what is served by express
