@@ -17,6 +17,10 @@ module.exports = {
     env_production: {
       PORT: 2000,
     },
+    output: `/home/agrumentator/log/${project}.out.log`,
+    error: `/home/agrumentator/log/${project}.err.log`,
+    log: `/home/agrumentator/log/${project}.combined.log`,
+    log_date_format: 'YYYY-MM-DDTHH:mm:ssZ',
   }],
 
   /**
@@ -34,10 +38,6 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
       },
-      output: `/home/agrumentator/log/${project}.out.log`,
-      error: `/home/agrumentator/log/${project}.err.log`,
-      log: `/home/agrumentator/log/${project}.combined.log`,
-      log_date_format: 'YYYY-MM-DDTHH:mm:ssZ',
     },
   },
 };
