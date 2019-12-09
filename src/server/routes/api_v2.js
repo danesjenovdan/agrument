@@ -3,6 +3,7 @@ import cors from 'cors';
 import qs from 'querystring';
 import db from '../database';
 import { getFullImageURL } from '../utils/image';
+import { parseDate } from '../../utils/date';
 
 const BASE_URL = 'https://agrument.danesjenovdan.si';
 
@@ -23,6 +24,14 @@ function validateSort(sortVal, def) {
 function countPosts() {
   return db('posts')
     .where('type', 'published')
+    .count()
+    .then(data => data[0]['count(*)']);
+}
+
+function countPostsBefore(timestamp, sort) {
+  return db('posts')
+    .where('type', 'published')
+    .andWhere('date', sort[0] === '-' ? '>' : '<', timestamp)
     .count()
     .then(data => data[0]['count(*)']);
 }
@@ -70,12 +79,37 @@ router.get('/posts', (req, res) => {
 
   if (query.sort === false) {
     res.status(400).json({
-      error: 'Bad Request',
+      error: 'Bad Request (invalid `sort` value)',
     });
     return;
   }
 
-  countPosts()
+  if (req.query.start_date != null && req.query.offset != null) {
+    res.status(400).json({
+      error: 'Bad Request (both `start_date` and `offset` defined at the same time)',
+    });
+    return;
+  }
+
+  const startDate = parseDate(req.query.start_date, false);
+
+  if (!startDate) {
+    res.status(400).json({
+      error: 'Bad Request (invalid `start_date` value)',
+    });
+    return;
+  }
+
+  let waitForPromise = Promise.resolve();
+  if (startDate) {
+    const startTime = startDate.getTime();
+    waitForPromise = countPostsBefore(startTime, query.sort).then((count) => {
+      query.offset = count;
+    });
+  }
+
+  waitForPromise
+    .then(() => countPosts())
     .then((count) => {
       const prevOffset = query.offset >= query.limit ? query.offset - query.limit : 0;
       const nextOffset = query.offset + query.limit;
