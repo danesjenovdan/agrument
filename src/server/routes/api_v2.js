@@ -91,21 +91,24 @@ router.get('/posts', (req, res) => {
     return;
   }
 
-  const startDate = parseDate(req.query.start_date, false);
-
-  if (!startDate) {
-    res.status(400).json({
-      error: 'Bad Request (invalid `start_date` value)',
-    });
-    return;
-  }
-
   let waitForPromise = Promise.resolve();
-  if (startDate) {
-    const startTime = startDate.getTime();
-    waitForPromise = countPostsBefore(startTime, query.sort).then((count) => {
-      query.offset = count;
-    });
+
+  if (req.query.start_date != null) {
+    const startDate = parseDate(req.query.start_date, false);
+
+    if (!startDate) {
+      res.status(400).json({
+        error: 'Bad Request (invalid `start_date` value)',
+      });
+      return;
+    }
+
+    if (startDate) {
+      const startTime = startDate.getTime();
+      waitForPromise = countPostsBefore(startTime, query.sort).then((count) => {
+        query.offset = count;
+      });
+    }
   }
 
   waitForPromise
