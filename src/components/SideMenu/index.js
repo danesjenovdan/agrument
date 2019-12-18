@@ -12,7 +12,9 @@ class SideMenu extends React.Component {
   }
 
   toggleMenu() {
-    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+    document.location.href = 'https://danesjenovdan.si/agrument';
+    this.setState(() => ({ isOpen: false }));
+    // this.setState(prevState => ({ isOpen: !prevState.isOpen }));
   }
 
   render() {
