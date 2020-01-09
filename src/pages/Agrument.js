@@ -1,17 +1,14 @@
-import React from 'react';
-import Header from '../components/Header';
-import AgrumentContainer from '../components/Agrument/Container';
+import { withRouter } from 'react-router-dom';
 
-const Agrument = () => (
-  <div>
-    <div className="container-fluid">
-      <Header
-        title="Agrument"
-        subTitle="Divja misel kiselkastega okusa. Dnevna doza sezonskih in osvežilnih natipkov. Vsi naši izdelki so sveži, pripravljeni po lastni recepturi in ne vsebujejo €-jev."
-      />
-      <AgrumentContainer />
-    </div>
-  </div>
-);
+const Agrument = ({ location, staticContext }) => {
+  const redirectUrl = `https://danesjenovdan.si/agrument${location.pathname}`;
+  if (staticContext) {
+    // eslint-disable-next-line no-param-reassign
+    staticContext.url = redirectUrl;
+  } else if (typeof window !== 'undefined') {
+    window.location = redirectUrl;
+  }
+  return null;
+};
 
-export default Agrument;
+export default withRouter(Agrument);
