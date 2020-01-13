@@ -12,8 +12,28 @@ import initReactions from '../reactions';
 
 initReactions(store);
 
-// TODO: lazy loading and other routes
-// import rootRoute from './routes';
+const routes = [
+  {
+    path: '/login',
+    component: Login,
+  },
+  {
+    path: '/register',
+    component: Register,
+  },
+  {
+    path: '/reset',
+    component: Reset,
+  },
+  {
+    path: '/dash',
+    component: Dashboard,
+  },
+  {
+    path: '/',
+    component: Agrument,
+  },
+];
 
 class App extends React.Component {
   componentDidMount() {
@@ -28,11 +48,7 @@ class App extends React.Component {
       <Fragment>
         <SideMenu />
         <Switch>
-          <Route path="/login" render={() => <Login state={state} />} />
-          <Route path="/register" render={() => <Register state={state} />} />
-          <Route path="/reset" render={() => <Reset state={state} />} />
-          <Route path="/dash" render={() => <Dashboard state={state} />} />
-          <Route path="/" render={() => <Agrument state={state} />} />
+          {routes.map(r => <Route key={`route[${r.path}]`} path={r.path} render={() => <r.component state={state} />} />)}
         </Switch>
       </Fragment>
     );
@@ -40,3 +56,4 @@ class App extends React.Component {
 }
 
 export default App;
+export { routes };

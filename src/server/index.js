@@ -83,7 +83,8 @@ app.get('*', renderApp);
 
 // if no one handled the route return 404
 app.get('*', (req, res) => {
-  // res.status(404).send('TODO: == 404 Not Found == ');
+  // eslint-disable-next-line no-console
+  console.log(`404: ${req.url}`);
   res.redirect('/');
 });
 

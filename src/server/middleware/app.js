@@ -2,9 +2,9 @@ import React from 'react';
 import fs from 'fs-extra';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router';
+import { StaticRouter, matchPath } from 'react-router';
 import Helmet from 'react-helmet';
-import App from '../../containers/App';
+import App, { routes } from '../../containers/App';
 import { getPost } from '../routes/agrument';
 
 const filePath = path.resolve(__dirname, '../../../dist/template.html');
@@ -14,17 +14,16 @@ if (!markup) {
 }
 
 function isValidRoute(req) {
-  // TODO: use react-router-config
-  if (req.url === '/') {
+  // is root
+  if (req.path === '/') {
     return true;
   }
-  if (/^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.url)) {
+  // is date e.g. /12.12.2012
+  if (/^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.path)) {
     return true;
   }
-  if (/^\/dash(?:\/|$)/.test(req.url)) {
-    return true;
-  }
-  return false;
+  // check other non root app routes
+  return routes.some(r => r.path !== '/' && matchPath(req.path, r));
 }
 
 async function loadData(query) {
@@ -36,6 +35,8 @@ async function loadData(query) {
 
 function render(req, res, next) {
   if (!isValidRoute(req)) {
+    // eslint-disable-next-line no-console
+    console.error(`Not a valid route: ${req.url}`);
     next();
     return;
   }
@@ -47,7 +48,9 @@ function render(req, res, next) {
   promise
     .then((data) => {
       if (data && !data.post) {
-        res.redirect('/');
+        // eslint-disable-next-line no-console
+        console.error(`Not a valid date: ${req.url}`);
+        next();
         return;
       }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import Input from '../FormControl/Input';
 import Button from '../FormControl/Button';
 import { parseSearch } from '../../utils/url';
@@ -39,6 +39,9 @@ const RegisterForm = ({
   title,
 }) => {
   const { id, token } = parseSearch(location.search);
+  if (!id || !token) {
+    return <Redirect to="/" />;
+  }
   return (
     <div className="container dash__container">
       <form onSubmit={onFormSubmit(id, token, history)}>
