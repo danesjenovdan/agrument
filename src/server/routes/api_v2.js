@@ -116,7 +116,7 @@ router.get('/posts', (req, res) => {
     .then((count) => {
       const prevOffset = query.offset >= query.limit ? query.offset - query.limit : 0;
       const nextOffset = query.offset + query.limit;
-      const lastOffset = Math.floor(count / query.limit) * query.limit;
+      const lastOffset = Math.max(0, Math.floor((count - 1) / query.limit) * query.limit);
 
       return getPosts(query)
         .then((posts) => {
@@ -128,6 +128,7 @@ router.get('/posts', (req, res) => {
               next: nextOffset <= lastOffset ? `${BASE_URL}${path}?${qs.stringify({ ...query, offset: nextOffset })}` : null,
               last: `${BASE_URL}${path}?${qs.stringify({ ...query, offset: lastOffset })}`,
             },
+            count,
             data: posts.map(mapPost),
           });
         });
