@@ -440,6 +440,9 @@ function initReactions(store) {
     if (!sub.tweet || !sub.tweet.trim()) {
       errors.push('Manjka tweet');
     }
+    if (toSloDateString(sub.date) !== toSloDateString(new Date())) {
+      errors.push(`Preveri datum! (Ni ${toSloDateString(new Date())})`);
+    }
 
     return errors;
   }
