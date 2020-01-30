@@ -45,6 +45,9 @@ app.disable('x-powered-by');
 // serve static files first so you dont create new sessions for static files
 app.use(express.static(path.resolve(__dirname, '../../dist')));
 app.use('/media', express.static(path.resolve(__dirname, '../../media')));
+app.get('/favicon.ico', (req, res) => {
+  res.sendStatus(404);
+});
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
