@@ -46,11 +46,13 @@ export default class SimpleRichTextEditor extends React.Component {
     };
   }
 
-  componentWillMount() {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount() {
     this._updateStateFromProps(this.props);
   }
 
-  componentWillReceiveProps(newProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(newProps) {
     this._updateStateFromProps(newProps);
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import RenderSpinner from '../hoc/RenderSpinner';
 import Header from '../components/Header';

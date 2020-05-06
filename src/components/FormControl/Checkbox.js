@@ -4,7 +4,8 @@ import { uniqueId } from 'lodash';
 import classnames from 'classnames';
 
 class Checkbox extends React.Component {
-  componentWillMount() {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount() {
     const id = uniqueId('checkbox-');
     this.setState({ id });
   }

@@ -70,8 +70,9 @@ function onValueChange(key) {
 }
 
 function onRightsChange(value) {
-  if (value.length <= 2) {
-    onValueChange('rights')(value);
+  const values = value || [];
+  if (values.length <= 2) {
+    onValueChange('rights')(values);
   }
 }
 

@@ -13,7 +13,8 @@ class LoadingButton extends React.Component {
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(newProps) {
     if (this.props.loading !== newProps.loading) {
       if (!newProps.loading) {
         const tid = setTimeout(() => {

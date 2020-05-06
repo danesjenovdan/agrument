@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 process.traceDeprecation = true;
@@ -27,10 +27,8 @@ if (isProd) {
     minimize: true,
     debug: false,
   }));
-  activePlugins.push(new ExtractTextPlugin({
-    filename: isProd ? 'bundle.[md5:contenthash:hex:20].css' : 'bundle.css',
-    disable: false,
-    allChunks: true,
+  activePlugins.push(new MiniCssExtractPlugin({
+    filename: isProd ? 'bundle.[contenthash].css' : 'bundle.css',
   }));
 }
 
@@ -68,55 +66,37 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: isProd
-          ? (
-            ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: ['css-loader', 'sass-loader'],
-            })
-          )
-          : (
-            [
-              {
-                loader: 'style-loader',
-              },
-              {
-                loader: 'css-loader',
-                options: {
-                  sourceMap: true,
-                },
-              },
-              {
-                loader: 'sass-loader',
-                options: {
-                  sourceMap: true,
-                },
-              },
-            ]
-          ),
+        use: [
+          {
+            loader: isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
-        use: isProd
-          ? (
-            ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: 'css-loader',
-            })
-          )
-          : (
-            [
-              {
-                loader: 'style-loader',
-              },
-              {
-                loader: 'css-loader',
-                options: {
-                  sourceMap: true,
-                },
-              },
-            ]
-          ),
+        use: [
+          {
+            loader: isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(js|jsx)$/,

@@ -128,7 +128,7 @@
     background-color: #fff;
     line-height: 1;
 
-    .react-date-picker__button {
+    .react-date-picker__wrapper {
       border-radius: 0px;
       outline: none;
       box-shadow: none;
@@ -145,7 +145,7 @@
     }
 
     .react-date-picker__calendar-button {
-      svg g {
+      svg {
         stroke: #c2d8d8 !important;
       }
     }

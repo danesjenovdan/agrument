@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter, matchPath } from 'react-router';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import App, { routes } from '../../containers/App';
 import { getPost } from '../routes/agrument';
 
