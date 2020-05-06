@@ -532,6 +532,20 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
           }
         });
       }
+      try {
+        const sendMailRes = await request
+          .post('http://podpri.djnd.si/api/send-agrument-mail/')
+          .set('Authorization', config.MAUTIC_SECRET);
+        // eslint-disable-next-line no-console
+        console.log('Mautic send mail response:', sendMailRes);
+      } catch (error) {
+        sendErrorToSlack('sendMauticMail', error, (error2) => {
+          if (error2) {
+            // eslint-disable-next-line no-console
+            console.error(error2);
+          }
+        });
+      }
     }
   })
     .then(() => {
