@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -22,7 +22,7 @@ const activePlugins = [
 ];
 
 if (isProd) {
-  activePlugins.push(new CleanWebpackPlugin(['dist'], { beforeEmit: true }));
+  activePlugins.push(new CleanWebpackPlugin());
   activePlugins.push(new webpack.LoaderOptionsPlugin({
     minimize: true,
     debug: false,
