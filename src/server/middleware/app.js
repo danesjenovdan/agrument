@@ -41,6 +41,12 @@ function render(req, res, next) {
     return;
   }
 
+  console.log('---', req.url);
+  console.log('req.ip', req.ip);
+  console.log('req.ips', req.ips);
+  console.log('req.protocol', req.protocol);
+  console.log('req.hostname', req.hostname);
+
   let promise = Promise.resolve(null);
   if (req.url === '/' || /^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.url)) {
     promise = loadData({ date: req.url.replace(/^\/+|\/+$/g, '') });
