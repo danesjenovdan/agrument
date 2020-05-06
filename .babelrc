@@ -1,10 +1,10 @@
 {
   "presets": [
-    [ "env", { "targets": { "node": "current" } } ],
-    "react"
+    [ "@babel/preset-env", { "targets": { "node": "current" } } ],
+    "@babel/preset-react"
   ],
   "plugins": [
-    "transform-object-rest-spread",
-    "transform-class-properties"
+  //   "transform-object-rest-spread",
+    "@babel/plugin-proposal-class-properties"
   ]
 }

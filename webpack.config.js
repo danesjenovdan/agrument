@@ -128,13 +128,13 @@ module.exports = {
               cacheDirectory: true,
               babelrc: false,
               presets: [
-                ['env', { modules: false }],
-                'react',
+                '@babel/preset-env',
+                '@babel/preset-react',
               ],
               plugins: [
-                'transform-object-rest-spread',
-                'transform-class-properties',
-                'transform-runtime',
+              //   'transform-object-rest-spread',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-transform-runtime',
                 'lodash',
               ],
             },
