@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Button from '../../FormControl/Button';
@@ -12,10 +12,14 @@ import store from '../../../store';
 const PER_PAGE = 20;
 
 class List extends React.Component {
-  state = {
-    firstDateForOffset: null,
-    currentPageOffset: 0,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      firstDateForOffset: null,
+      currentPageOffset: 0,
+    };
+  }
 
   componentDidMount() {
     store.emit('published:fetch');
@@ -119,8 +123,8 @@ class List extends React.Component {
               isLoading={published.isLoading && !published.data}
               data={published.data}
             >
-              {data => (
-                <Fragment>
+              {(data) => (
+                <>
                   <table className="table table-hover table-agrument-list">
                     <thead>
                       <tr>
@@ -132,7 +136,7 @@ class List extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {(published.ignorePagination ? data : data.slice(0, PER_PAGE)).map(e => (
+                      {(published.ignorePagination ? data : data.slice(0, PER_PAGE)).map((e) => (
                         <tr key={e.id}>
                           <td>{e.id}</td>
                           <td>{toSloDateString(e.date)}</td>
@@ -156,7 +160,7 @@ class List extends React.Component {
                         <Button value="Starejši" disabled={this.isOlderDisabled()} onClick={this.onOlderClick} />
                       </div>
                     )}
-                </Fragment>
+                </>
               )}
             </RenderSpinner>
           </div>

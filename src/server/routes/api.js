@@ -25,7 +25,7 @@ router.get('/word-count', (req, res) => {
     .select('content')
     .then((data) => {
       const allWords = data
-        .map(e => (e.content ? e.content.split(' ').length : 0));
+        .map((e) => (e.content ? e.content.split(' ').length : 0));
       res.json({
         count: _.sum(allWords),
       });

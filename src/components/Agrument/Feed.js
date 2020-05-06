@@ -208,7 +208,7 @@ class Feed extends React.Component {
         />
       ));
 
-      const articles = this.state.data.map(post => (
+      const articles = this.state.data.map((post) => (
         <WaypointBlock key={post.id} onEnterFunc={() => this.changeActiveArticle(post)}>
           <Article data={post} />
         </WaypointBlock>

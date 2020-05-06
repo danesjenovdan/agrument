@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 
 class LoadingButton extends React.Component {
-  state = {
-    tid: null,
-    didError: false,
-    wasClicked: false,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      tid: null,
+      didError: false,
+      wasClicked: false,
+    };
+  }
 
   componentWillReceiveProps(newProps) {
     if (this.props.loading !== newProps.loading) {

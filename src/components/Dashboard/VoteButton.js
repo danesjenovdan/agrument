@@ -31,7 +31,7 @@ const VoteButton = ({ entry, voteType }) => (
       </button>
     </div>
     <div className="vote-button__text">
-      {entry.votes.data.filter(v => v.vote === voteType).map(v => v.author_name).join(', ')}
+      {entry.votes.data.filter((v) => v.vote === voteType).map((v) => v.author_name).join(', ')}
     </div>
   </div>
 );

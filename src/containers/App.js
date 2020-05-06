@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import SideMenu from '../components/SideMenu';
 import Login from '../pages/Login';
@@ -45,12 +45,12 @@ class App extends React.Component {
   render() {
     const state = store.get();
     return (
-      <Fragment>
+      <>
         <SideMenu />
         <Switch>
-          {routes.map(r => <Route key={`route[${r.path}]`} path={r.path} render={() => <r.component state={state} />} />)}
+          {routes.map((r) => <Route key={`route[${r.path}]`} path={r.path} render={() => <r.component state={state} />} />)}
         </Switch>
-      </Fragment>
+      </>
     );
   }
 }

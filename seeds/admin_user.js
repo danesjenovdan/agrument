@@ -1,4 +1,4 @@
-exports.seed = knex => (
+exports.seed = (knex) => (
   knex('users')
     .insert({
       id: 1,

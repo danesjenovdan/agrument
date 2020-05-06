@@ -39,16 +39,11 @@ function getContentCharactersLeft(text) {
   if (!text) {
     return CONTENT_LIMIT;
   }
+
   const plain = text
     .replace(/\s?\[https?:\/\/.+?\]/g, '')
     .replace(/\s\s+/g, ' ')
     .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, ''); // \u200b is zero-width space
-
-  console.log('--------------------------');
-  console.log('text', text.length, text);
-  console.log('plain', plain.length, plain);
-  console.log('plain', Array.from(plain).map(c => c.charCodeAt(0)));
-  console.log('--------------------------');
 
   return CONTENT_LIMIT - plain.length;
 }
@@ -65,7 +60,7 @@ function onValueChange(key) {
     if (event.target) {
       value = event.target.type === 'checkbox' ? Number(event.target.checked) : event.target.value;
     } else if (_.isArray(value)) {
-      value = value.map(e => e.value).join(',');
+      value = value.map((e) => e.value).join(',');
     } else if (_.isDate(value)) {
       const date = parseDate(value, false);
       value = date.getTime();
@@ -86,16 +81,20 @@ function onImageChange(value, name) {
 }
 
 class SubmissionEditor extends React.Component {
-  state = {
-    saveErrorText: null,
-    editorText: 0,
-    editorHtml: '',
-    showRawHtml: false,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      saveErrorText: null,
+      editorText: 0,
+      editorHtml: '',
+      showRawHtml: false,
+    };
+  }
 
   onRawClick = (event) => {
     event.preventDefault();
-    this.setState(prevState => ({ showRawHtml: !prevState.showRawHtml }));
+    this.setState((prevState) => ({ showRawHtml: !prevState.showRawHtml }));
   }
 
   onRawHtmlChange = (event) => {
@@ -153,7 +152,7 @@ class SubmissionEditor extends React.Component {
       content = (
         <div className="component__input component__input--select">
           <select id="submissioneditor-author" value={entry.author} className="form-control" onChange={onValueChange('author')}>
-            {state.users.data.map(u => (
+            {state.users.data.map((u) => (
               <option key={u.id} value={u.id}>{`${u.name} (${u.username})`}</option>
             ))}
           </select>
@@ -196,7 +195,7 @@ class SubmissionEditor extends React.Component {
       content = (
         <div className="component__input component__input--select">
           <select id="submissioneditor-type" value={entry.type} className="form-control" onChange={onValueChange('type')}>
-            {Object.keys(TYPE_TEXT).map(type => (
+            {Object.keys(TYPE_TEXT).map((type) => (
               <option key={type} value={type}>{TYPE_TEXT[type]}</option>
             ))}
           </select>
@@ -220,7 +219,7 @@ class SubmissionEditor extends React.Component {
       saveErrorText,
       showRawHtml,
     } = this.state;
-    // console.log(user.id, entry.author);
+
     return (
       <div className="row">
         <div className="col-md-4">
@@ -297,7 +296,7 @@ class SubmissionEditor extends React.Component {
                   id="submissioneditor-rights"
                   classNamePrefix="react-select"
                   name="rights"
-                  value={entry.rights.split(',').map(r => rights.find(e => e.value === r))}
+                  value={entry.rights.split(',').map((r) => rights.find((e) => e.value === r))}
                   options={rights}
                   onChange={onRightsChange}
                   placeholder="Izberi eno ali dve pravici"
@@ -393,6 +392,8 @@ SubmissionEditor.propTypes = {
     rights: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     author_name: PropTypes.string,
+    tweet: PropTypes.string,
+    fbtext: PropTypes.string,
   }).isRequired,
   state: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,

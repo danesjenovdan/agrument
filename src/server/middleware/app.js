@@ -23,7 +23,7 @@ function isValidRoute(req) {
     return true;
   }
   // check other non root app routes
-  return routes.some(r => r.path !== '/' && matchPath(req.path, r));
+  return routes.some((r) => r.path !== '/' && matchPath(req.path, r));
 }
 
 async function loadData(query) {
@@ -41,11 +41,13 @@ function render(req, res, next) {
     return;
   }
 
+  /* eslint-disable no-console */
   console.log('---', req.url);
   console.log('req.ip', req.ip);
   console.log('req.ips', req.ips);
   console.log('req.protocol', req.protocol);
   console.log('req.hostname', req.hostname);
+  /* eslint-enable no-console */
 
   let promise = Promise.resolve(null);
   if (req.url === '/' || /^\/\d{1,2}\.\d{1,2}\.\d{4}\/?$/.test(req.url)) {

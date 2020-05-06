@@ -2,9 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class ImageSelect extends React.Component {
-  state = {
-    name: '',
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      name: '',
+    };
+  }
 
   onFileSelected = (event) => {
     event.preventDefault();

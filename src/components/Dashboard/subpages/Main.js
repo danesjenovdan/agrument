@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import PendingSubmissions from '../PendingSubmissions';
 import VotableSubmissions from '../VotableSubmissions';
 import Blurb from '../Blurb';
 
 const Main = ({ state }) => (
-  <Fragment>
+  <>
     <Blurb />
     <div className="row">
       <div className="col-lg-6">
@@ -15,7 +15,7 @@ const Main = ({ state }) => (
         <PendingSubmissions state={state} />
       </div>
     </div>
-  </Fragment>
+  </>
 );
 
 Main.propTypes = {

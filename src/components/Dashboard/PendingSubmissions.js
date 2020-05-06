@@ -15,10 +15,10 @@ class PendingSubmissions extends React.PureComponent {
     const { state } = this.props;
     return (
       <RenderSpinner isLoading={state.pending.isLoading} data={state.pending.data}>
-        {data => (
+        {(data) => (
           <div>
             <TriangleHeading title="Agrumenti, ki jih moraš oddati" />
-            {data.map(entry => <PendingEntry key={entry.id} entry={entry} />)}
+            {data.map((entry) => <PendingEntry key={entry.id} entry={entry} />)}
           </div>
         )}
       </RenderSpinner>

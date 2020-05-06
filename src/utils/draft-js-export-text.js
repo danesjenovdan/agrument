@@ -128,7 +128,7 @@ class MarkupGenerator {
     if (!prevBlock || prevBlock.getType() !== blockType || prevBlock.getDepth() !== blockDepth) {
       this.listItemCounts[blockDepth] = 0;
     }
-    this.listItemCounts[blockDepth] = this.listItemCounts[blockDepth] + 1;
+    this.listItemCounts[blockDepth] += 1;
     return this.listItemCounts[blockDepth];
   }
 

@@ -36,7 +36,7 @@ class Admin extends React.Component {
           <TriangleHeading title="Agrumenti, ki čakajo na oddajo" />
           <div className="card__content clearfix">
             <RenderSpinner isLoading={state.submissions.isLoading} data={state.submissions.data}>
-              {data => (
+              {(data) => (
                 <table className="table table-hover table-agrument-list">
                   <thead>
                     <tr>
@@ -48,7 +48,7 @@ class Admin extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map(e => (
+                    {data.map((e) => (
                       <tr key={e.id}>
                         <td>{e.id}</td>
                         <td>{toSloDateString(e.date)}</td>
@@ -74,7 +74,7 @@ class Admin extends React.Component {
           <TriangleHeading title="Dodaj nov agrument v čakalnico" />
           <div className="card__content clearfix">
             <RenderSpinner isLoading={state.users.isLoading} data={state.users.data}>
-              {data => (
+              {(data) => (
                 <AssignNewSubmission users={data} newArticle={state.newArticle} />
               )}
             </RenderSpinner>

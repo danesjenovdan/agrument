@@ -68,7 +68,7 @@ class AddUser extends React.Component {
               <strong>Neaktivirane povezave</strong>
             </div>
             <RenderSpinner isLoading={state.tokenUsers.isLoading} data={state.tokenUsers.data}>
-              {data => (
+              {(data) => (
                 <table className="table table-hover table-users-list">
                   <thead>
                     <tr>
@@ -77,7 +77,7 @@ class AddUser extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map(e => (
+                    {data.map((e) => (
                       <tr key={e.id}>
                         <td>{e.id}</td>
                         <td>{getRegisterURL(e.id, e.token)}</td>
@@ -99,7 +99,7 @@ class AddUser extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {state.users.data.filter(e => !e.disabled).map(e => (
+                {state.users.data.filter((e) => !e.disabled).map((e) => (
                   <tr key={e.id}>
                     <td>{e.id}</td>
                     <td>
@@ -132,7 +132,7 @@ class AddUser extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {state.users.data.filter(e => e.disabled).map(e => (
+                {state.users.data.filter((e) => e.disabled).map((e) => (
                   <tr key={e.id}>
                     <td>{e.id}</td>
                     <td>

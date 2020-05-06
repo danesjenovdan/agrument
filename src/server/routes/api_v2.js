@@ -25,7 +25,7 @@ function countPosts() {
   return db('posts')
     .where('type', 'published')
     .count()
-    .then(data => data[0]['count(*)']);
+    .then((data) => data[0]['count(*)']);
 }
 
 function countPostsBefore(timestamp, sort) {
@@ -33,7 +33,7 @@ function countPostsBefore(timestamp, sort) {
     .where('type', 'published')
     .andWhere('date', sort[0] === '-' ? '>' : '<', timestamp)
     .count()
-    .then(data => data[0]['count(*)']);
+    .then((data) => data[0]['count(*)']);
 }
 
 function getPosts({ limit, offset, sort }) {

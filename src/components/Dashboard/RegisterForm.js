@@ -92,6 +92,7 @@ RegisterForm.propTypes = {
     name: PropTypes.string,
     username: PropTypes.string,
     password: PropTypes.string,
+    passwordRepeat: PropTypes.string,
   }).isRequired,
   canChangeUsername: PropTypes.bool,
   title: PropTypes.string.isRequired,

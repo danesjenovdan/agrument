@@ -30,7 +30,7 @@ const AssignNewSubmission = ({ users, newArticle }) => (
       <div className="col-sm-10">
         <div className="component__input component__input--select">
           <select id="newarticle-user" value={newArticle.selectedUser} className="form-control" onChange={changeSelectedUser}>
-            {users.map(user => (
+            {users.map((user) => (
               <option key={user.id} value={user.id}>
                 {`${user.name} (${user.username})`}
               </option>

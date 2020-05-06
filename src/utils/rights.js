@@ -11,7 +11,7 @@ const rights = [
 ];
 
 function getRightFromLetter(letter) {
-  const r = rights.find(e => e.value === letter);
+  const r = rights.find((e) => e.value === letter);
   if (r) {
     return r.label;
   }

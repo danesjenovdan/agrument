@@ -15,10 +15,10 @@ class VotableSubmissions extends React.PureComponent {
     const { state } = this.props;
     return (
       <RenderSpinner isLoading={state.votable.isLoading} data={state.votable.data}>
-        {data => (
+        {(data) => (
           <div>
             <TriangleHeading title="Agrumenti, za katere lahko glasuješ" />
-            {data.map(entry => (
+            {data.map((entry) => (
               <VotableEntry key={entry.id} entry={entry} state={state} />
             ))}
           </div>

@@ -309,12 +309,6 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
 
 router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
   db.transaction(async (trx) => {
-    const { imageURL } = await trx
-      .from('posts')
-      .whereIn('type', ['votable', 'pending'])
-      .andWhere('id', req.params.id)
-      .first('imageURL');
-
     await trx
       .from('posts')
       .whereIn('type', ['votable', 'pending'])
@@ -325,12 +319,6 @@ router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
       .from('votes')
       .where('post', req.params.id)
       .delete();
-
-    const imagePath = getFullImagePath(imageURL);
-    console.log('tried to remove', imagePath);
-    // if (imageURL && imagePath && fs.existsSync(imagePath)) {
-    //   await fs.remove(imagePath);
-    // }
   })
     .then(() => {
       res.json({
@@ -526,22 +514,17 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
-    console.log('-- objava: before env:', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'production') {
       try {
-        console.log('-- objava: Twitter start');
         const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
         const text = `${tweet}\n${url}`;
-        console.log('-- objava: Twitter text:', text);
         const tweetRes = await request
           .post('https://api.djnd.si/sendTweet/')
           .field('tweet_text', text)
           .field('secret', config.TWITTER_SECRET);
-        console.log('-- objava: Twitter response:', tweetRes);
-        console.log('-- objava: Twitter end');
+        // eslint-disable-next-line no-console
+        console.log('Twitter post response:', tweetRes);
       } catch (error) {
-        console.log('-- objava: Twitter error');
-        console.error(error);
         sendErrorToSlack('twitterPost', error, (error2) => {
           if (error2) {
             // eslint-disable-next-line no-console
@@ -550,7 +533,6 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         });
       }
     }
-    console.log('-- objava: after env:', process.env.NODE_ENV);
   })
     .then(() => {
       res.json({
@@ -572,7 +554,7 @@ router.get('/edit/:date', (req, res) => {
   } else {
     query = db('posts')
       .where('date', req.params.date)
-      .andWhere(builder => (
+      .andWhere((builder) => (
         builder
           .where('author', req.user.id)
           .orWhere('type', 'votable')

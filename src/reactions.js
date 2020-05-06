@@ -187,7 +187,7 @@ function initReactions(store) {
   });
 
   store.on('submissions:remove', (id) => {
-    const sub = store.get().submissions.data.find(e => e.id === id);
+    const sub = store.get().submissions.data.find((e) => e.id === id);
     const { type } = sub;
 
     if (sub) {
@@ -390,7 +390,7 @@ function initReactions(store) {
 
   // THIS IS FIRST SUBMISSION (author finished editing)
   store.on('pending:submit', (id) => {
-    const sub = store.get().pending.data.find(e => e.id === id);
+    const sub = store.get().pending.data.find((e) => e.id === id);
 
     if (sub) {
       sub.set({ disabled: true });
@@ -413,7 +413,7 @@ function initReactions(store) {
     if (!sub.votes || !sub.votes.data) {
       errors.push('Manjkajo glasovi');
     } else {
-      const veto = sub.votes.data.find(v => v.vote === 'veto');
+      const veto = sub.votes.data.find((v) => v.vote === 'veto');
       if (veto) {
         errors.push('Obstaja veto');
       }
@@ -448,7 +448,7 @@ function initReactions(store) {
   }
 
   store.on('votable:publish', (id) => {
-    let sub = store.get().votable.data.find(e => e.id === id);
+    let sub = store.get().votable.data.find((e) => e.id === id);
 
     if (sub) {
       sub = sub.set({ disabled: true });
@@ -467,7 +467,7 @@ function initReactions(store) {
             }
           });
       } else {
-        sub = store.get().votable.data.find(e => e.id === id);
+        sub = store.get().votable.data.find((e) => e.id === id);
         if (sub) {
           sub.set({
             disabled: false,
@@ -530,7 +530,7 @@ function initReactions(store) {
   });
 
   store.on('votes:fetch', (id) => {
-    let sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+    let sub = store.get().votable.data && store.get().votable.data.find((e) => e.id === id);
 
     if (!sub || (sub && sub.votes && sub.votes.isLoading)) {
       return;
@@ -544,7 +544,7 @@ function initReactions(store) {
 
     dash.getVotes(id)
       .end((err, res) => {
-        sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+        sub = store.get().votable.data && store.get().votable.data.find((e) => e.id === id);
 
         if (sub) {
           if (!sub.votes) {
@@ -566,7 +566,7 @@ function initReactions(store) {
   });
 
   store.on('votes:vote', (id, vote) => {
-    let sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+    let sub = store.get().votable.data && store.get().votable.data.find((e) => e.id === id);
 
     if (!sub || (sub && sub.votes && sub.votes.isLoading)) {
       return;
@@ -577,7 +577,7 @@ function initReactions(store) {
         if (!err && res.ok) {
           store.emit('votes:fetch', id);
         } else if (res && res.body && res.body.error) {
-          sub = store.get().votable.data && store.get().votable.data.find(e => e.id === id);
+          sub = store.get().votable.data && store.get().votable.data.find((e) => e.id === id);
 
           if (sub) {
             if (!sub.votes) {

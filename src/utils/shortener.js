@@ -33,7 +33,7 @@ function fetchShortUrl(url) {
 
 async function shortenUrls(urls, text) {
   let replacedText = text;
-  const promises = urls.map(url => SHORT_CACHE[url] || fetchShortUrl(url));
+  const promises = urls.map((url) => SHORT_CACHE[url] || fetchShortUrl(url));
   await Promise.all(promises)
     .then((shortUrls) => {
       shortUrls.forEach((shortUrl, i) => {
