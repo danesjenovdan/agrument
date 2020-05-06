@@ -47,10 +47,6 @@ module.exports = {
   },
   context: sourcePath,
   entry: {
-    vendor: [
-      'react',
-      'react-dom',
-    ],
     main: [
       './index.js',
     ],
