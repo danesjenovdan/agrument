@@ -16,7 +16,12 @@ function stringify(obj) {
 }
 
 function sendErrorToSlack(type, err, cb) {
+  // eslint-disable-next-line no-console
+  console.error('About to send error to slack:', type, err);
+
   if (!webhook) {
+    // eslint-disable-next-line no-console
+    console.error('There is no slack webhook!');
     if (cb) {
       cb(null, null);
     }
@@ -42,8 +47,11 @@ function sendErrorToSlack(type, err, cb) {
 
   slack.webhook(
     { attachments: [attachment] },
-    // eslint-disable-next-line no-console, no-unused-vars
     (error, response) => {
+      if (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error sending slack webhook:', error);
+      }
       if (cb) {
         cb(error, response);
       }
