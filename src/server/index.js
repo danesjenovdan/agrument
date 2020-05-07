@@ -18,11 +18,7 @@ import useSessionAuth from './session-auth';
 process.on('uncaughtException', (err) => {
   // eslint-disable-next-line no-console
   console.error(err);
-  sendErrorToSlack('uncaughtException', err, (error) => {
-    if (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
+  sendErrorToSlack('uncaughtException', err, () => {
     process.exit(1);
   });
 });
@@ -30,11 +26,7 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, p) => {
   // eslint-disable-next-line no-console
   console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
-  sendErrorToSlack('unhandledRejection', reason, (error) => {
-    if (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
+  sendErrorToSlack('unhandledRejection', reason, () => {
     process.exit(1);
   });
 });

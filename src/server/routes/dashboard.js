@@ -500,11 +500,11 @@ router.get('/votable', (req, res) => {
 
 router.post('/votable/publish/:id', requireAdmin, (req, res) => {
   db.transaction(async (trx) => {
-    const { tweet, date } = await trx
+    const post = await trx
       .from('posts')
       .where('type', 'votable')
       .andWhere('id', req.params.id)
-      .first('tweet', 'date');
+      .first();
 
     await trx
       .from('posts')
@@ -514,37 +514,35 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
         type: 'published',
       });
 
+    const url = `https://agrument.danesjenovdan.si/${toSloDateString(post.date)}`;
+
     if (process.env.NODE_ENV === 'production') {
       try {
-        const url = await fetchShortUrl(`https://agrument.danesjenovdan.si/${toSloDateString(date)}`);
-        const text = `${tweet}\n${url}`;
-        const tweetRes = await request
+        const shortUrl = await fetchShortUrl(url);
+        const text = `${post.tweet}\n${shortUrl}`;
+        const response = await request
           .post('https://api.djnd.si/sendTweet/')
           .field('tweet_text', text)
           .field('secret', config.TWITTER_SECRET);
         // eslint-disable-next-line no-console
-        console.log('Twitter post response:', tweetRes);
+        console.log('Twitter post response:', response.status, response.text);
       } catch (error) {
-        sendErrorToSlack('twitterPost', error, (error2) => {
-          if (error2) {
-            // eslint-disable-next-line no-console
-            console.error(error2);
-          }
-        });
+        sendErrorToSlack('twitterPost', error);
       }
       try {
-        const sendMailRes = await request
-          .post('http://podpri.djnd.si/api/send-agrument-mail/')
+        const response = await request
+          .post('https://podpri.djnd.si/api/send-agrument-mail/')
+          .send({
+            url,
+            content_html: post.content,
+            image_url: getFullImageURL(post.imageURL),
+            title: post.title,
+          })
           .set('Authorization', config.MAUTIC_SECRET);
         // eslint-disable-next-line no-console
-        console.log('Mautic send mail response:', sendMailRes);
+        console.log('Mautic send mail response:', response.status, response.text);
       } catch (error) {
-        sendErrorToSlack('sendMauticMail', error, (error2) => {
-          if (error2) {
-            // eslint-disable-next-line no-console
-            console.error(error2);
-          }
-        });
+        sendErrorToSlack('sendMauticMail', error);
       }
     }
   })
