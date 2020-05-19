@@ -535,7 +535,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
           .send({
             url,
             content_html: post.content,
-            image_url: getFullImageURL(post.imageURL),
+            image_url: `https://agrument.danesjenovdan.si${getFullImageURL(post.imageURL)}`,
             title: post.title,
           })
           .set('Authorization', config.MAUTIC_SECRET);
