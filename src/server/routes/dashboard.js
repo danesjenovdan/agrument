@@ -534,9 +534,11 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
           .post('https://podpri.djnd.si/api/send-agrument-mail/')
           .send({
             url,
+            title: post.title,
             content_html: post.content,
             image_url: `https://agrument.danesjenovdan.si${getFullImageURL(post.imageURL)}`,
-            title: post.title,
+            image_source: post.imageCaption,
+            image_source_url: post.imageCaptionURL,
           })
           .set('Authorization', config.MAUTIC_SECRET);
         // eslint-disable-next-line no-console
