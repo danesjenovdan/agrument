@@ -10,6 +10,7 @@ import {
   getFullImagePath,
   getFullImageURL,
   imageUploader,
+  optimizeImage,
 } from '../utils/image';
 import { fetchShortUrl } from '../../utils/shortener';
 import { toSloDateString } from '../../utils/date';
@@ -344,6 +345,7 @@ router.post('/submissions/edit/:id', imageUploader.single('imageURL'), (req, res
     const { imageURL, imageName, ...data } = _.omit(req.body, disallowed);
 
     if (req.file) {
+      await optimizeImage(req.file.path);
       data.imageURL = req.file.filename;
     }
 

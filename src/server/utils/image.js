@@ -1,5 +1,8 @@
 import fs from 'fs-extra';
 import multer from 'multer';
+import imagemin from 'imagemin';
+import imageminMozJpeg from 'imagemin-mozjpeg';
+import imageminPngQuant from 'imagemin-pngquant';
 import config from '../../../config';
 
 function generateImageName(imageName, mimeType) {
@@ -58,12 +61,24 @@ const imageUploader = multer({
     return cb(new Error(`Only 'png' and 'jpeg' images allowed (got ${file.mimetype}).`));
   },
   limits: {
-    fileSize: 2 * 1024 * 1024, // 2MB
+    fileSize: 5 * 1024 * 1024, // 2MB
   },
 });
+
+function optimizeImage(fileName) {
+  return imagemin([fileName], {
+    glob: false, // not needed, doesn't work on windows anyway
+    destination: config.MEDIA_PATH,
+    plugins: [
+      imageminMozJpeg({ quality: 90 }),
+      imageminPngQuant({ quality: [0.9, 1] }),
+    ],
+  });
+}
 
 export {
   getFullImagePath,
   getFullImageURL,
   imageUploader,
+  optimizeImage,
 };
