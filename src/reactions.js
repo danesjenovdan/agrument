@@ -365,6 +365,9 @@ function initReactions(store) {
       if (editorValue) {
         newData.content = editorValue;
       }
+      if (typeof newData.imageURL !== 'string') {
+        newData.imageURL = undefined;
+      }
 
       dash.editSubmission(data.id, newData)
         .end((err, res) => {

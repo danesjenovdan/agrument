@@ -331,7 +331,8 @@ class SubmissionEditor extends React.Component {
               </div>
               <div className="col-sm-6">
                 <label className="control-label">Predogled</label>
-                {entry.imageURL && <img className="img-responsive img-fullwidth thumbnail" src={entry.imageURL} alt="preview" />}
+                {/* TODO: blob image preview */}
+                {typeof entry.imageURL === 'string' && <img className="img-responsive img-fullwidth thumbnail" src={entry.imageURL} alt="preview" />}
               </div>
             </section>
             {/* <section>
@@ -384,7 +385,7 @@ SubmissionEditor.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    imageURL: PropTypes.string.isRequired,
+    imageURL: PropTypes.any,
     imageCaption: PropTypes.string.isRequired,
     imageCaptionURL: PropTypes.string.isRequired,
     // hasEmbed: PropTypes.number.isRequired,

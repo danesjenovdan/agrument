@@ -12,19 +12,14 @@ class ImageSelect extends React.Component {
 
   onFileSelected = (event) => {
     event.preventDefault();
-    const { onChange } = this.props;
-
     const file = event.target.files[0];
-    const reader = new FileReader();
 
-    reader.onload = () => {
-      this.setState({ name: file.name });
-      if (onChange) {
-        onChange(reader.result, file.name);
-      }
-    };
+    this.setState({ name: file.name });
 
-    reader.readAsDataURL(file);
+    const { onChange } = this.props;
+    if (onChange) {
+      onChange(file, file.name);
+    }
   }
 
   render() {
