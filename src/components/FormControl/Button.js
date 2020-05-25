@@ -36,7 +36,7 @@ const Button = ({
   const buttonType = getButtonType(type);
   if (!href) {
     return (
-      // eslint-disable-next-line react/button-has-type
+      /* eslint-disable react/button-has-type */
       <button
         {...otherProps}
         className={classes}
@@ -47,6 +47,7 @@ const Button = ({
       >
         {inside}
       </button>
+      /* eslint-enable react/button-has-type */
     );
   }
   const target = {};
