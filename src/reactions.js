@@ -309,6 +309,13 @@ function initReactions(store) {
     if (store.get().editable.autosave) {
       debouncedEditableSave();
     }
+
+    if (key === 'imageURL' || key === 'imageName') {
+      const { data } = store.get().editable;
+      if (data && typeof data.imageURL !== 'string' && data.imageName) {
+        store.emit('editable:imageupload');
+      }
+    }
   });
 
   store.on('editable:updateeditor', (html, text) => {
@@ -388,6 +395,39 @@ function initReactions(store) {
             });
           }
         });
+    }
+  });
+
+  store.on('editable:imageupload', () => {
+    const { data } = store.get().editable;
+    if (data) {
+      const newData = data.toJS();
+      if (typeof newData.imageURL !== 'string' && newData.imageName) {
+        store.get().editable.set({
+          saving: true,
+          savingError: false,
+        });
+
+        dash.uploadImage(data.id, newData.imageURL, newData.imageName)
+          .end((err, res) => {
+            if (err || !res.ok) {
+              store.get().editable.set({
+                saving: false,
+                savingError: true,
+              });
+            } else {
+              if (res.body && res.body.imageURL) {
+                store.get().editable.data.set({
+                  imageURL: res.body.imageURL,
+                });
+              }
+              store.get().editable.set({
+                saving: false,
+                savingError: false,
+              });
+            }
+          });
+      }
     }
   });
 

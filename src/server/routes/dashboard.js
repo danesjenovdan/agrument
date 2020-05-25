@@ -7,9 +7,9 @@ import config from '../../../config';
 import { requireLoggedIn, requireAdmin } from '../middleware/auth';
 import db from '../database';
 import {
-  saveDataUrlImageToFile,
   getFullImagePath,
   getFullImageURL,
+  imageUploader,
 } from '../utils/image';
 import { fetchShortUrl } from '../../utils/shortener';
 import { toSloDateString } from '../../utils/date';
@@ -332,7 +332,7 @@ router.delete('/submissions/remove/:id', requireAdmin, (req, res) => {
     });
 });
 
-router.post('/submissions/edit/:id', (req, res) => {
+router.post('/submissions/edit/:id', imageUploader.single('imageURL'), (req, res) => {
   db.transaction(async (trx) => {
     // omit some keys so you can't for example change the id or author by mistake
     let disallowed;
@@ -343,23 +343,22 @@ router.post('/submissions/edit/:id', (req, res) => {
     }
     const { imageURL, imageName, ...data } = _.omit(req.body, disallowed);
 
-    const hasNewImage = imageURL && imageURL.startsWith('data:') && imageName;
-
-    if (hasNewImage) {
-      const newImageName = await saveDataUrlImageToFile(imageURL, imageName);
-      data.imageURL = newImageName;
+    if (req.file) {
+      data.imageURL = req.file.filename;
     }
 
-    const numRows = await trx
-      .from('posts')
-      .andWhere('id', req.params.id)
-      .update(data);
+    if (Object.keys(data).length) {
+      const numRows = await trx
+        .from('posts')
+        .andWhere('id', req.params.id)
+        .update(data);
 
-    if (numRows && req.body.type === 'pending') {
-      await trx
-        .from('votes')
-        .where('post', req.params.id)
-        .delete();
+      if (numRows && req.body.type === 'pending') {
+        await trx
+          .from('votes')
+          .where('post', req.params.id)
+          .delete();
+      }
     }
 
     return data.imageURL;

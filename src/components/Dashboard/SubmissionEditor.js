@@ -77,6 +77,7 @@ function onRightsChange(value) {
 }
 
 function onImageChange(value, name) {
+  onValueChange('imageName')(''); // Prevent uploading new image with old name on imageURL update
   onValueChange('imageURL')(value);
   onValueChange('imageName')(name);
 }

@@ -1,16 +1,14 @@
 import fs from 'fs-extra';
-import imageType from 'image-type';
+import multer from 'multer';
 import config from '../../../config';
 
-const DATA_URL_REGEX = /^data:.+\/(.+);base64,(.*)$/;
-
-function generateImageName(imageName) {
+function generateImageName(imageName, mimeType) {
   let name = String(imageName);
   const dotIndex = name.lastIndexOf('.');
   if (dotIndex !== -1) {
     name = name.slice(0, dotIndex);
   }
-  const slug = name
+  let slug = name
     .normalize('NFKD')
     // eslint-disable-next-line no-control-regex
     .replace(/[^\x00-\x7F]/g, '')
@@ -18,23 +16,14 @@ function generateImageName(imageName) {
     .trim()
     .toLowerCase()
     .replace(/[-\s]+/g, '-');
-  return `${Date.now()}-${slug}`;
-}
-
-async function saveDataUrlImageToFile(dataUrl, imageName) {
-  const newImageName = generateImageName(imageName);
-  const matches = dataUrl.match(DATA_URL_REGEX);
-  if (matches && matches.length === 3) {
-    const buffer = Buffer.from(matches[2], 'base64');
-    const type = imageType(buffer);
-    if (type) {
-      await fs.ensureDir(config.MEDIA_PATH);
-      await fs.writeFile(`${config.MEDIA_PATH}${newImageName}.${type.ext}`, buffer);
-      return `${newImageName}.${type.ext}`;
-    }
-    throw new Error('data url was not and image');
+  if (mimeType === 'image/jpeg') {
+    slug += '.jpg';
+  } else if (mimeType === 'image/png') {
+    slug += '.png';
+  } else {
+    slug += '.unknown';
   }
-  throw new Error('data url did not match regex');
+  return `${Date.now()}-${slug}`;
 }
 
 function getFullImagePath(imageName) {
@@ -51,8 +40,30 @@ function getFullImageURL(imageName) {
   return 'https://danesjenovdan.si/img/djndog.png';
 }
 
+const imageUploader = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      fs.ensureDir(config.MEDIA_PATH).then(() => {
+        cb(null, config.MEDIA_PATH);
+      });
+    },
+    filename(req, file, cb) {
+      cb(null, generateImageName(file.originalname, file.mimetype));
+    },
+  }),
+  fileFilter(req, file, cb) {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+      return cb(null, true);
+    }
+    return cb(new Error(`Only 'png' and 'jpeg' images allowed (got ${file.mimetype}).`));
+  },
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2MB
+  },
+});
+
 export {
-  saveDataUrlImageToFile,
   getFullImagePath,
   getFullImageURL,
+  imageUploader,
 };

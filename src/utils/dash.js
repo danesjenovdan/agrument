@@ -86,6 +86,11 @@ function editSubmission(id, data) {
     .send(data);
 }
 
+function uploadImage(id, imageURL, imageName) {
+  return request.post(POST_EDIT_SUBMISSION.replace(':id', id))
+    .attach('imageURL', imageURL, imageName);
+}
+
 function getPending() {
   return request.get(GET_PENDING);
 }
@@ -131,6 +136,7 @@ export {
   addBulkSubmission,
   removeSubmission,
   editSubmission,
+  uploadImage,
   getPending,
   submitPending,
   getVotable,
