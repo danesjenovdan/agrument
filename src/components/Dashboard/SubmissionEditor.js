@@ -54,6 +54,11 @@ const TYPE_TEXT = {
   pending: 'Čaka na oddajo',
 };
 
+const EMAIL_TEMPLATES = {
+  normal: 'Normalna',
+  project: 'S projektom',
+};
+
 function onValueChange(key) {
   return (event) => {
     let value = event;
@@ -213,6 +218,31 @@ class SubmissionEditor extends React.Component {
     );
   }
 
+  renderEmailTemplate() {
+    const { entry, state } = this.props;
+    let content = (
+      <div>{EMAIL_TEMPLATES[entry.emailTemplate]}</div>
+    );
+    if (state.user.data.group === 'admin') {
+      content = (
+        <div className="component__input component__input--select">
+          <select id="submissioneditor-emailTemplate" value={entry.emailTemplate} className="form-control" onChange={onValueChange('emailTemplate')}>
+            {Object.keys(EMAIL_TEMPLATES).map((template) => (
+              <option key={template} value={template}>{EMAIL_TEMPLATES[template]}</option>
+            ))}
+          </select>
+          <span><i className="glyphicon glyphicon-chevron-down" /></span>
+        </div>
+      );
+    }
+    return (
+      <div className="form-group">
+        <label htmlFor="submissioneditor-emailTemplate" className="control-label">Email predloga</label>
+        {content}
+      </div>
+    );
+  }
+
   render() {
     const { entry, state } = this.props;
     const {
@@ -230,6 +260,7 @@ class SubmissionEditor extends React.Component {
               {this.renderAuthor()}
               {this.renderDate()}
               {this.renderStatus()}
+              {this.renderEmailTemplate()}
               <div className="form-group">
                 <label htmlFor="submissioneditor-tweet" className="control-label">Twitter ({getTweetCharactersLeft(entry.tweet)})</label>
                 <Textarea
@@ -397,6 +428,7 @@ SubmissionEditor.propTypes = {
     author_name: PropTypes.string,
     tweet: PropTypes.string,
     fbtext: PropTypes.string,
+    emailTemplate: PropTypes.string,
   }).isRequired,
   state: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,

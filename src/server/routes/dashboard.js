@@ -540,6 +540,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
             image_url: `https://agrument.danesjenovdan.si${getFullImageURL(post.imageURL)}`,
             image_source: post.imageCaption,
             image_source_url: post.imageCaptionURL,
+            email_template_id: post.emailTemplate === 'project' ? 232 : 42,
           })
           .set('Authorization', config.MAUTIC_SECRET);
         // eslint-disable-next-line no-console
