@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-exports.up = (knex, Promise) => (
+exports.up = (knex) => (
   Promise.all([
     knex.schema.alterTable('posts', (table) => {
       table.dropColumn('deadline');
@@ -8,7 +8,7 @@ exports.up = (knex, Promise) => (
   ])
 );
 
-exports.down = (knex, Promise) => (
+exports.down = (knex) => (
   Promise.all([
     knex.schema.alterTable('posts', (table) => {
       table.integer('deadline').notNullable();

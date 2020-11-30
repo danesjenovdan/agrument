@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-exports.up = (knex, Promise) => (
+exports.up = (knex) => (
   Promise.all([
     knex.schema.hasTable('users').then((exists) => {
       if (!exists) {
@@ -57,7 +57,7 @@ exports.up = (knex, Promise) => (
   ])
 );
 
-exports.down = (knex, Promise) => (
+exports.down = (knex) => (
   Promise.all([
     knex.schema.dropTable('users'),
     knex.schema.dropTable('posts'),
