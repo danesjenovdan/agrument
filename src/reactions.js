@@ -336,14 +336,15 @@ function initReactions(store) {
   store.on('editable:updategeneratedtext', () => {
     if (store.get().editable && store.get().editable.data) {
       const text = store.get().currentEditorText;
-      const naslov = store.get().editable.data.title;
+      const originalTitle = store.get().editable.data.title;
       const caption = store.get().editable.data.imageCaption;
       const imgUrl = store.get().editable.data.imageCaptionURL;
       const timestamp = store.get().editable.data.date;
       const url = `${window.location.origin}/${toSloDateString(timestamp)}`;
 
       shortenUrls([imgUrl, url], `Slika: ${caption} [${imgUrl}]\n\n${url}`).then((footerText) => {
-        const fbtext = `${naslov}\n\n${text}\n${footerText}`;
+        const uppercaseTitle = String(originalTitle).toUpperCase();
+        const fbtext = `${uppercaseTitle}\n\n${text}\n${footerText}`;
 
         let desc = text
           .replace(/\n/g, ' ')
