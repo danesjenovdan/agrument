@@ -81,6 +81,7 @@ SubmissionPreview.propTypes = {
     imageURL: PropTypes.string.isRequired,
     imageCaption: PropTypes.string.isRequired,
     imageCaptionURL: PropTypes.string.isRequired,
+    imageAltText: PropTypes.string.isRequired,
     // hasEmbed: PropTypes.number.isRequired,
     // embedCode: PropTypes.string,
     // embedHeight: PropTypes.string, // TODO:

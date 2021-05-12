@@ -237,6 +237,7 @@ router.post('/submissions/addbulk', requireAdmin, (req, res) => {
         imageURL: entry.imageURL,
         imageCaption: entry.imageCaption,
         imageCaptionURL: entry.imageCaptionURL,
+        imageAltText: entry.imageAltText,
       };
 
       const { date } = obj;
@@ -289,6 +290,7 @@ router.post('/submissions/add', requireAdmin, (req, res) => {
             imageURL: '',
             imageCaption: '',
             imageCaptionURL: '',
+            imageAltText: '',
             hasEmbed: 0,
             rights: '',
             type: 'pending',
@@ -540,6 +542,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
             image_url: `https://agrument.danesjenovdan.si${getFullImageURL(post.imageURL)}`,
             image_source: post.imageCaption,
             image_source_url: post.imageCaptionURL,
+            image_alt_text: post.imageAltText,
             email_template_id: post.emailTemplate === 'project' ? 232 : 42,
           })
           .set('Authorization', config.MAUTIC_SECRET);

@@ -360,6 +360,15 @@ class SubmissionEditor extends React.Component {
                     className="form-control"
                   />
                 </div>
+                <div className="form-group">
+                  <label htmlFor="submissioneditor-imgalt" className="control-label">Opis slike (alt)</label>
+                  <input
+                    id="submissioneditor-imgalt"
+                    value={entry.imageAltText}
+                    onChange={onValueChange('imageAltText')}
+                    className="form-control"
+                  />
+                </div>
               </div>
               <div className="col-sm-6">
                 <label className="control-label">Predogled</label>
@@ -420,6 +429,7 @@ SubmissionEditor.propTypes = {
     imageURL: PropTypes.any,
     imageCaption: PropTypes.string.isRequired,
     imageCaptionURL: PropTypes.string.isRequired,
+    imageAltText: PropTypes.string.isRequired,
     // hasEmbed: PropTypes.number.isRequired,
     // embedCode: PropTypes.string,
     // embedHeight: PropTypes.string, // TODO:

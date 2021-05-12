@@ -61,6 +61,7 @@ function mapPost(post) {
     image_url: fullImageURL,
     image_source: post.imageCaption,
     image_source_url: post.imageCaptionURL,
+    image_alt_text: post.imageAltText,
   };
 }
 
