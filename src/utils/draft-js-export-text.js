@@ -157,7 +157,8 @@ class MarkupGenerator {
             if (!text2) {
               return '';
             }
-            return encodeContent(text2);
+            // return encodeContent(text2); // escape markdown characters, eg. *_`
+            return text2;
           })
           .join('');
         const entity = entityKey ? contentState.getEntity(entityKey) : null;
