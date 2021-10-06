@@ -116,14 +116,18 @@ class SubmissionEditor extends React.Component {
   }
 
   onEditorChange = (value, editorValue) => {
+    const fixedHtml = value
+      .replace(/\s+<\/a>(\S)/g, '</a> $1') // fix "one </a>two"
+      .replace(/\s+<\/a>\s+/g, '</a> '); // fix "one </a> two"
+
     this.editorValue = true;
-    this.setState({ editorHtml: value });
+    this.setState({ editorHtml: fixedHtml });
 
     if (editorValue) {
       stateToText(editorValue.getEditorState().getCurrentContent())
         .then((text) => {
           this.setState({ editorText: text, saveErrorText: null });
-          store.emit('editable:updateeditor', value, text);
+          store.emit('editable:updateeditor', fixedHtml, text);
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
