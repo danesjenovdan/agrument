@@ -10,7 +10,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "start:watch": "nodemon --watch server server/index.js"
   },
   "dependencies": {
     "@fastify/session": "^6.4.0",
@@ -46,6 +47,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "vite": "^2.8.0"
   }
