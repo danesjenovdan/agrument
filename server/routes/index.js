@@ -2,6 +2,8 @@ import apiV2 from './api_v2.js';
 import api from './api.js';
 import feed from './feed.js';
 import agrument from './agrument.js';
+import auth from './auth.js';
+// import dashRouter from './routes/dashboard';
 
 export function registerPublicApi(fastify) {
   // public api based on REST, JSONFeed
@@ -13,19 +15,19 @@ export function registerPublicApi(fastify) {
   // rss/atom/json feeds
   fastify.register(feed, { prefix: '/rss' });
 
-  // get published posts for public feed
+  // old public api
   fastify.register(agrument, { prefix: '/api/agrument' });
 }
 
+export function registerAuthenticatedApi(fastify, fastifyPassport) {
+  // login/logout/register routes
+  fastify.register(auth, { prefix: '/api/auth', fastifyPassport });
+
+  // private api for dashboard that requires logged in users
+  // app.use('/api/dash', dashRouter);
+}
+
 // import renderApp from './middleware/app';
-// import dashRouter from './routes/dashboard';
-// import authRouter from './routes/auth';
-
-// // login/logout/register routes
-// app.use('/api/auth', authRouter);
-
-// // private api for dashboard that requires logged in users
-// app.use('/api/dash', dashRouter);
 
 // // any other api route returns 400
 // app.use(['/api', '/api/*'], (req, res) => {

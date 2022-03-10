@@ -101,4 +101,6 @@ export default function registerSessionAuth(fastify) {
   fastifyPassport.registerUserDeserializer(deserializeUser);
   fastify.register(fastifyPassport.initialize());
   fastifyPassport.use('local', new LocalStrategy(verifyUser));
+
+  return fastifyPassport;
 }
