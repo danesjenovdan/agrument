@@ -1,16 +1,13 @@
-import express from 'express';
-import { isArray } from 'lodash';
-import db from '../database';
-import { toDateTimestamp } from '../../utils/date';
-import { getFullImageURL } from '../utils/image';
+import _ from 'lodash';
+import db from '../database.js';
+import { toDateTimestamp } from '../utils/date.js';
+import { getFullImageURL } from '../utils/image.js';
 
-const MLADINA_EXTRA_PARAGRAPH = '<p><a href="https://agrument.danesjenovdan.si" target="blank">Agrument</a> ustvarja <a href="https://danesjenovdan.si/" target="blank">Danes je nov dan</a>.</p>';
-
-const router = express.Router();
+const MLADINA_EXTRA_PARAGRAPH =
+  '<p><a href="https://agrument.danesjenovdan.si" target="blank">Agrument</a> ustvarja <a href="https://danesjenovdan.si/" target="blank">Danes je nov dan</a>.</p>';
 
 function getData(queryObj) {
-  const query = db('posts')
-    .where('type', 'published');
+  const query = db('posts').where('type', 'published');
   if (queryObj.all) {
     return query.select();
   }
@@ -22,16 +19,10 @@ function getData(queryObj) {
      */
     const date = toDateTimestamp(queryObj.date);
     if (queryObj.direction === 'newer') {
-      return query
-        .andWhere('date', '>', date)
-        .orderBy('date', 'asc')
-        .first();
+      return query.andWhere('date', '>', date).orderBy('date', 'asc').first();
     }
     if (queryObj.direction === 'older') {
-      return query
-        .andWhere('date', '<', date)
-        .orderBy('date', 'desc')
-        .first();
+      return query.andWhere('date', '<', date).orderBy('date', 'desc').first();
     }
     throw new Error('Bad Request (invalid direction)');
   }
@@ -42,28 +33,26 @@ function getData(queryObj) {
      *  - if invalid date return first post with todays date or empty if no posts today
      */
     const date = toDateTimestamp(queryObj.date);
-    return query
-      .andWhere('date', date)
-      .first();
+    return query.andWhere('date', date).first();
   }
   /**
    * No date provided:
    *  - return latest post
    */
-  return query
-    .orderBy('date', 'desc')
-    .first();
+  return query.orderBy('date', 'desc').first();
 }
 
 async function getPost(queryObj) {
   const data = await getData(queryObj);
-  if (isArray(data)) {
+  if (_.isArray(data)) {
     const mapped = data.map((post) => {
       if (post.imageURL) {
         return {
           ...post,
           imageURL: getFullImageURL(post.imageURL),
-          content: queryObj.mladina ? (post.content + MLADINA_EXTRA_PARAGRAPH) : post.content,
+          content: queryObj.mladina
+            ? post.content + MLADINA_EXTRA_PARAGRAPH
+            : post.content,
         };
       }
       return post;
@@ -83,21 +72,23 @@ async function getPost(queryObj) {
   return null;
 }
 
-router.get('/', (req, res) => {
-  getPost(req.query)
+function getAgrumentHandler(request, reply) {
+  getPost(request.query)
     .then((post) => {
-      res.json({
+      reply.send({
         post,
       });
     })
     .catch((err) => {
-      res.status(500).json({
+      reply.status(500).send({
         error: err.message,
       });
     });
-});
+}
 
-export default router;
-export {
-  getPost,
-};
+export { getPost };
+
+export default function registerRoutes(fastify, opts, done) {
+  fastify.get('/', getAgrumentHandler);
+  done();
+}
