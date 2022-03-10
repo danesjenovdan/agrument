@@ -1,4 +1,7 @@
-# Agrument (using React)
+Agrument dashboard and API
+==========================
+
+## TODO: These docs are outdated!
 
 ### Install (with node 8)
 ```
