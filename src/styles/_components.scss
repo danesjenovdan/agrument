@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .component__header {
   background-color: #6ba8a0;
   padding-top: 32px;
@@ -109,7 +111,7 @@
     cursor: pointer;
   }
 
-  input[type="file"] {
+  input[type='file'] {
     display: none;
   }
 }
@@ -183,7 +185,7 @@
       content: '';
       display: block;
       position: absolute;
-      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
     }
 
     &:before {
@@ -199,7 +201,7 @@
       top: 50%;
       //top: $size * 0.60;
       left: $size * 0.125;
-      transform: translateY($size / 10) scaleX(-1) rotate(180deg + -45deg);
+      transform: translateY(math.div($size, 10)) scaleX(-1) rotate(180deg + -45deg);
       transform-origin: left top;
       border: 0 solid #c2d8d8;
     }
@@ -214,8 +216,8 @@
     animation: check 0.8s;
     height: $size * 0.75;
     width: $size * 0.33;
-    border-right-width: $size / 10;
-    border-top-width: $size / 10;
+    border-right-width: math.div($size, 10);
+    border-top-width: math.div($size, 10);
   }
 }
 
@@ -227,7 +229,7 @@
   letter-spacing: 1px;
   background-color: #dd786b;
   position: relative;
-  transition: background-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: background-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   white-space: normal;
 
   &:hover {
@@ -245,8 +247,12 @@
   text-align: center;
 
   @keyframes spinner {
-    0%   { transform: rotate(0deg);   }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .spinner {
@@ -255,7 +261,7 @@
     height: $size;
     border-style: solid;
     border-color: $agrument-teal;
-    border-width: $size / 4;
+    border-width: math.div($size, 4);
     border-right-color: transparent !important;
     border-radius: 50% !important;
     animation: spinner 1s infinite linear;

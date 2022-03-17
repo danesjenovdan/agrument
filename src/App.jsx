@@ -1,45 +1,67 @@
-import { useState, React } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
+import Reset from './pages/Reset.jsx';
+// import Dashboard from '../pages/Dashboard';
+import Agrument from './pages/Agrument.jsx';
 
-function App() {
-  const [count, setCount] = useState(0);
+// import store from '../store';
+// import initReactions from '../reactions';
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((value) => value + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  );
+// initReactions(store);
+
+const routes = [
+  {
+    path: '/login',
+    component: Login,
+  },
+  {
+    path: '/register',
+    component: Register,
+  },
+  {
+    path: '/reset',
+    component: Reset,
+  },
+  // {
+  //   path: '/dash',
+  //   component: Dashboard,
+  // },
+  {
+    path: '*',
+    component: Agrument,
+  },
+];
+
+class App extends React.Component {
+  componentDidMount() {
+    // store.on('update', () => {
+    //   this.forceUpdate();
+    // });
+  }
+
+  render() {
+    // const state = store.get();
+    return (
+      <>
+        <Helmet
+          titleTemplate="%s - Agrument Dashboard"
+          defaultTitle="Agrument Dashboard"
+        />
+        <Routes>
+          {routes.map((r) => (
+            <Route
+              key={`route[${r.path}]`}
+              path={r.path}
+              element={<r.component /* state={state} */ />}
+            />
+          ))}
+        </Routes>
+      </>
+    );
+  }
 }
 
 export default App;

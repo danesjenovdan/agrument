@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const Header = ({ title, subTitle, small }) => {
-  const classes = classnames(
-    'row',
-    'component__header',
-    { 'component__header--small': small },
-  );
+export default function Header({ title, subTitle, small }) {
+  const classes = classnames('row', 'component__header', {
+    'component__header--small': small,
+  });
   return (
     <div className={classes}>
       <div className="container">
@@ -22,7 +20,7 @@ const Header = ({ title, subTitle, small }) => {
       </div>
     </div>
   );
-};
+}
 
 Header.propTypes = {
   title: PropTypes.string.isRequired,
@@ -33,5 +31,3 @@ Header.propTypes = {
 Header.defaultProps = {
   small: false,
 };
-
-export default Header;

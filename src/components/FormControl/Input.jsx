@@ -4,10 +4,10 @@ import { uniqueId } from 'lodash';
 import classnames from 'classnames';
 
 class Input extends React.Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
+  constructor() {
+    super();
     const id = uniqueId('input-');
-    this.setState({ id });
+    this.state = { id };
   }
 
   get value() {
@@ -19,27 +19,29 @@ class Input extends React.Component {
 
   shake() {
     this.inputElement.classList.add('shake');
-    this.inputElement.addEventListener('animationend', () => { this.inputElement.classList.remove('shake'); });
+    this.inputElement.addEventListener('animationend', () => {
+      this.inputElement.classList.remove('shake');
+    });
   }
 
   render() {
-    const {
-      inline, label, value, placeholder, type, onChange,
-    } = this.props;
-    const classes = classnames(
-      'component__input',
-      { 'component__input--inline': inline },
-    );
+    const { inline, label, value, placeholder, type, onChange } = this.props;
+    const { id } = this.state;
+    const classes = classnames('component__input', {
+      'component__input--inline': inline,
+    });
     return (
       <div className={classes}>
-        {label ? <label htmlFor={this.state.id}>{label}</label> : null}
+        {label ? <label htmlFor={id}>{label}</label> : null}
         <input
-          id={this.state.id}
+          id={id}
           className="form-control"
           value={value}
           placeholder={placeholder}
           type={type}
-          ref={(el) => { this.inputElement = el; }}
+          ref={(el) => {
+            this.inputElement = el;
+          }}
           onChange={onChange}
         />
       </div>

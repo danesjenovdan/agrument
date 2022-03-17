@@ -13,7 +13,7 @@ function getButtonType(type) {
   }
 }
 
-const Button = ({
+export default function Button({
   value,
   block,
   external,
@@ -24,14 +24,14 @@ const Button = ({
   onClick,
   className,
   ...otherProps
-}) => {
+}) {
   const inside = !children ? value : children;
   const classes = classnames(
     'component__button',
     'btn',
     { 'btn-block': block },
     { 'disabled ': disabled },
-    className,
+    className
   );
   const buttonType = getButtonType(type);
   if (!href) {
@@ -56,9 +56,17 @@ const Button = ({
     target.rel = 'noopener noreferrer';
   }
   return (
-    <a {...otherProps} className={classes} href={href} {...target} onClick={onClick}>{inside}</a>
+    <a
+      {...otherProps}
+      className={classes}
+      href={href}
+      {...target}
+      onClick={onClick}
+    >
+      {inside}
+    </a>
   );
-};
+}
 
 Button.propTypes = {
   value: PropTypes.string,
@@ -80,8 +88,6 @@ Button.defaultProps = {
   type: 'button',
   href: '',
   disabled: false,
-  onClick: () => { },
+  onClick: () => {},
   className: '',
 };
-
-export default Button;

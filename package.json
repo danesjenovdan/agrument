@@ -16,6 +16,7 @@
   "dependencies": {
     "@fastify/session": "^6.4.0",
     "@vscode/sqlite3": "^5.0.7",
+    "classnames": "^2.3.1",
     "connect-session-knex": "^2.1.1",
     "dotenv-expand": "^8.0.1",
     "dotenv-flow": "^3.2.0",
@@ -34,9 +35,13 @@
     "make-promises-safe": "^5.1.0",
     "passport-local": "^1.0.0",
     "password-hash-and-salt": "^0.1.4",
+    "prop-types": "^15.8.1",
     "randomstring": "^1.2.2",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-helmet-async": "^1.2.3",
+    "react-router-dom": "^6.2.2",
+    "sass": "^1.49.9"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.0.7",
