@@ -1,3 +1,4 @@
+import fastifyCors from 'fastify-cors';
 import _ from 'lodash';
 import db from '../database.js';
 
@@ -41,7 +42,12 @@ function getWordCountHandler(request, reply) {
 }
 
 export default function registerRoutes(fastify, opts, done) {
+  fastify.register(fastifyCors, {
+    origin: '*',
+  });
+
   fastify.get('/last-agrument', getLastAgrumentHandler);
   fastify.get('/word-count', getWordCountHandler);
+
   done();
 }

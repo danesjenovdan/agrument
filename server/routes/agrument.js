@@ -1,3 +1,4 @@
+import fastifyCors from 'fastify-cors';
 import _ from 'lodash';
 import db from '../database.js';
 import { toDateTimestamp } from '../utils/date.js';
@@ -89,6 +90,11 @@ function getAgrumentHandler(request, reply) {
 export { getPost };
 
 export default function registerRoutes(fastify, opts, done) {
+  fastify.register(fastifyCors, {
+    origin: '*',
+  });
+
   fastify.get('/', getAgrumentHandler);
+
   done();
 }

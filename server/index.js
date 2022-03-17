@@ -3,15 +3,10 @@ import './load-env.js';
 import { resolve } from 'path';
 import { fastify as createFastify } from 'fastify';
 import fastifyStatic from 'fastify-static';
-import fastifyCors from 'fastify-cors';
 import { registerAuthenticatedApi, registerPublicApi } from './routes/index.js';
 import registerSessionAuth from './session-auth.js';
 
 const fastify = createFastify({ logger: true, ignoreTrailingSlash: true });
-
-fastify.register(fastifyCors, {
-  origin: '*',
-});
 
 fastify.register(fastifyStatic, {
   root: resolve('./dist'),

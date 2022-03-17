@@ -1,3 +1,4 @@
+import fastifyCors from 'fastify-cors';
 import db from '../database.js';
 import { getFullImageURL } from '../utils/image.js';
 import { parseDate } from '../utils/date.js';
@@ -159,6 +160,11 @@ function getPostsHandler(request, reply) {
 }
 
 export default function registerRoutes(fastify, opts, done) {
+  fastify.register(fastifyCors, {
+    origin: '*',
+  });
+
   fastify.get('/posts', getPostsHandler);
+
   done();
 }

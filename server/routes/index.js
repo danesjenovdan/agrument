@@ -33,12 +33,5 @@ export function registerAuthenticatedApi(fastify, fastifyPassport) {
 
 // import renderApp from './middleware/app';
 
-// // any other api route returns 400
-// app.use(['/api', '/api/*'], (req, res) => {
-//   res.status(400).json({
-//     error: 'Bad Request',
-//   });
-// });
-
 // // any other GET route renders html + react
 // app.get('*', renderApp);
