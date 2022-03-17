@@ -7,7 +7,7 @@ module.exports = {
   extends: ['airbnb', 'plugin:prettier/recommended'],
   plugins: ['prettier'],
   parserOptions: {
-    ecmaVersion: 2021,
+    ecmaVersion: 2022,
   },
   rules: {
     'react/prop-types': ['off'],
