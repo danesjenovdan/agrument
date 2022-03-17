@@ -4,6 +4,7 @@ import feed from './feed.js';
 import agrument from './agrument.js';
 import auth from './auth.js';
 import dashboardUser from './dashboard/user.js';
+import dashboardAdmin from './dashboard/admin.js';
 
 export function registerPublicApi(fastify) {
   // public api based on REST, JSONFeed
@@ -27,7 +28,7 @@ export function registerAuthenticatedApi(fastify, fastifyPassport) {
   fastify.register(dashboardUser, { prefix: '/api/dash' });
 
   // private api for dashboard that requires logged in users
-  // fastify.register(dashboardAdmin, { prefix: '/api/dash' });
+  fastify.register(dashboardAdmin, { prefix: '/api/dash' });
 }
 
 // import renderApp from './middleware/app';
