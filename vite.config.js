@@ -5,4 +5,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   clearScreen: false,
   plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        cookieDomainRewrite: 'localhost:3000',
+      },
+    },
+  },
 });

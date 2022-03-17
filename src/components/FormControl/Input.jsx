@@ -25,7 +25,8 @@ class Input extends React.Component {
   }
 
   render() {
-    const { inline, label, value, placeholder, type, onChange } = this.props;
+    const { inline, label, name, value, placeholder, type, onChange } =
+      this.props;
     const { id } = this.state;
     const classes = classnames('component__input', {
       'component__input--inline': inline,
@@ -36,6 +37,7 @@ class Input extends React.Component {
         <input
           id={id}
           className="form-control"
+          name={name}
           value={value}
           placeholder={placeholder}
           type={type}
@@ -50,6 +52,7 @@ class Input extends React.Component {
 }
 
 Input.propTypes = {
+  name: PropTypes.string,
   value: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
@@ -59,6 +62,7 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
+  name: undefined,
   value: undefined,
   placeholder: '',
   type: 'text',

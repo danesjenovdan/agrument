@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import Header from '../components/Header.jsx';
 import RegisterForm from '../components/Dashboard/RegisterForm.jsx';
 
-export default function Reset({ state }) {
+export default function Reset() {
   return (
     <div>
       <Helmet>
@@ -21,7 +20,3 @@ export default function Reset({ state }) {
     </div>
   );
 }
-
-Reset.propTypes = {
-  state: PropTypes.shape().isRequired,
-};

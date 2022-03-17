@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import Header from '../components/Header.jsx';
 import RegisterForm from '../components/Dashboard/RegisterForm.jsx';
 
-export default function Register({ state }) {
+export default function Register() {
   return (
     <div>
       <Helmet>
@@ -20,7 +19,3 @@ export default function Register({ state }) {
     </div>
   );
 }
-
-Register.propTypes = {
-  state: PropTypes.shape().isRequired,
-};
