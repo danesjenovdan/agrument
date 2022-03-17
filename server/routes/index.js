@@ -30,8 +30,3 @@ export function registerAuthenticatedApi(fastify, fastifyPassport) {
   // private api for dashboard that requires logged in users
   fastify.register(dashboardAdmin, { prefix: '/api/dash' });
 }
-
-// import renderApp from './middleware/app';
-
-// // any other GET route renders html + react
-// app.get('*', renderApp);

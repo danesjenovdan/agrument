@@ -84,7 +84,9 @@ export default function registerSessionAuth(fastify) {
     resave: false, // don't resave to store if not modified
     store: new KnexSessionStore({ knex: db }),
     secret: process.env.SESSION_SECRET,
-    cookie: {},
+    cookie: {
+      secure: false,
+    },
   };
 
   // if (app.get('env') === 'production') {
@@ -100,6 +102,7 @@ export default function registerSessionAuth(fastify) {
   fastifyPassport.registerUserSerializer(serializeUser);
   fastifyPassport.registerUserDeserializer(deserializeUser);
   fastify.register(fastifyPassport.initialize());
+  fastify.register(fastifyPassport.secureSession());
   fastifyPassport.use('local', new LocalStrategy(verifyUser));
 
   return fastifyPassport;

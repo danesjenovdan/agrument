@@ -13,6 +13,10 @@ fastify.register(fastifyStatic, {
   prefix: '/',
 });
 
+fastify.setNotFoundHandler((request, reply) => {
+  reply.sendFile('index.html');
+});
+
 registerPublicApi(fastify);
 
 // every route registered after this has access to auth (request.user) and sessions
