@@ -2,32 +2,34 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { dash } from '../../utils/requests/api.js';
 
-const fetchUser = createAsyncThunk('user/fetch', async () => {
-  const response = await dash.get('/user');
+const fetchUsers = createAsyncThunk('users/fetch', async () => {
+  const response = await dash.get('/users');
   return response.data;
 });
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: 'users',
   initialState: {
     loading: false,
     data: null,
   },
   extraReducers: {
-    [fetchUser.pending]: (state) => {
+    [fetchUsers.pending]: (state) => {
       state.loading = true;
     },
-    [fetchUser.fulfilled]: (state, action) => {
+    [fetchUsers.fulfilled]: (state, action) => {
       state.loading = false;
-      state.data = action.payload.user;
+      state.data = action.payload.users
+        .slice()
+        .sort((a, b) => (a?.name || '').localeCompare(b?.name || '', 'sl'));
     },
-    [fetchUser.rejected]: (state) => {
+    [fetchUsers.rejected]: (state) => {
       state.loading = false;
       state.data = null;
     },
   },
 });
 
-export { fetchUser };
+export { fetchUsers };
 
 export default userSlice.reducer;

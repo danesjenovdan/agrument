@@ -20,6 +20,7 @@
     "axios": "^0.26.1",
     "classnames": "^2.3.1",
     "connect-session-knex": "^2.1.1",
+    "date-fns": "^2.28.0",
     "dotenv-expand": "^8.0.1",
     "dotenv-flow": "^3.2.0",
     "fastify": "^3.27.4",
@@ -40,10 +41,13 @@
     "prop-types": "^15.8.1",
     "randomstring": "^1.2.2",
     "react": "^17.0.2",
+    "react-datepicker": "^4.7.0",
     "react-dom": "^17.0.2",
     "react-helmet-async": "^1.2.3",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.2",
+    "react-timeago": "^6.2.1",
+    "react-use": "^17.3.2",
     "sass": "^1.49.9"
   },
   "devDependencies": {

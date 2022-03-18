@@ -4,7 +4,9 @@ function parseDate(input, defaultToNow = true) {
   let dateObj = null;
   if (input) {
     if (input instanceof Date) {
-      dateObj = new Date(Date.UTC(input.getFullYear(), input.getMonth(), input.getDate()));
+      dateObj = new Date(
+        Date.UTC(input.getFullYear(), input.getMonth(), input.getDate())
+      );
     } else {
       const inputAsNumber = Number(input);
       if (_.isInteger(inputAsNumber)) {
@@ -51,7 +53,9 @@ function toISODateString(date) {
 function toSloDateString(date, spaces = false) {
   const dateObj = _.isDate(date) ? date : parseDate(date);
   const spaceChar = spaces ? ' ' : '';
-  return `${dateObj.getUTCDate()}.${spaceChar}${dateObj.getUTCMonth() + 1}.${spaceChar}${dateObj.getUTCFullYear()}`;
+  return `${dateObj.getUTCDate()}.${spaceChar}${
+    dateObj.getUTCMonth() + 1
+  }.${spaceChar}${dateObj.getUTCFullYear()}`;
 }
 
 function toDateTimestamp(date) {
@@ -59,9 +63,4 @@ function toDateTimestamp(date) {
   return dateObj.getTime();
 }
 
-export {
-  parseDate,
-  toISODateString,
-  toSloDateString,
-  toDateTimestamp,
-};
+export { parseDate, toISODateString, toSloDateString, toDateTimestamp };

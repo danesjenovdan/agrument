@@ -1,29 +1,33 @@
-// import request from 'superagent';
+import { dash } from './api.js';
 
-// const API_DASH = '/api/dash';
+export async function addSubmission(userId, date) {
+  const { data } = await dash.post('/submissions/add', {
+    author: userId,
+    date,
+  });
+  if (data.success !== 'Added submission') {
+    throw new Error('Adding submission failed!');
+  }
+}
 
-// const GET_USERS = `${API_DASH}/users`;
+export async function removeSubmission(id) {
+  const { data } = await dash.delete(`/submissions/remove/${id}`);
+  if (data.success !== 'Removed submission') {
+    throw new Error('Removing submission failed!');
+  }
+}
+
 // const POST_DISABLE_USER = `${API_DASH}/users/disable/:id`;
 // const POST_CREATE_USER_TOKEN = `${API_DASH}/users/createtoken/:id`;
 // const GET_USERS_TOKENS = `${API_DASH}/users/tokens`;
 // const POST_CREATE_USER = `${API_DASH}/users/create`;
-// const GET_PUBLISHED = `${API_DASH}/published`;
-// const GET_SUBMISSIONS = `${API_DASH}/submissions`;
-// const POST_ADD_SUBMISSION = `${API_DASH}/submissions/add`;
-// const POST_ADD_BULK_SUBMISSION = `${API_DASH}/submissions/addbulk`;
-// const DELETE_REMOVE_SUBMISSION = `${API_DASH}/submissions/remove/:id`;
+
 // const POST_EDIT_SUBMISSION = `${API_DASH}/submissions/edit/:id`;
-// const GET_PENDING = `${API_DASH}/pending/`;
 // const POST_SUBMIT_PENDING = `${API_DASH}/pending/submit/:id`;
-// const GET_VOTABLE = `${API_DASH}/votable`;
 // const POST_PUBLISH_VOTABLE = `${API_DASH}/votable/publish/:id`;
 // const GET_EDITABLE = `${API_DASH}/edit/:date`;
 // const GET_VOTES = `${API_DASH}/votes/:id`;
 // const POST_VOTE = `${API_DASH}/vote/:id`;
-
-// function getUsers() {
-//   return request.get(GET_USERS);
-// }
 
 // function disableUser(id, disabled) {
 //   return request.post(POST_DISABLE_USER.replace(':id', id))
@@ -42,40 +46,6 @@
 //   return request.post(POST_CREATE_USER);
 // }
 
-// function getPublished(date, offset, searchQuery) {
-//   let req = request.get(GET_PUBLISHED);
-//   const queryObj = {};
-//   if (searchQuery) {
-//     queryObj.q = searchQuery;
-//   }
-//   if (date && offset != null) {
-//     queryObj.after = `${date}+${offset}`;
-//   }
-//   req = req.query(queryObj);
-//   return req;
-// }
-
-// function getSubmissions() {
-//   return request.get(GET_SUBMISSIONS);
-// }
-
-// function addSubmission(userId, date) {
-//   return request.post(POST_ADD_SUBMISSION)
-//     .send({
-//       author: userId,
-//       date,
-//     });
-// }
-
-// function addBulkSubmission(data) {
-//   return request.post(POST_ADD_BULK_SUBMISSION)
-//     .send(data);
-// }
-
-// function removeSubmission(id) {
-//   return request.del(DELETE_REMOVE_SUBMISSION.replace(':id', id));
-// }
-
 // function editSubmission(id, data) {
 //   return request.post(POST_EDIT_SUBMISSION.replace(':id', id))
 //     .send(data);
@@ -86,16 +56,8 @@
 //     .attach('imageURL', imageURL, imageName);
 // }
 
-// function getPending() {
-//   return request.get(GET_PENDING);
-// }
-
 // function submitPending(id) {
 //   return request.post(POST_SUBMIT_PENDING.replace(':id', id));
-// }
-
-// function getVotable() {
-//   return request.get(GET_VOTABLE);
 // }
 
 // function publishVotable(id) {
@@ -119,22 +81,13 @@
 // }
 
 // export {
-//   getUser,
-//   getUsers,
 //   disableUser,
 //   createUserToken,
 //   getTokenUsers,
 //   createUser,
-//   getPublished,
-//   getSubmissions,
-//   addSubmission,
-//   addBulkSubmission,
-//   removeSubmission,
 //   editSubmission,
 //   uploadImage,
-//   getPending,
 //   submitPending,
-//   getVotable,
 //   publishVotable,
 //   getEditable,
 //   getVotes,

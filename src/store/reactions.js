@@ -5,33 +5,6 @@
 // import { shortenUrls } from './utils/shortener';
 
 // function initReactions(store) {
-//   store.on('users:fetch', () => {
-//     if (store.get().users.isLoading) {
-//       return;
-//     }
-
-//     store.get().users.set({ isLoading: true });
-
-//     dash.getUsers()
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().users.set({
-//             isLoading: false,
-//           });
-//         } else {
-//           store.get().users.set({
-//             isLoading: false,
-//             data: res.body.users,
-//           });
-//           if (res.body.users.length) {
-//             store.get().newArticle.set({
-//               selectedUser: res.body.users[0].id,
-//             });
-//           }
-//         }
-//       });
-//   });
-
 //   store.on('users:disable', (id, disabled) => {
 //     dash.disableUser(id, disabled)
 //       .end((err, res) => {
@@ -72,62 +45,6 @@
 //       });
 //   });
 
-//   store.on('newsubmission:changeuser', (id) => {
-//     store.get().newArticle.set({ selectedUser: id });
-//   });
-
-//   store.on('newsubmission:changedate', (time) => {
-//     store.get().newArticle.set({ date: time });
-//   });
-
-//   store.on('newsubmission:create', () => {
-//     if (store.get().newArticle.isLoading) {
-//       return;
-//     }
-
-//     store.get().newArticle.set({ isLoading: true, error: false });
-
-//     dash.addSubmission(store.get().newArticle.selectedUser, store.get().newArticle.date)
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().newArticle.set({
-//             isLoading: false,
-//             error: res.body.error || err || res.status,
-//           });
-//         } else {
-//           store.get().newArticle.set({
-//             isLoading: false,
-//             error: false,
-//           });
-//           store.emit('submissions:fetch');
-//         }
-//       });
-//   });
-
-//   store.on('published:fetch', (date, offset) => {
-//     if (store.get().published.isLoading) {
-//       return;
-//     }
-
-//     store.get().published.set({ isLoading: true });
-
-//     dash.getPublished(date, offset, store.get().published.searchQuery)
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().published.set({
-//             isLoading: false,
-//             ignorePagination: false,
-//           });
-//         } else {
-//           store.get().published.set({
-//             isLoading: false,
-//             data: res.body.published,
-//             ignorePagination: res.body.ignorePagination || false,
-//           });
-//         }
-//       });
-//   });
-
 //   const debouncedPublishedFetch = _.debounce(() => {
 //     store.emit('published:fetch');
 //   }, 500);
@@ -135,97 +52,6 @@
 //   store.on('published:updatesearchquery', (value) => {
 //     store.get().published.set({ searchQuery: value }).now();
 //     debouncedPublishedFetch();
-//   });
-
-//   store.on('submissions:fetch', () => {
-//     if (store.get().submissions.isLoading) {
-//       return;
-//     }
-
-//     store.get().submissions.set({ isLoading: true });
-
-//     dash.getSubmissions()
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().submissions.set({
-//             isLoading: false,
-//           });
-//         } else {
-//           store.get().submissions.set({
-//             isLoading: false,
-//             data: res.body.submissions,
-//           });
-//         }
-//       });
-//   });
-
-//   store.on('submissions:remove', (id) => {
-//     const sub = store.get().submissions.data.find((e) => e.id === id);
-//     const { type } = sub;
-
-//     if (sub) {
-//       sub.set({ disabled: true });
-
-//       dash.removeSubmission(id)
-//         .end((err, res) => {
-//           if (err || !res.ok) {
-//             // noop
-//           } else {
-//             store.emit('submissions:fetch');
-//             store.emit(`${type}:fetch`);
-//           }
-//         });
-//     }
-//   });
-
-//   store.on('pending:fetch', () => {
-//     if (store.get().pending.isLoading) {
-//       return;
-//     }
-
-//     store.get().pending.set({ isLoading: true });
-
-//     dash.getPending()
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().pending.set({
-//             isLoading: false,
-//           });
-//         } else {
-//           store.get().pending.set({
-//             isLoading: false,
-//             data: res.body.pending,
-//           });
-//         }
-//       });
-//   });
-
-//   store.on('votable:fetch', () => {
-//     if (store.get().votable.isLoading) {
-//       return;
-//     }
-
-//     store.get().votable.set({ isLoading: true });
-
-//     dash.getVotable()
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().votable.set({
-//             isLoading: false,
-//           });
-//         } else {
-//           store.get().votable.set({
-//             isLoading: false,
-//             data: res.body.votable,
-//           });
-//           if (res.body.votes) {
-//             store.get().votes.set({
-//               isLoading: false,
-//               data: res.body.votes,
-//             });
-//           }
-//         }
-//       });
 //   });
 
 //   const debouncedEditableSave = _.debounce(() => {

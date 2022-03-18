@@ -26,6 +26,7 @@ function getPublishedHandler(request, reply) {
   }
 
   if (request.query.q) {
+    // TODO: remove X:no-image, its not working correctly anyway
     if (request.query.q === 'X:no-image') {
       query = query
         .orderBy('date', 'desc')

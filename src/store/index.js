@@ -1,17 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './slices/user.js';
+import usersReducer from './slices/users.js';
+import postsReducer from './slices/posts.js';
 
 export default configureStore({
   reducer: {
     user: userReducer,
+    users: usersReducer,
+    posts: postsReducer,
   },
 });
 
 // const store = new Freezer({
-//   users: {
-//     isLoading: false,
-//     data: null,
-//   },
 //   tokenUsers: {
 //     isLoading: false,
 //     data: null,
@@ -21,47 +21,8 @@ export default configureStore({
 //     id: 0,
 //     token: null,
 //   },
-//   newArticle: {
-//     isLoading: false,
-//     error: false,
-//     selectedUser: null,
-//     date: parseDate(Date.now()).getTime(),
-//   },
-//   published: {
-//     isLoading: false,
-//     searchQuery: '',
-//     data: null,
-//     ignorePagination: false,
-//   },
-//   submissions: {
-//     isLoading: false,
-//     data: null,
-//   },
-//   pending: {
-//     isLoading: false,
-//     data: null,
-//   },
-//   votable: {
-//     isLoading: false,
-//     data: null,
-//   },
 //   currentEditor: null,
 //   currentEditorText: '',
-//   forms: {
-//     login: {
-//       isLoading: false,
-//       username: '',
-//       password: '',
-//     },
-//     register: {
-//       isLoading: false,
-//       error: false,
-//       name: '',
-//       username: '',
-//       password: '',
-//       passwordRepeat: '',
-//     },
-//   },
 //   editable: {
 //     saving: false,
 //     savingError: false,

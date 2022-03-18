@@ -6,12 +6,10 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 const slFormatter = buildFormatter(sloStrings);
 
-const LocalizedTimeAgo = ({ date }) => (
-  <TimeAgo formatter={slFormatter} date={date} />
-);
+export default function LocalizedTimeAgo({ date }) {
+  return <TimeAgo formatter={slFormatter} date={date} />;
+}
 
 LocalizedTimeAgo.propTypes = {
   date: PropTypes.number.isRequired,
 };
-
-export default LocalizedTimeAgo;

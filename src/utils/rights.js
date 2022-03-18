@@ -20,7 +20,4 @@ function getRightFromLetter(letter) {
   return null;
 }
 
-export {
-  rights,
-  getRightFromLetter,
-};
+export { rights, getRightFromLetter };

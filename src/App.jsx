@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Reset from './pages/Reset.jsx';
-// import Dashboard from '../pages/Dashboard';
+import Dashboard from './pages/Dashboard.jsx';
 import Agrument from './pages/Agrument.jsx';
 
 const routes = [
@@ -20,10 +20,10 @@ const routes = [
     path: '/reset',
     component: Reset,
   },
-  // {
-  //   path: '/dash',
-  //   component: Dashboard,
-  // },
+  {
+    path: '/dash/*',
+    component: Dashboard,
+  },
   {
     path: '*',
     component: Agrument,
