@@ -523,29 +523,6 @@
 //     });
 //   });
 
-//   store.on('registerform:update', (key, value) => {
-//     store.get().forms.register.set({
-//       [key]: value,
-//     }).now();
-//   });
-
-//   store.on('registerform:submit', (id, token, history) => {
-//     const register = store.get().forms.register.set({ isLoading: true });
-
-//     login.register(id, token, register.name, register.username, register.password)
-//       .end((err, res) => {
-//         if (err || !res.ok) {
-//           store.get().forms.register.set({
-//             isLoading: false,
-//             error: true,
-//           });
-//         } else {
-//           store.emit('registerform:discard');
-//           history.push('/login');
-//         }
-//       });
-//   });
-
 //   store.on('votes:fetch', (id) => {
 //     let sub = store.get().votable.data && store.get().votable.data.find((e) => e.id === id);
 

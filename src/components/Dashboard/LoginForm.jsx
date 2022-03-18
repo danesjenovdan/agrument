@@ -69,7 +69,7 @@ export default function LoginForm() {
 
   return (
     <div className="container dash__container">
-      <form action="/api/login" method="post" onSubmit={onSubmitForm}>
+      <form method="post" onSubmit={onSubmitForm}>
         <div className="row">
           <div className="col-md-4 col-md-offset-4">
             <div className="form-group">
@@ -81,6 +81,7 @@ export default function LoginForm() {
                 placeholder="username"
                 value={username}
                 onChange={handleInputChange}
+                autoFocus
               />
             </div>
             <div className="form-group">

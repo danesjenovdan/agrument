@@ -14,13 +14,15 @@ export async function logout() {
   }
 }
 
-// const POST_REGISTER = '/api/auth/register';
-// export function register(id, token, name, username, password) {
-//   return request.post(POST_REGISTER).send({
-//     id,
-//     token,
-//     name,
-//     username,
-//     password,
-//   });
-// }
+export async function register(id, token, name, username, password) {
+  const { data } = await api.post('/api/auth/register', {
+    id,
+    token,
+    name,
+    username,
+    password,
+  });
+  if (data.success !== 'Registered') {
+    throw new Error('Registration failed!');
+  }
+}

@@ -11,11 +11,7 @@ export default function Reset() {
       </Helmet>
       <div className="container-fluid">
         <Header title="Agrument" subTitle="Spremeni podatke" small />
-        <RegisterForm
-          /* data={state.forms.register} */ data={{}}
-          title="Spremeni podatke"
-          canChangeUsername={false}
-        />
+        <RegisterForm title="Spremeni podatke" canChangeUsername={false} />
       </div>
     </div>
   );

@@ -1,41 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Input from '../FormControl/Input.jsx';
 import Button from '../FormControl/Button.jsx';
 import { parseQuery } from '../../utils/query.js';
+import { register } from '../../utils/requests/login.js';
 
-// import store from '../../store';
-
-function onValueChange(key) {
-  return (event) => {
-    const { value } = event.target;
-    // store.emit('registerform:update', key, value);
-  };
-}
-
-function isButtonDisabled(data) {
-  if (data.isLoading) {
-    return true;
-  }
-  if (
-    !data.password ||
-    data.password.length < 8 ||
-    data.password !== data.passwordRepeat
-  ) {
-    return true;
-  }
-  return false;
-}
-
-export default function RegisterForm({ data, canChangeUsername, title }) {
+export default function RegisterForm({ canChangeUsername, title }) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [
+    { username, name, password, passwordRepeat, loading, error },
+    setState,
+  ] = useState({
+    username: '',
+    name: '',
+    password: '',
+    passwordRepeat: '',
+    loading: false,
+    error: false,
+  });
 
   const { id, token } = parseQuery(location.search);
 
+  const isButtonDisabled =
+    !password || password.length < 8 || password !== passwordRepeat || loading;
+
+  const handleInputChange = (event) => {
+    const { name: inputName, value } = event.target;
+    setState((state) => ({
+      ...state,
+      [inputName]: value,
+    }));
+  };
+
   const onSubmitForm = async (event) => {
     event.preventDefault();
-    // store.emit('registerform:submit', id, token, history);
+    setState((state) => ({
+      ...state,
+      error: false,
+      loading: true,
+    }));
+
+    try {
+      await register(id, token, name, username, password);
+      navigate('/login');
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Registration failed!', err);
+      setState((state) => ({
+        ...state,
+        error: err,
+        loading: false,
+      }));
+    }
   };
 
   if (!id || !token) {
@@ -44,7 +63,7 @@ export default function RegisterForm({ data, canChangeUsername, title }) {
 
   return (
     <div className="container dash__container">
-      <form onSubmit={onSubmitForm}>
+      <form method="post" onSubmit={onSubmitForm}>
         <div className="row">
           <div className="col-md-4 col-md-offset-4">
             <div className="form-group">
@@ -53,48 +72,52 @@ export default function RegisterForm({ data, canChangeUsername, title }) {
             {canChangeUsername ? (
               <div className="form-group">
                 <Input
+                  name="username"
                   label="Uporabniško ime"
-                  value={data.username}
-                  onChange={onValueChange('username')}
+                  value={username}
+                  onChange={handleInputChange}
+                  autoFocus={canChangeUsername}
                 />
               </div>
             ) : null}
             <div className="form-group">
               <Input
+                name="name"
                 label="Ime in priimek"
-                value={data.name}
-                onChange={onValueChange('name')}
+                value={name}
+                onChange={handleInputChange}
+                autoFocus={!canChangeUsername}
               />
             </div>
             <div className="form-group">
               <Input
+                name="password"
                 label="Novo geslo (naj bo dolgo vsaj 8 znakov)"
                 type="password"
-                value={data.password}
-                onChange={onValueChange('password')}
+                value={password}
+                onChange={handleInputChange}
               />
-              {data.password && data.password.length < 8 ? (
+              {password && password.length < 8 ? (
                 <h4 className="text-center">Geslo ni veljavno!</h4>
               ) : null}
             </div>
             <div className="form-group">
               <Input
+                name="passwordRepeat"
                 label="Ponovi geslo"
                 type="password"
-                value={data.passwordRepeat}
-                onChange={onValueChange('passwordRepeat')}
+                value={passwordRepeat}
+                onChange={handleInputChange}
               />
-              {data.password &&
-              data.passwordRepeat &&
-              data.password !== data.passwordRepeat ? (
+              {password && passwordRepeat && password !== passwordRepeat ? (
                 <h4 className="text-center">Gesli se ne ujemata!</h4>
               ) : null}
             </div>
             <div className="form-group">
-              {data.error ? (
+              {error ? (
                 <h4 className="text-center">Napaka pri registraciji!</h4>
               ) : null}
-              <Button type="submit" block disabled={isButtonDisabled(data)}>
+              <Button type="submit" block disabled={isButtonDisabled}>
                 Pošlji!
               </Button>
             </div>
@@ -106,14 +129,6 @@ export default function RegisterForm({ data, canChangeUsername, title }) {
 }
 
 RegisterForm.propTypes = {
-  data: PropTypes.shape({
-    isLoading: PropTypes.bool,
-    error: PropTypes.bool,
-    name: PropTypes.string,
-    username: PropTypes.string,
-    password: PropTypes.string,
-    passwordRepeat: PropTypes.string,
-  }).isRequired,
   canChangeUsername: PropTypes.bool,
   title: PropTypes.string.isRequired,
 };

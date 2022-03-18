@@ -11,10 +11,7 @@ export default function Register() {
       </Helmet>
       <div className="container-fluid">
         <Header title="Agrument" subTitle="Registracija" small />
-        <RegisterForm
-          /* data={state.forms.register} */ data={{}}
-          title="Registracija"
-        />
+        <RegisterForm title="Registracija" />
       </div>
     </div>
   );
