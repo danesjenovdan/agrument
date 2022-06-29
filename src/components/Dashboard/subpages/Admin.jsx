@@ -8,7 +8,7 @@ import { toSloDateString } from '../../../utils/date.js';
 import RenderSpinner from '../../RenderSpinner.jsx';
 import TriangleHeading from '../../Card/TriangleHeading.jsx';
 import AssignNewSubmission from '../AssignNewSubmission.jsx';
-// import AddUser from '../AddUser';
+import AddUser from '../AddUser.jsx';
 
 export default function Admin() {
   const dispatch = useDispatch();
@@ -117,12 +117,9 @@ export default function Admin() {
       <div className="col-md-6">
         <TriangleHeading title="Dodaj novega uporabnika" />
         <div className="card__content clearfix">
-          {/* <RenderSpinner
-            isLoading={state.users.isLoading}
-            data={state.users.data}
-          >
-            {() => <AddUser state={state} />}
-          </RenderSpinner> */}
+          <RenderSpinner isLoading={users.loading} data={users.data}>
+            {(data) => <AddUser users={data} />}
+          </RenderSpinner>
         </div>
       </div>
     </div>

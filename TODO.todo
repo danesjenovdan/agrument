@@ -1,0 +1,29 @@
+TODO:
+  - run and fix eslint errors
+
+TODO REPORT:
+  - NUJNO
+    - admin user management - 2h
+    - editor view - 4h
+      - generiraj plain text za facebook samo enkrat - 1h
+      - uploadanje slik na S3 - 2h
+    - change database connection to postgress and apply knex migrations - 2h
+    - skripta za migriranje iz sqlite v postgres - 1h
+    - nazaj enablat pošiljanje mejlov - 1h
+    - docker/k8s in github actions setup - 1h
+    ---------------------------------------------------------------------- 2 dni
+
+  - DODATNO
+    - zamenjaj editor z nečem kar dela v vseh browserjih reliably - 4h
+    - direktna twitter integracija (ne preko knedla!) - 1h
+    ---------------------------------------------------------------------- 1 dan
+
+  - NICE TO HAVES
+    - boljše error reportanje serverja - 4h
+      - route nared async/await z generičnim error handlerjem
+      - sentry
+    - poglej kako se db transakcije uporabljajo, da ne bo connection timeoutal
+    - rad bi deprecatal in removal star api (ampak ga mladina uporablja)
+    - change edit/:date to edit/:id
+    - allow deleting user reset tokens
+    ---------------------------------------------------------------------- 1 dan
