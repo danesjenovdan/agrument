@@ -208,14 +208,13 @@ function postVotablePublishIdHandler(request, reply) {
         type: 'published',
       });
 
-    const url = `https://agrument.danesjenovdan.si/${toSloDateString(
+    const url = `https://danesjenovdan.si/agrument/${toSloDateString(
       post.date
     )}`;
 
     // if (process.env.NODE_ENV === 'production') {
     //   try {
-    //     const shortUrl = await fetchShortUrl(url);
-    //     const text = `${post.tweet}\n${shortUrl}`;
+    //     const text = `${post.tweet}\n${url}`;
     //     const response = await request_
     //       .post('https://api.djnd.si/sendTweet/')
     //       .field('tweet_text', text)
