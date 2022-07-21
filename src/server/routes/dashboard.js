@@ -520,17 +520,17 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
     const url = `https://danesjenovdan.si/agrument/${toSloDateString(post.date)}`;
 
     if (process.env.NODE_ENV === 'production') {
-      try {
-        const text = `${post.tweet}\n${url}`;
-        const response = await request
-          .post('https://api.djnd.si/sendTweet/')
-          .field('tweet_text', text)
-          .field('secret', config.TWITTER_SECRET);
-        // eslint-disable-next-line no-console
-        console.log('Twitter post response:', response.status, response.text);
-      } catch (error) {
-        sendErrorToSlack('twitterPost', error);
-      }
+      // try {
+      //   const text = `${post.tweet}\n${url}`;
+      //   const response = await request
+      //     .post('https://api.djnd.si/sendTweet/')
+      //     .field('tweet_text', text)
+      //     .field('secret', config.TWITTER_SECRET);
+      //   // eslint-disable-next-line no-console
+      //   console.log('Twitter post response:', response.status, response.text);
+      // } catch (error) {
+      //   sendErrorToSlack('twitterPost', error);
+      // }
       try {
         const response = await request
           .post('https://podpri.djnd.si/api/send-agrument-mail/')
