@@ -109,11 +109,11 @@ class AddUser extends React.Component {
                       )}
                     </td>
                     <td className="text-right">
-                      <button type="button" className="btn btn-primary btn-xs" onClick={createToken(e.id)}>
+                      <button type="button" className="btn btn-primary btn-xs" onClick={createToken(e.id)} title="Ustvari povezavo za urejanje gesla">
                         <i className="glyphicon glyphicon-link" />
                       </button>
-                      <button type="button" className={`btn btn-${e.disabled ? 'success' : 'danger'} btn-xs`} onClick={disableUser(e.id, !e.disabled)}>
-                        <i className={`glyphicon glyphicon-${e.disabled ? 'ok' : 'ban-circle'}`} />
+                      <button type="button" className="btn btn-danger btn-xs" onClick={disableUser(e.id, 1)} title="Onemogoči uporabnika">
+                        <i className="glyphicon glyphicon-ban-circle" />
                       </button>
                     </td>
                   </tr>
@@ -132,7 +132,7 @@ class AddUser extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {state.users.data.filter((e) => e.disabled).map((e) => (
+                {state.users.data.filter((e) => e.disabled === 1).map((e) => (
                   <tr key={e.id}>
                     <td>{e.id}</td>
                     <td>
@@ -142,8 +142,11 @@ class AddUser extends React.Component {
                       )}
                     </td>
                     <td className="text-right">
-                      <button type="button" className="btn btn-warning btn-xs" onClick={disableUser(e.id, !e.disabled)}>
+                      <button type="button" className="btn btn-success btn-xs" onClick={disableUser(e.id, 0)} title="Aktiviraj uporabnika">
                         <i className="glyphicon glyphicon-ok" />
+                      </button>
+                      <button type="button" className="btn btn-danger btn-xs" onClick={disableUser(e.id, 2)} title="Izbriši uporabnika">
+                        <i className="glyphicon glyphicon-ban-circle" />
                       </button>
                     </td>
                   </tr>
