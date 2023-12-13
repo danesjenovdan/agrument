@@ -533,7 +533,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
       // }
       try {
         const response = await request
-          .post('https://podpri.djnd.si/api/send-agrument-mail/')
+          .post('https://podpri.lb.djnd.si/api/send-agrument-mail/')
           .send({
             url,
             title: post.title,
@@ -542,7 +542,7 @@ router.post('/votable/publish/:id', requireAdmin, (req, res) => {
             image_source: post.imageCaption,
             image_source_url: post.imageCaptionURL,
             image_alt_text: post.imageAltText,
-            email_template_id: post.emailTemplate === 'project' ? 232 : 42,
+            email_template_id: post.emailTemplate === 'project' ? 228 : 227,
           })
           .set('Authorization', config.MAUTIC_SECRET);
         // eslint-disable-next-line no-console
